@@ -337,7 +337,7 @@ function pipeStreamToSSE(res, streamData) {
 app.post('/api/chat', async (req, res) => {
   try {
     const { messages } = req.body;
-    const orKey = req.headers['x-or-key'] || '';
+    const orKey = (req.headers['x-or-key'] || process.env.OR_KEY || '').trim();
 
     if (!orKey || !orKey.startsWith('sk-or-')) {
       return res.status(401).json({ error: 'NO_KEY' });
@@ -411,7 +411,7 @@ app.get('*', (_, res) => res.sendFile(path.join(__dirname, '..', 'index.html')))
 const PORT = process.env.PORT || 3001;
 // ── Forex Vision Analysis endpoint ────────────────────────────────────
 app.post('/api/forex', express.json({ limit: '20mb' }), async (req, res) => {
-  const orKey = (req.headers['x-or-key'] || '').trim();
+  const orKey = (req.headers['x-or-key'] || process.env.OR_KEY || '').trim();
   if (!orKey || !orKey.startsWith('sk-or-')) return res.status(401).json({ error: 'Missing or invalid OR key' });
   try {
     const model = await getBestVisionModel(orKey);
