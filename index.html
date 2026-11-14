@@ -2214,8 +2214,23 @@ async function forexAnalyze() {
 <header>
   <div class="gns-container header-inner">
     <div class="logo">
-      <div class="icon">⚡</div>
-      <div>Gold News Signal<small>สัญญาณเทรดข่าว XAUUSD · NFP · CPI · FOMC</small></div>
+      <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <defs><radialGradient id="gns-rg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff2a2a"/><stop offset="100%" stop-color="#e63946"/></radialGradient></defs>
+        <g fill="url(#gns-rg)">
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(0 50 50)" opacity="0.95"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(60 50 50)" opacity="0.85"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(120 50 50)" opacity="0.75"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(180 50 50)" opacity="0.65"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(240 50 50)" opacity="0.55"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(300 50 50)" opacity="0.45"/>
+        </g>
+        <circle cx="50" cy="50" r="12" fill="#0a0608"/>
+        <circle cx="50" cy="50" r="7" fill="#e63946"/>
+      </svg>
+      <div>
+        <div style="font-size:14px;font-weight:700;line-height:1.2">Deep<span style="font-weight:300">GPT</span> <span style="font-weight:400;color:var(--gns-muted2)">· Gold News Signal</span></div>
+        <small style="display:block;font-size:10px;font-weight:400;color:var(--gns-muted);letter-spacing:0.4px">สัญญาณเทรดข่าว XAUUSD · NFP · CPI · FOMC</small>
+      </div>
     </div>
     <div class="price-ticker">
       <div class="tick-label">ทองคำ XAUUSD</div>
