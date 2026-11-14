@@ -1,0 +1,124 @@
+{
+  "topics": [
+    {
+      "id": "smc_overview",
+      "keywords": ["smc", "smart money", "smart money concept", "สมาร์ทมันนี่", "สมาร์ท มันนี่"],
+      "question": "SMC คืออะไร",
+      "answer": "SMC (Smart Money Concepts) คือแนวทางการเทรดที่มองตลาดจากมุมของสถาบัน เช่น ธนาคาร กองทุน hedge fund ที่มีเงินมหาศาลและขยับราคาได้\n\nหลักการหลัก:\n- สถาบันต้องการ Liquidity (ออเดอร์ขนาดใหญ่) ก่อนเข้าออก\n- พวกเขาล่อ retail ให้เข้าผิดทาง แล้วกลับตัว\n- ร่องรอยที่ทิ้งไว้บนกราฟ เราอ่านได้และเทรดตาม\n\nเครื่องมือหลัก: BOS, MSS, Order Block, FVG, Liquidity"
+    },
+    {
+      "id": "ict_overview",
+      "keywords": ["ict", "inner circle trader", "inner circle", "ไอซีที"],
+      "question": "ICT คืออะไร",
+      "answer": "ICT (Inner Circle Trader) คือ methodology ที่สร้างโดย Michael J. Huddleston ซึ่งเป็นต้นกำเนิดของ SMC\n\nICT เน้น:\n- PD Arrays (Premium & Discount)\n- Kill Zones (เวลาที่ตลาดเคลื่อนไหวแรง)\n- OTE (Optimal Trade Entry) ที่ Fib 62-79%\n- IPDA (Interbank Price Delivery Algorithm)\n- Power of 3 (Accumulation → Manipulation → Distribution)\n\nICT ละเอียดกว่า SMC และมีกฎชัดเจนกว่า"
+    },
+    {
+      "id": "bos",
+      "keywords": ["bos", "break of structure", "break structure", "บอส", "เบรก สตรัคเจอร์"],
+      "question": "BOS คืออะไร",
+      "answer": "BOS (Break of Structure) คือการที่ราคาทำลาย High หรือ Low ก่อนหน้า แสดงว่าเทรนด์ยังดำเนินต่อ\n\n- Bullish BOS: ราคาทำลาย Higher High → เทรนด์ขาขึ้นยืนยัน\n- Bearish BOS: ราคาทำลาย Lower Low → เทรนด์ขาลงยืนยัน\n\nใช้ BOS เพื่อยืนยันทิศทาง ไม่ใช่สัญญาณ entry"
+    },
+    {
+      "id": "mss_choch",
+      "keywords": ["mss", "choch", "choch", "market structure shift", "change of character", "เปลี่ยนเทรนด์"],
+      "question": "MSS / CHoCH คืออะไร",
+      "answer": "MSS (Market Structure Shift) หรือ CHoCH (Change of Character) คือสัญญาณเปลี่ยนเทรนด์\n\n- MSS (ICT): ราคา break structure ในทิศตรงข้ามกับเทรนด์เดิม\n- CHoCH (SMC): คำเดียวกันในภาษา SMC community\n\nตัวอย่าง:\n- ขาขึ้น → ราคาทำลาย Higher Low สุดท้าย = CHoCH → เทรนด์กำลังจะกลับ\n- ใช้เป็น entry signal หรือยืนยันการกลับตัว"
+    },
+    {
+      "id": "order_block",
+      "keywords": ["order block", "ob", "ออเดอร์ บล็อค", "ออเดอร์บล็อค", "ob คือ"],
+      "question": "Order Block คืออะไร",
+      "answer": "Order Block (OB) คือโซนที่สถาบันวางออเดอร์ขนาดใหญ่ไว้ ราคามักกลับมาที่นี่\n\nวิธีหา Bullish OB:\n- แท่งเทียนสุดท้ายที่เป็น Bearish ก่อนที่ราคาจะพุ่งขึ้น (Bullish Displacement)\n\nวิธีหา Bearish OB:\n- แท่งเทียนสุดท้ายที่เป็น Bullish ก่อนที่ราคาจะดิ่งลง (Bearish Displacement)\n\nการใช้: รอราคากลับมาทดสอบ OB แล้ว entry ตามทิศทาง\nStop Loss: ไว้เหนือ/ใต้ OB"
+    },
+    {
+      "id": "fvg",
+      "keywords": ["fvg", "fair value gap", "imbalance", "gap", "ช่องว่าง", "แฟร์วาลู"],
+      "question": "FVG คืออะไร",
+      "answer": "FVG (Fair Value Gap) หรือ Imbalance คือช่องว่างบนกราฟที่ราคาวิ่งผ่านเร็วเกินไป ทำให้เกิด gap ระหว่าง 3 แท่งเทียน\n\nวิธีหา:\n- แท่งที่ 1 High / แท่งที่ 3 Low ไม่ทับกัน = Bullish FVG\n- แท่งที่ 1 Low / แท่งที่ 3 High ไม่ทับกัน = Bearish FVG\n\nการใช้: ราคามักกลับมาเติม FVG (Consequent Encroachment = จุดกึ่งกลาง)\nใช้เป็นโซน entry หรือ TP"
+    },
+    {
+      "id": "liquidity",
+      "keywords": ["liquidity", "ลิควิดิตี้", "stop hunt", "equal high", "equal low", "eqh", "eql", "ssl", "bsl"],
+      "question": "Liquidity คืออะไร",
+      "answer": "Liquidity คือกลุ่ม stop loss ของ retail trader ที่สะสมอยู่ใต้/เหนือ level สำคัญ สถาบันจะล่า liquidity ก่อนไปทิศทางจริง\n\nประเภท:\n- BSL (Buy Side Liquidity): stop loss ของคนขาย = อยู่เหนือ equal highs / swing high\n- SSL (Sell Side Liquidity): stop loss ของคนซื้อ = อยู่ใต้ equal lows / swing low\n\nสัญญาณ: ราคาไป sweep liquidity แล้วกลับตัวเร็ว = สถาบันเข้า\nกลยุทธ์: รอ sweep → รอ MSS → entry ตามทิศทางใหม่"
+    },
+    {
+      "id": "inducement",
+      "keywords": ["inducement", "idm", "ล่อ", "ล่อเข้า"],
+      "question": "Inducement คืออะไร",
+      "answer": "Inducement (IDM) คือการที่ราคาทำ swing point ปลอมเพื่อล่อให้ retail เข้าผิดทาง ก่อนไปทิศทางจริง\n\nตัวอย่าง:\n- ราคากำลัง pullback → ทำ lower low เล็กๆ ล่อให้คนขาย → แล้วพุ่งขึ้น sweep BSL\n\nIDM มักอยู่ก่อน Liquidity Sweep จริง"
+    },
+    {
+      "id": "premium_discount",
+      "keywords": ["premium", "discount", "pd array", "equilibrium", "50%", "midpoint", "pd"],
+      "question": "Premium / Discount Zone คืออะไร",
+      "answer": "Premium และ Discount คือโซนราคาเทียบกับ range ปัจจุบัน\n\n- Equilibrium = กึ่งกลาง range (50%)\n- Premium Zone = เหนือ 50% → ราคาแพง → โซนขาย (Sell)\n- Discount Zone = ใต้ 50% → ราคาถูก → โซนซื้อ (Buy)\n\nหลักการ ICT: ซื้อใน Discount, ขายใน Premium\nใช้ร่วมกับ FVG / OB เพื่อ filter entry"
+    },
+    {
+      "id": "kill_zones",
+      "keywords": ["kill zone", "killzone", "london", "new york", "asian", "session", "เวลาเทรด", "เวลา entry"],
+      "question": "Kill Zones คืออะไร",
+      "answer": "Kill Zones คือช่วงเวลาที่ตลาดเคลื่อนไหวแรงที่สุด เหมาะสำหรับ entry\n\nICT Kill Zones (เวลาไทย UTC+7):\n- Asian KZ: 00:00 - 04:00 (แนว range)\n- London Open KZ: 15:00 - 17:00 (volatile มาก)\n- New York Open KZ: 20:30 - 22:30 (volatile มาก)\n- London Close: 00:00 - 01:00\n\nเวลาที่ดีที่สุด = London Open และ NY Open"
+    },
+    {
+      "id": "ote",
+      "keywords": ["ote", "optimal trade entry", "fibonacci", "fib", "0.62", "0.705", "0.79", "โอทีอี"],
+      "question": "OTE คืออะไร",
+      "answer": "OTE (Optimal Trade Entry) คือโซน entry ที่ดีที่สุดตาม ICT ใช้ Fibonacci retracement\n\nโซน OTE = 62% ถึง 79% ของ impulse move\n- จุดพิเศษ: 70.5% (จุดกึ่งกลาง OTE)\n\nวิธีใช้:\n1. หา Swing Low → Swing High (Bullish)\n2. วาง Fib จาก Low → High\n3. รอราคา pullback มาที่ 62-79%\n4. หา OB หรือ FVG ใน zone นั้น\n5. Entry"
+    },
+    {
+      "id": "msnr",
+      "keywords": ["msnr", "malaysian snr", "malaysia snr", "เอ็มเอสเอ็นอาร์", "msnr คือ"],
+      "question": "MSNR คืออะไร",
+      "answer": "MSNR (Malaysian Support & Resistance) คือวิธีลาก S/R ที่ใช้ body ของแท่งเทียน (Open/Close) แทน wick\n\nหลักการ:\n- วาด level จาก Open/Close ของแท่งสำคัญ ไม่ใช้ High/Low\n- Level ที่ถูก wick สัมผัส = level ถูก \"ใช้\" ไปแล้ว\n- Level ที่ body close ผ่าน = level flip (เปลี่ยนบทบาท)\n\nกฎสำคัญ:\n- Resistance ที่ถูก body close ผ่านขึ้นไป → กลายเป็น Support\n- Support ที่ถูก body close ทะลุลง → กลายเป็น Resistance\n- Level ที่ถูก wick สัมผัส 1 ครั้ง = level นั้น \"spent\" แล้ว\n\nMSNR ง่ายและ accurate กว่า traditional S/R เพราะกรอง noise จาก wick ออก"
+    },
+    {
+      "id": "msnr_storyline",
+      "keywords": ["storyline", "story line", "msnr story", "แนวเรื่อง"],
+      "question": "Storyline ใน MSNR คืออะไร",
+      "answer": "Storyline คือการอ่านทิศทางตลาดจาก timeframe สูง (Daily, Weekly, Monthly)\n\nหลักการ:\n- กำหนดทิศทางหลักจาก HTF ก่อนเสมอ\n- เข้า entry ในทิศทางเดียวกับ Storyline เท่านั้น\n- Storyline bullish = หา buy setup เท่านั้น\n- Storyline bearish = หา sell setup เท่านั้น\n\nวิธีอ่าน Storyline MSNR:\n1. ดู Daily/Weekly chart\n2. หา S/R สำคัญด้วย MSNR body method\n3. ราคาอยู่เหนือ level สำคัญ = Bullish storyline\n4. ราคาอยู่ใต้ level สำคัญ = Bearish storyline"
+    },
+    {
+      "id": "power_of_3",
+      "keywords": ["power of 3", "po3", "accumulation", "manipulation", "distribution", "amd", "พาวเวอร์ออฟ3"],
+      "question": "Power of 3 (AMD) คืออะไร",
+      "answer": "Power of 3 หรือ AMD คือ 3 เฟสของการเคลื่อนไหวราคาในแต่ละวัน\n\n1. Accumulation (สะสม): ราคา range แคบ ช่วง Asian session\n2. Manipulation (ล่อ): ราคาวิ่งผิดทาง sweep liquidity ล่อ retail\n3. Distribution (ไปจริง): ราคาวิ่งไปทิศทางจริง ช่วง London/NY\n\nตัวอย่าง Bullish Day:\n- Asian: range แคบ\n- London open: ราคาดิ่งลง sweep SSL (Manipulation)\n- NY: ราคาพุ่งขึ้นแรง (Distribution)\n\nใช้คาด Bias ของวันนั้น"
+    },
+    {
+      "id": "displacement",
+      "keywords": ["displacement", "impulse", "strong move", "แท่งแรง", "ดิสเพลสเมนต์"],
+      "question": "Displacement คืออะไร",
+      "answer": "Displacement คือการเคลื่อนไหวราคาที่แรงและเร็ว แสดงว่าสถาบันเข้าตลาดแล้ว\n\nลักษณะ:\n- แท่งเทียนยาว body ใหญ่ wick เล็ก\n- ราคาวิ่งผ่าน level สำคัญโดยไม่ถูก reject\n- มักทิ้ง FVG ไว้\n\nใช้ Displacement เพื่อยืนยัน:\n- OB ที่เกิดก่อน displacement = valid OB\n- FVG ที่เกิดจาก displacement = high probability FVG"
+    },
+    {
+      "id": "swing_high_low",
+      "keywords": ["swing high", "swing low", "hh", "hl", "lh", "ll", "higher high", "lower low"],
+      "question": "Swing High / Low และ Market Structure คืออะไร",
+      "answer": "Market Structure คือโครงสร้างตลาดที่ดูจาก Swing Points\n\nขาขึ้น (Bullish):\n- Higher High (HH): ทำ high สูงกว่าเดิม\n- Higher Low (HL): ทำ low สูงกว่าเดิม\n\nขาลง (Bearish):\n- Lower High (LH): ทำ high ต่ำกว่าเดิม\n- Lower Low (LL): ทำ low ต่ำกว่าเดิม\n\nอ่าน structure จาก timeframe สูงก่อน แล้วลงมา timeframe ต่ำเพื่อหา entry"
+    },
+    {
+      "id": "mitigation",
+      "keywords": ["mitigation", "mitigate", "mitigated", "ob mitigated", "มิทิเกชัน"],
+      "question": "Mitigation คืออะไร",
+      "answer": "Mitigation คือเมื่อราคากลับมาสัมผัส Order Block หรือ Supply/Demand Zone เพื่อ \"ชำระ\" orders ที่ค้างอยู่\n\n- Mitigated OB = OB ที่ราคากลับมาสัมผัสแล้ว → ถือว่า invalidated\n- Unmitigated OB = OB ที่ยังไม่ถูกสัมผัส → ยังมีผล\n\nใช้ unmitigated OB เป็น entry zone เท่านั้น"
+    },
+    {
+      "id": "turtle_soup",
+      "keywords": ["turtle soup", "false breakout", "fake break", "stop hunt entry"],
+      "question": "Turtle Soup / False Breakout คืออะไร",
+      "answer": "Turtle Soup คือ setup ที่เข้า trade หลังจากราคา sweep liquidity แล้วกลับตัว\n\nขั้นตอน:\n1. ระบุ equal highs หรือ swing high สำคัญ (BSL)\n2. รอราคาวิ่งขึ้นไป sweep ก่อน\n3. รอ rejection + ลงมาทำ CHoCH\n4. Entry sell หลัง CHoCH ยืนยัน\n\nเป็น setup ความน่าจะเป็นสูงมาก เพราะเข้าหลัง manipulation แล้ว"
+    },
+    {
+      "id": "risk_management",
+      "keywords": ["risk", "risk management", "sl", "tp", "stop loss", "take profit", "rr", "risk reward", "ความเสี่ยง"],
+      "question": "Risk Management ในการเทรด SMC",
+      "answer": "Risk Management คือสิ่งสำคัญที่สุดในการเทรด\n\nกฎพื้นฐาน:\n- เสี่ยงไม่เกิน 1-2% ต่อ trade\n- Minimum RR 1:2 (เสี่ยง 1 ได้คืน 2)\n- ไม่ตามใจเพิ่ม SL หลังเข้า\n- วาง SL ไว้เหนือ/ใต้ OB หรือ liquidity zone\n\nตัวอย่าง:\n- ทุน 10,000 บาท → เสี่ยงได้ trade ละ 100-200 บาท\n- SL = 20 pip → Position size คำนวณจาก risk amount\n\nไม่มี setup ไหนดีพอถ้า risk management แย่"
+    },
+    {
+      "id": "trading_sessions",
+      "keywords": ["session", "london", "new york", "ny", "asian", "เซสชัน", "ช่วงเวลา"],
+      "question": "Session เทรด forex มีอะไรบ้าง",
+      "answer": "Forex Trading Sessions (เวลาไทย UTC+7):\n\n🌏 Asian Session: 06:00 - 15:00\n- ราคา range แคบ, volume ต่ำ\n- เหมาะสำหรับดู accumulation\n\n🇬🇧 London Session: 15:00 - 00:00\n- เปิด 15:00 → volatile ที่สุด\n- Volume สูง, เทรนด์ชัด\n\n🇺🇸 New York Session: 20:30 - 05:00\n- Overlap กับ London 20:30-00:00 → volatile มากที่สุด\n- ข่าว US มักออกช่วงนี้\n\nช่วงที่ดีที่สุด: London Open (15:00-17:00) และ NY Open (20:30-22:30)"
+    }
+  ]
+}
