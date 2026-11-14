@@ -1863,496 +1863,962 @@ async function forexAnalyze() {
   </div>
 </div>
 
+
 <!-- ── Gold News Signal Screen (embedded) ── -->
 <div id="news-screen" class="hidden">
-  <div id="forex-topbar">
-    <button class="back-btn" onclick="closeNewsSignal()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <div style="flex:1">
-      <h1>⚡ Gold News Signal</h1>
-      <p>สัญญาณข่าวเศรษฐกิจ · NFP · CPI · FOMC · XAUUSD</p>
-    </div>
-  </div>
-
-  <div id="gns-wrap" style="height:calc(100vh - 60px);overflow-y:auto">
-  <div class="gns-container">
-
-    <!-- Header price ticker -->
-    <div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px">
-        <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#f0b90b,#b45309);display:grid;place-items:center;font-size:16px;box-shadow:0 0 14px rgba(240,185,11,.35)">⚡</div>
-        <div>Gold News Signal<small style="display:block;font-size:10px;font-weight:400;color:#5c6478;letter-spacing:.5px">สัญญาณเทรดข่าว XAUUSD · NFP · CPI · FOMC</small></div>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:14px;background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);padding:7px 14px;border-radius:12px">
-        <span style="font-size:11px;color:#5c6478;text-transform:uppercase;letter-spacing:.6px">XAUUSD</span>
-        <span style="font-size:16px;font-weight:700;color:#ffd75e;font-variant-numeric:tabular-nums" id="gns-tickPrice">…</span>
-        <span id="gns-tickChange" style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:8px;color:#8b93a7;background:rgba(255,255,255,.05)">สด</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#5c6478">
-        <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;flex-shrink:0" id="gns-srcDot"></span>
-        <span id="gns-srcLabel">เชื่อมต่อ…</span>
-      </div>
-      <button onclick="gnsRefresh()" style="border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#e6eaf2;padding:7px 13px;border-radius:9px;font-family:inherit;font-size:12px;cursor:pointer">⟳ รีเฟรช</button>
-    </div>
-
-    <!-- Hero countdown -->
-    <div style="padding:16px 18px 0">
-      <div id="gns-heroCard" style="background:linear-gradient(135deg,rgba(240,185,11,.10),rgba(255,255,255,.02)),#121a2b;border:1px solid rgba(240,185,11,.35);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-        <div style="flex:1;min-width:200px">
-          <div style="font-size:11px;letter-spacing:.8px;color:#ffd75e;text-transform:uppercase" id="gns-heroLabel">เลือกอีเวนต์</div>
-          <h2 style="font-size:20px;margin-top:2px;font-weight:700" id="gns-heroEvTitle">…</h2>
-          <div style="color:#8b93a7;font-size:12px;margin-top:4px" id="gns-heroEvMeta">…</div>
-        </div>
-        <div style="text-align:center;padding:4px 10px">
-          <div style="font-size:11px;color:#5c6478;text-transform:uppercase;letter-spacing:1px" id="gns-countLabel">เวลานับถอยหลัง</div>
-          <div style="font-size:36px;font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;color:#ffd75e;text-shadow:0 0 24px rgba(240,185,11,.35);line-height:1.15" id="gns-countdownTime">--:--:--</div>
-        </div>
-      </div>
-      <div id="gns-warnBar" style="margin-top:10px;padding:10px 14px;border-radius:11px;font-size:12px;display:none;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.4)"></div>
-    </div>
-
-    <!-- Main grid -->
-    <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:16px;padding:16px 18px;align-items:start" id="gns-grid">
-
-      <!-- Event list -->
-      <div style="background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden">
-        <div style="display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600;font-size:13px">
-          📅 ปฏิทินข่าวสำคัญ USD
-          <span style="margin-left:auto;font-size:11px;color:#5c6478;font-weight:400" id="gns-evCount"></span>
-        </div>
-        <div style="max-height:580px;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:7px" id="gns-evList">
-          <div style="color:#5c6478;font-size:13px;text-align:center;padding:24px">กำลังโหลด…</div>
-        </div>
-      </div>
-
-      <!-- Score panel -->
-      <div style="background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden" id="gns-scorePanel">
-        <div style="display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600;font-size:13px">
-          🎯 Signal Score
-          <span style="margin-left:auto;font-size:11px;color:#5c6478;font-weight:400">ซ้าย=ซื้อ · ขวา=ขาย</span>
-        </div>
-        <div style="padding:15px" id="gns-scorePanelBody">
-          <div style="font-size:14px;font-weight:700" id="gns-scoreName">เลือกอีเวนต์</div>
-          <div style="font-size:11px;color:#8b93a7;margin-top:2px" id="gns-scoreTime">…</div>
-          <div style="text-align:center;padding:8px 0 4px" id="gns-scoreGauge"></div>
-          <div class="gns-verdict neutral" id="gns-verdictBox">
-            <div style="font-size:24px;font-weight:800;letter-spacing:1px" id="gns-verdictBig">—</div>
-            <div style="font-size:11px;color:#8b93a7;margin-top:3px" id="gns-verdictSub">…</div>
-          </div>
-          <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px" id="gns-brkBox"></div>
-          <div style="margin-top:12px;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font-size:12px;color:#8b93a7;line-height:1.65" id="gns-reasonBox"></div>
-
-          <!-- tabs -->
-          <div style="display:flex;gap:5px;padding:8px 0 0;border-bottom:1px solid rgba(255,255,255,.08);margin-top:14px">
-            <button class="gns-tab gns-tab-active" data-tab="playbook" onclick="gnsTab(this)">📖 Playbook</button>
-            <button class="gns-tab" data-tab="risk" onclick="gnsTab(this)">🛡 Risk</button>
-            <button class="gns-tab" data-tab="stats" onclick="gnsTab(this)">📊 สถิติ</button>
-          </div>
-
-          <div id="gns-tab-playbook" class="gns-tab-content" style="display:block;padding:13px 0 0">
-            <div style="font-size:11px;color:#5c6478;margin-bottom:4px">เปรียบ Actual กับคาดการณ์ หลังข่าวออก:</div>
-            <table style="width:100%;border-collapse:collapse;font-size:12px" id="gns-scenRows"></table>
-            <div style="font-size:11px;color:#5c6478;margin-top:12px">กลยุทธ์ก่อน/หลังข่าว:</div>
-            <div id="gns-stratRows"></div>
-          </div>
-
-          <div id="gns-tab-risk" class="gns-tab-content" style="display:none;padding:13px 0 0">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">ยอดเงิน (USD)</label><input type="number" id="gns-inBal" min="0" step="50" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
-              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">ความเสี่ยง (%)</label><input type="number" id="gns-inRisk" min="0.1" max="10" step="0.1" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
-              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">SL (USD)</label><input type="number" id="gns-inSL" min="1" step="1" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
-              <div style="display:flex;align-items:flex-end"><button onclick="gnsCalcRisk()" style="width:100%;background:linear-gradient(135deg,#f0b90b,#d97706);color:#1a1204;font-weight:700;border:none;border-radius:9px;padding:9px;font-family:inherit;font-size:12px;cursor:pointer">คำนวณ Lot</button></div>
-            </div>
-            <div style="margin-top:12px;padding:12px;border-radius:11px;background:rgba(240,185,11,.06);border:1px solid rgba(240,185,11,.35);font-size:12px" id="gns-riskResult">
-              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>ความเสี่ยง (USD)</span><b style="color:#ffd75e" id="gns-riskUSD">—</b></div>
-              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Lot แนะนำ</span><b style="color:#ffd75e" id="gns-lotOut">—</b></div>
-              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>SL</span><b style="color:#ffd75e" id="gns-slOut">—</b></div>
-              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>TP (1.5×SL)</span><b style="color:#ffd75e" id="gns-tpOut">—</b></div>
-            </div>
-          </div>
-
-          <div id="gns-tab-stats" class="gns-tab-content" style="display:none;padding:13px 0 0">
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#22c55e" id="gns-stWin">0</div><div style="font-size:10px;color:#5c6478;margin-top:1px">ชนะ</div></div>
-              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#ef4444" id="gns-stLoss">0</div><div style="font-size:10px;color:#5c6478;margin-top:1px">แพ้</div></div>
-              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#ffd75e" id="gns-stRate">—</div><div style="font-size:10px;color:#5c6478;margin-top:1px">Win rate</div></div>
-              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800" id="gns-stDev">—</div><div style="font-size:10px;color:#5c6478;margin-top:1px">dev เฉลี่ย</div></div>
-            </div>
-            <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px" id="gns-histList"></div>
-            <button onclick="gnsClearResults()" style="margin-top:10px;border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#8b93a7;padding:6px 12px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">🗑 ล้างประวัติ</button>
-          </div>
-
-          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)" id="gns-trackerBox"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- disclaimer -->
-    <div style="margin:0 18px 20px;padding:11px 15px;border-radius:11px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.3);font-size:11px;color:#8b93a7;line-height:1.6">
-      <b style="color:#f59e0b">⚠️ คำเตือน:</b> เครื่องมือนี้เป็นโมเดลกลยุทธ์ ไม่ใช่คำทำนาย — ใช้ SL เสมอ ทดลองในบัญชีเดโม่ก่อน
-    </div>
-  </div>
-  </div>
-</div>
-<!-- end Gold News Signal Screen -->
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-.gns-container { font-family: "Prompt", system-ui, sans-serif; }
-.gns-verdict { margin-top:12px;padding:12px;border-radius:11px;text-align:center;border:1px solid rgba(255,255,255,.08) }
-.gns-verdict.buy { background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.35) }
-.gns-verdict.buy div:first-child { color:#22c55e }
-.gns-verdict.sell { background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.35) }
-.gns-verdict.sell div:first-child { color:#ef4444 }
-.gns-verdict.neutral { background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.35) }
-.gns-verdict.neutral div:first-child { color:#f59e0b }
-.gns-tab { padding:7px 13px;font-size:12px;border-radius:9px 9px 0 0;cursor:pointer;border:1px solid transparent;border-bottom:none;color:#8b93a7;transition:.15s;font-family:inherit;background:transparent }
-.gns-tab-active { background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.08);color:#e6eaf2 }
-.gns-ev-card { border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px 12px;cursor:pointer;transition:.15s ease;background:rgba(255,255,255,.015) }
-.gns-ev-card:hover { border-color:rgba(240,185,11,.35);transform:translateX(2px) }
-.gns-ev-card.gns-active { border-color:#f0b90b;background:rgba(240,185,11,.07) }
-.gns-ev-card.gns-urgent { border-color:rgba(239,68,68,.55) }
-@media(max-width:860px){ #gns-grid{grid-template-columns:1fr} }
+/* ===== GNS overlay wrapper ===== */
+#news-screen {
+  position: fixed; inset: 0; z-index: 9000;
+  font-family: "Prompt", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --bg: #07090f; --bg2: #0c101a;
+  --panel: rgba(17,23,38,0.72); --panel-solid: #121a2b;
+  --border: rgba(255,255,255,0.08); --border-gold: rgba(240,185,11,0.35);
+  --gold: #f0b90b; --gold-soft: #ffd75e;
+  --green: #22c55e; --red: #ef4444; --amber: #f59e0b; --blue: #38bdf8;
+  --txt: #e6eaf2; --txt-dim: #8b93a7; --txt-faint: #5c6478;
+  --radius: 14px; --shadow: 0 10px 40px rgba(0,0,0,0.45);
+  color: var(--txt); overflow-y: auto;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(240,185,11,0.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(56,189,248,0.07), transparent 55%),
+    var(--bg);
+}
+#news-screen.hidden { display:none !important; }
+#news-screen * { margin:0; padding:0; box-sizing:border-box; line-height:1.55; }
+#news-screen ::selection { background:rgba(240,185,11,0.3); }
+#news-screen .gns-container { max-width:1180px; margin:0 auto; padding:0 18px; }
+
+/* close button */
+#news-screen .gns-close-btn {
+  position:fixed; top:14px; right:18px; z-index:9100;
+  background:rgba(17,23,38,0.9); border:1px solid var(--border);
+  color:var(--txt); padding:8px 14px; border-radius:10px;
+  font-family:inherit; font-size:13px; cursor:pointer;
+  transition:all 0.18s;
+}
+#news-screen .gns-close-btn:hover { border-color:var(--border-gold); color:var(--gold-soft); }
+
+/* header */
+#news-screen header {
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:blur(14px);
+  background:rgba(7,9,15,0.82);
+  border-bottom:1px solid var(--border);
+}
+#news-screen .header-inner {
+  display:flex; align-items:center; gap:14px; padding:12px 0; flex-wrap:wrap;
+}
+#news-screen .logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:19px; letter-spacing:0.2px; }
+#news-screen .logo .icon {
+  width:36px; height:36px; border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),#b45309);
+  display:grid; place-items:center; font-size:18px;
+  box-shadow:0 0 18px rgba(240,185,11,0.35);
+}
+#news-screen .logo small { display:block; font-size:10.5px; font-weight:400; color:var(--txt-faint); letter-spacing:0.5px; }
+#news-screen .price-ticker {
+  margin-left:auto; display:flex; align-items:center; gap:14px;
+  background:var(--panel); border:1px solid var(--border);
+  padding:7px 14px; border-radius:12px;
+}
+#news-screen .tick-label { font-size:11px; color:var(--txt-faint); text-transform:uppercase; letter-spacing:0.6px; }
+#news-screen .tick-price { font-size:17px; font-weight:700; color:var(--gold-soft); font-variant-numeric:tabular-nums; }
+#news-screen .tick-change { font-size:12px; font-weight:600; padding:2px 8px; border-radius:8px; }
+#news-screen .tick-change.up { color:var(--green); background:rgba(34,197,94,0.12); }
+#news-screen .tick-change.down { color:var(--red); background:rgba(239,68,68,0.12); }
+#news-screen .tick-change.flat { color:var(--txt-dim); background:rgba(255,255,255,0.05); }
+#news-screen .source-dot { width:8px; height:8px; border-radius:50%; background:var(--txt-faint); flex-shrink:0; }
+#news-screen .source-dot.ok { background:var(--green); box-shadow:0 0 8px var(--green); }
+#news-screen .source-dot.warn { background:var(--amber); box-shadow:0 0 8px var(--amber); }
+#news-screen .source-dot.err { background:var(--red); box-shadow:0 0 8px var(--red); }
+#news-screen .btn {
+  border:1px solid var(--border); background:var(--panel);
+  color:var(--txt); padding:8px 14px; border-radius:10px;
+  font-family:inherit; font-size:13px; cursor:pointer; transition:all 0.18s;
+}
+#news-screen .btn:hover { border-color:var(--border-gold); color:var(--gold-soft); transform:translateY(-1px); }
+#news-screen .btn:active { transform:translateY(0); }
+#news-screen .btn-gold {
+  background:linear-gradient(135deg,var(--gold),#d97706);
+  color:#1a1204; font-weight:700; border:none;
+  box-shadow:0 4px 16px rgba(240,185,11,0.3);
+}
+#news-screen .btn-gold:hover { filter:brightness(1.08); color:#1a1204; }
+
+/* hero */
+#news-screen .hero { margin:22px 0 18px; }
+#news-screen .hero-card {
+  background:linear-gradient(135deg,rgba(240,185,11,0.10),rgba(255,255,255,0.02)),var(--panel-solid);
+  border:1px solid var(--border-gold); border-radius:18px; padding:20px 22px;
+  display:flex; align-items:center; gap:22px; flex-wrap:wrap; box-shadow:var(--shadow);
+}
+#news-screen .hero-event { flex:1; min-width:220px; }
+#news-screen .hero-event .badge { font-size:11px; letter-spacing:0.8px; color:var(--gold-soft); text-transform:uppercase; }
+#news-screen .hero-event h1 { font-size:22px; margin-top:2px; }
+#news-screen .hero-event .meta { color:var(--txt-dim); font-size:13px; margin-top:4px; }
+#news-screen .countdown { text-align:center; padding:4px 10px; }
+#news-screen .countdown .label { font-size:11px; color:var(--txt-faint); text-transform:uppercase; letter-spacing:1px; }
+#news-screen .countdown .time {
+  font-size:40px; font-weight:800; letter-spacing:2px;
+  font-variant-numeric:tabular-nums; color:var(--gold-soft);
+  text-shadow:0 0 24px rgba(240,185,11,0.35); line-height:1.15;
+}
+#news-screen .hero-card.urgent { animation:gns-pulse-border 1.6s infinite; }
+@keyframes gns-pulse-border {
+  0%,100% { box-shadow:0 0 0 0 rgba(239,68,68,0.35); }
+  50% { box-shadow:0 0 0 10px rgba(239,68,68,0); }
+}
+#news-screen .countdown.urgent .time { color:var(--red); text-shadow:0 0 24px rgba(239,68,68,0.4); }
+
+/* grid */
+#news-screen .grid { display:grid; grid-template-columns:1.05fr 1fr; gap:18px; align-items:start; }
+@media (max-width:940px) { #news-screen .grid { grid-template-columns:1fr; } }
+#news-screen .panel { background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); backdrop-filter:blur(10px); overflow:hidden; }
+#news-screen .panel-head { display:flex; align-items:center; gap:10px; padding:13px 16px; border-bottom:1px solid var(--border); font-weight:600; font-size:14px; }
+#news-screen .panel-head .sub { margin-left:auto; font-size:11px; color:var(--txt-faint); font-weight:400; }
+#news-screen .panel-body { padding:16px; }
+
+/* event list */
+#news-screen .ev-list { max-height:620px; overflow-y:auto; padding:8px; display:flex; flex-direction:column; gap:8px; }
+#news-screen .ev-list::-webkit-scrollbar { width:8px; }
+#news-screen .ev-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:8px; }
+#news-screen .ev-card { border:1px solid var(--border); border-radius:12px; padding:11px 13px; cursor:pointer; transition:all 0.18s; background:rgba(255,255,255,0.015); position:relative; }
+#news-screen .ev-card:hover { border-color:var(--border-gold); transform:translateX(3px); }
+#news-screen .ev-card.active { border-color:var(--gold); background:rgba(240,185,11,0.07); }
+#news-screen .ev-card.urgent { border-color:rgba(239,68,68,0.55); animation:gns-pulse-border 1.6s infinite; }
+#news-screen .ev-top { display:flex; align-items:center; gap:8px; }
+#news-screen .ev-title { font-size:13.5px; font-weight:600; }
+#news-screen .ev-imp { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.4px; }
+#news-screen .ev-imp.High { background:rgba(239,68,68,0.15); color:var(--red); }
+#news-screen .ev-imp.Medium { background:rgba(245,158,11,0.15); color:var(--amber); }
+#news-screen .ev-imp.Low { background:rgba(139,147,167,0.15); color:var(--txt-dim); }
+#news-screen .ev-meta { display:flex; gap:14px; margin-top:7px; font-size:11.5px; color:var(--txt-dim); flex-wrap:wrap; }
+#news-screen .ev-meta b { color:var(--txt); font-weight:600; }
+#news-screen .ev-count { margin-left:auto; font-size:11px; color:var(--txt-faint); font-variant-numeric:tabular-nums; white-space:nowrap; }
+#news-screen .ev-card.urgent .ev-count { color:var(--red); font-weight:700; }
+
+/* warn bar */
+#news-screen .warn-bar { padding:11px 15px; border-radius:12px; font-size:12.5px; line-height:1.6; background:rgba(139,147,167,0.08); border:1px solid var(--border); color:var(--txt-dim); }
+#news-screen .warn-bar.show { display:block !important; }
+#news-screen .warn-bar.urgent { background:rgba(239,68,68,0.10); border-color:rgba(239,68,68,0.4); color:var(--txt); }
+
+/* gauge */
+#news-screen .gauge-wrap { text-align:center; padding:8px 0 4px; }
+#news-screen .gauge-track { position:relative; height:18px; border-radius:20px; overflow:hidden; background:linear-gradient(90deg,rgba(34,197,94,0.85) 0%,rgba(34,197,94,0.35) 30%,rgba(255,255,255,0.06) 50%,rgba(239,68,68,0.35) 70%,rgba(239,68,68,0.9) 100%); border:1px solid var(--border); }
+#news-screen .gauge-needle { position:absolute; top:-4px; bottom:-4px; width:4px; background:#fff; border-radius:4px; box-shadow:0 0 12px rgba(255,255,255,0.9); transition:left 0.8s cubic-bezier(0.22,1,0.36,1); left:50%; }
+#news-screen .gauge-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--txt-faint); margin-top:6px; letter-spacing:0.5px; }
+#news-screen .verdict { margin-top:14px; padding:14px; border-radius:12px; text-align:center; border:1px solid var(--border); }
+#news-screen .verdict .big { font-size:26px; font-weight:800; letter-spacing:1px; }
+#news-screen .verdict.buy { background:rgba(34,197,94,0.10); border-color:rgba(34,197,94,0.35); }
+#news-screen .verdict.buy .big { color:var(--green); }
+#news-screen .verdict.sell { background:rgba(239,68,68,0.10); border-color:rgba(239,68,68,0.35); }
+#news-screen .verdict.sell .big { color:var(--red); }
+#news-screen .verdict.neutral { background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.35); }
+#news-screen .verdict.neutral .big { color:var(--amber); }
+#news-screen .verdict .sub { font-size:12px; color:var(--txt-dim); margin-top:4px; }
+#news-screen .breakdown { margin-top:16px; display:flex; flex-direction:column; gap:10px; }
+#news-screen .brk-row { display:grid; grid-template-columns:150px 1fr 40px; align-items:center; gap:10px; font-size:12px; }
+#news-screen .brk-row .name { color:var(--txt-dim); }
+#news-screen .brk-row .val { text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
+#news-screen .brk-bar { height:7px; border-radius:10px; background:rgba(255,255,255,0.06); overflow:hidden; position:relative; }
+#news-screen .brk-fill { height:100%; border-radius:10px; transition:width 0.7s ease; }
+#news-screen .brk-fill.buy { background:linear-gradient(90deg,var(--green),#16a34a); }
+#news-screen .brk-fill.sell { background:linear-gradient(90deg,var(--red),#b91c1c); }
+#news-screen .brk-fill.neutral { background:linear-gradient(90deg,var(--amber),#b45309); }
+#news-screen .reason-box { margin-top:14px; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border); font-size:12.5px; color:var(--txt-dim); line-height:1.7; }
+#news-screen .reason-box b { color:var(--txt); }
+#news-screen .reason-box ul { margin:6px 0 0 18px; }
+#news-screen .reason-box li { margin-bottom:3px; }
+
+/* playbook */
+#news-screen .scenario-table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:8px; }
+#news-screen .scenario-table th { text-align:left; color:var(--txt-faint); font-weight:500; font-size:11px; padding:7px 9px; border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:0.5px; }
+#news-screen .scenario-table td { padding:9px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:top; }
+#news-screen .scenario-table tr:last-child td { border-bottom:none; }
+#news-screen .scenario-table .sc-when { font-weight:700; white-space:nowrap; }
+#news-screen .sc-when.strong-buy { color:var(--green); }
+#news-screen .sc-when.buy { color:var(--green); }
+#news-screen .sc-when.neutral { color:var(--amber); }
+#news-screen .sc-when.sell { color:var(--red); }
+#news-screen .sc-when.strong-sell { color:var(--red); }
+#news-screen .strat { margin-top:12px; border:1px solid var(--border); border-radius:12px; padding:12px 14px; font-size:12.5px; }
+#news-screen .strat h4 { font-size:13px; margin-bottom:5px; display:flex; align-items:center; gap:8px; }
+#news-screen .strat h4 .n { width:22px; height:22px; border-radius:7px; display:grid; place-items:center; background:linear-gradient(135deg,var(--gold),#b45309); color:#1a1204; font-size:12px; font-weight:800; }
+#news-screen .strat p { color:var(--txt-dim); line-height:1.65; }
+#news-screen .strat .params { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; }
+#news-screen .chip { font-size:11px; padding:3px 9px; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--txt-dim); }
+#news-screen .chip b { color:var(--txt); }
+
+/* risk calc */
+#news-screen .calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px; }
+@media (max-width:560px) { #news-screen .calc-grid { grid-template-columns:1fr; } }
+#news-screen .field label { display:block; font-size:11px; color:var(--txt-faint); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+#news-screen .field input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--txt); padding:9px 11px; border-radius:10px; font-family:inherit; font-size:14px; transition:border 0.15s; }
+#news-screen .field input:focus { outline:none; border-color:var(--gold); }
+#news-screen .result-box { margin-top:14px; padding:13px; border-radius:12px; background:rgba(240,185,11,0.06); border:1px solid var(--border-gold); font-size:13px; }
+#news-screen .result-box .row { display:flex; justify-content:space-between; padding:3px 0; }
+#news-screen .result-box .row b { color:var(--gold-soft); font-size:15px; }
+
+/* stats */
+#news-screen .stat-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:8px; }
+@media (max-width:560px) { #news-screen .stat-cards { grid-template-columns:repeat(2,1fr); } }
+#news-screen .stat-card { text-align:center; padding:12px 8px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border); }
+#news-screen .stat-card .num { font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }
+#news-screen .stat-card .lbl { font-size:10.5px; color:var(--txt-faint); margin-top:2px; text-transform:uppercase; letter-spacing:0.4px; }
+#news-screen .stat-card.green .num { color:var(--green); }
+#news-screen .stat-card.red .num { color:var(--red); }
+#news-screen .stat-card.gold .num { color:var(--gold-soft); }
+#news-screen .history { margin-top:12px; display:flex; flex-direction:column; gap:7px; }
+#news-screen .hist-item { display:flex; align-items:center; gap:10px; font-size:12px; padding:8px 11px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--border); }
+#news-screen .hist-item .tag { font-size:10.5px; padding:2px 8px; border-radius:6px; font-weight:700; white-space:nowrap; }
+#news-screen .hist-item .tag.win { background:rgba(34,197,94,0.15); color:var(--green); }
+#news-screen .hist-item .tag.loss { background:rgba(239,68,68,0.15); color:var(--red); }
+#news-screen .hist-item .tag.skip { background:rgba(139,147,167,0.15); color:var(--txt-dim); }
+#news-screen .hist-item .ev { flex:1; color:var(--txt-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#news-screen .hist-item .dev { color:var(--txt-faint); font-variant-numeric:tabular-nums; }
+
+/* tabs */
+#news-screen .tabs { display:flex; gap:6px; padding:8px 8px 0; }
+#news-screen .tab { padding:8px 14px; font-size:12.5px; border-radius:10px 10px 0 0; cursor:pointer; border:1px solid transparent; border-bottom:none; color:var(--txt-dim); transition:all 0.15s; font-family:inherit; background:transparent; }
+#news-screen .tab.active { background:rgba(255,255,255,0.045); border-color:var(--border); color:var(--txt); }
+#news-screen .tab:hover:not(.active) { color:var(--gold-soft); }
+#news-screen .tab-content { display:none; padding:16px; }
+#news-screen .tab-content.active { display:block; animation:gns-fadeIn 0.25s ease; }
+@keyframes gns-fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+
+/* status toast */
+#news-screen .status-bar {
+  position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+  background:var(--panel-solid); border:1px solid var(--border);
+  padding:9px 16px; border-radius:12px; font-size:12px; color:var(--txt-dim);
+  display:flex; align-items:center; gap:8px; z-index:9200;
+  opacity:0; pointer-events:none; transition:opacity 0.25s; max-width:90vw;
+  box-shadow:var(--shadow);
+}
+#news-screen .status-bar.show { opacity:1; }
+
+/* footer */
+#news-screen footer { margin:34px 0 20px; padding-top:18px; border-top:1px solid var(--border); }
+#news-screen .disclaimer { background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:12px 16px; font-size:12px; color:var(--txt-dim); line-height:1.7; }
+#news-screen .disclaimer b { color:var(--amber); }
+#news-screen .footer-note { text-align:center; color:var(--txt-faint); font-size:11px; margin-top:14px; }
+
+/* misc */
+#news-screen .empty { color:var(--txt-faint); font-size:13px; text-align:center; padding:26px 10px; }
+#news-screen .pill { font-size:10.5px; padding:2px 9px; border-radius:20px; border:1px solid var(--border); color:var(--txt-dim); }
+#news-screen .pill.gold { color:var(--gold-soft); border-color:var(--border-gold); }
+#news-screen .pill.tv { color:#38bdf8; border-color:rgba(56,189,248,.35); }
+#news-screen .pill.ff { color:#a78bfa; border-color:rgba(167,139,250,.35); }
+#news-screen .mt { margin-top:18px; }
 </style>
 
+<!-- close button (always on top) -->
+<button class="gns-close-btn" onclick="window.closeNewsSignal()">✕ ปิด</button>
+
+<!-- ===== Header ===== -->
+<header>
+  <div class="gns-container header-inner">
+    <div class="logo">
+      <div class="icon">⚡</div>
+      <div>Gold News Signal<small>สัญญาณเทรดข่าว XAUUSD · NFP · CPI · FOMC</small></div>
+    </div>
+    <div class="price-ticker">
+      <div class="tick-label">ทองคำ XAUUSD</div>
+      <div class="tick-price" id="tickPrice">…</div>
+      <div class="tick-change flat" id="tickChange">สด</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--txt-faint)">
+      <span class="source-dot err" id="srcDot"></span>
+      <span id="srcLabel">เชื่อมต่อ…</span>
+    </div>
+    <button class="btn" id="refreshBtn">⟳ รีเฟรช</button>
+  </div>
+</header>
+
+<main class="gns-container">
+
+  <!-- ===== Hero / Countdown ===== -->
+  <section class="hero">
+    <div class="hero-card" id="heroCard">
+      <div class="hero-event">
+        <div class="badge" id="heroLabel">เลือกอีเวนต์</div>
+        <h1 id="heroEvTitle">…</h1>
+        <div class="meta" id="heroEvMeta">…</div>
+      </div>
+      <div class="countdown" id="countdownWrap">
+        <div class="label" id="countLabel">เวลานับถอยหลัง</div>
+        <div class="time" id="countdownTime">--:--:--</div>
+      </div>
+    </div>
+    <div class="warn-bar" id="warnBar" style="margin-top:10px;padding:11px 15px;border-radius:12px;font-size:12.5px;display:none"></div>
+  </section>
+
+  <!-- ===== Main grid ===== -->
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head">
+        📅 ปฏิทินข่าวสำคัญ USD (สัปดาห์นี้)
+        <span class="sub" id="evCount"></span>
+      </div>
+      <div class="ev-list" id="evList">
+        <div class="empty">กำลังโหลดปฏิทิน…</div>
+      </div>
+    </section>
+
+    <section class="panel" id="scorePanel">
+      <div class="panel-head">
+        🎯 Signal Score <span class="sub">คะแนน 0–100 (ซ้าย=ซื้อ · ขวา=ขาย)</span>
+      </div>
+      <div class="panel-body">
+        <div id="scoreName" style="font-size:15px;font-weight:700">เลือกอีเวนต์</div>
+        <div id="scoreTime" style="font-size:12px;color:var(--txt-dim);margin-top:2px">…</div>
+        <div class="gauge-wrap" id="scoreGauge"></div>
+        <div class="verdict neutral" id="verdictBox">
+          <div class="big" id="verdictBig">—</div>
+          <div class="sub" id="verdictSub">…</div>
+        </div>
+        <div class="breakdown" id="brkBox"></div>
+        <div class="reason-box" id="reasonBox"></div>
+
+        <div class="tabs" style="margin-top:16px;border-bottom:1px solid var(--border)" role="tablist">
+          <button class="tab active" data-tab="playbook" role="tab" aria-selected="true">📖 Playbook</button>
+          <button class="tab" data-tab="risk" role="tab" aria-selected="false">🛡 Risk</button>
+          <button class="tab" data-tab="stats" role="tab" aria-selected="false">📊 สถิติ</button>
+        </div>
+
+        <div class="tab-content active" id="tab-playbook">
+          <div style="font-size:12px;color:var(--txt-faint);margin-bottom:4px">เทียบ Actual กับค่าคาดการณ์ (forecast) หลังข่าวออก:</div>
+          <table class="scenario-table" id="scenRows"></table>
+          <div style="font-size:12px;color:var(--txt-faint);margin-top:14px">กลยุทธ์ก่อน/หลังข่าว (ใช้กับราคาปัจจุบัน):</div>
+          <div id="stratRows"></div>
+        </div>
+
+        <div class="tab-content" id="tab-risk">
+          <div class="calc-grid">
+            <div class="field">
+              <label>ยอดเงินในบัญชี (USD)</label>
+              <input type="number" id="inBal" min="0" step="50">
+            </div>
+            <div class="field">
+              <label>ความเสี่ยงต่ออีเวนต์ (%)</label>
+              <input type="number" id="inRisk" min="0.1" max="10" step="0.1">
+            </div>
+            <div class="field">
+              <label>ระยะ SL (USD ของทอง) — แนะนำ 1×ATR</label>
+              <input type="number" id="inSL" min="1" step="1">
+            </div>
+            <div class="field" style="display:flex;align-items:flex-end">
+              <button class="btn btn-gold" style="width:100%" onclick="window.gnsApp.calcRisk()">คำนวณขนาด Lot</button>
+            </div>
+          </div>
+          <div class="result-box">
+            <div class="row"><span>ความเสี่ยงเป็นเงิน (USD)</span><b id="riskUSD">—</b></div>
+            <div class="row"><span>ขนาด Lot ที่แนะนำ (XAUUSD)</span><b id="lotOut">—</b></div>
+            <div class="row"><span>SL</span><b id="slOut">—</b></div>
+            <div class="row"><span>TP แนะนำ (1.5×SL)</span><b id="tpOut">—</b></div>
+          </div>
+          <div style="font-size:11.5px;color:var(--txt-faint);margin-top:10px" id="riskWarn"></div>
+          <div style="font-size:11px;color:var(--txt-faint);margin-top:8px">สูตร: Lot = เงินเสี่ยง ÷ (SL × 100) — XAUUSD 1 lot = 100 ออนซ์ · ข่าวแรงให้หักเผื่อ slippage 15–20%</div>
+        </div>
+
+        <div class="tab-content" id="tab-stats">
+          <div class="stat-cards">
+            <div class="stat-card green"><div class="num" id="stWin">0</div><div class="lbl">ชนะ</div></div>
+            <div class="stat-card red"><div class="num" id="stLoss">0</div><div class="lbl">แพ้</div></div>
+            <div class="stat-card gold"><div class="num" id="stRate">—</div><div class="lbl">Win rate</div></div>
+            <div class="stat-card"><div class="num" id="stDev">—</div><div class="lbl">dev เฉลี่ย</div></div>
+          </div>
+          <div class="history" id="histList"></div>
+          <div style="margin-top:12px">
+            <button class="btn" style="font-size:11px" onclick="window.gnsApp.clearResults()">🗑 ล้างประวัติ</button>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)" id="trackerBox"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="disclaimer">
+      <b>⚠️ คำเตือนความเสี่ยง:</b> เครื่องมือนี้ใช้ <b>โมเดลกลยุทธ์</b> (ไม่ใช่คำทำนายหรือคำแนะนำการลงทุน) — ตลาดข่าวมีความไม่แน่นอนสูง สเปรดกว้าง 5–20 เท่าในนาทีแรกหลังข่าว, มีความเสี่ยงขาดทุนถึงเงินต้นทั้งหมด
+    </div>
+    <div class="footer-note">⚡ Gold News Signal · ข้อมูลข่าว: ForexFactory / TradingView · ราคาทอง: gold-api.com</div>
+  </footer>
+</main>
+
+<div class="status-bar" id="gns-statusBar" role="status" aria-live="polite"></div>
+
 <script>
-(function(){
-'use strict';
-const GNS_FF='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-const GNS_GOLD='https://api.gold-api.com/price/XAU';
-const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const clamp=(v,lo,hi)=>Math.min(hi,Math.max(lo,v));
-const THAI_M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-const LS=k=>{try{return localStorage.getItem(k)}catch{return null}};
-const SS=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+(function () {
+  'use strict';
 
-const GS={events:[],selected:null,gold:null,goldFirst:null,ticks:[],atr:30,inited:false};
+  /* ---------- state ---------- */
+  const state = {
+    inited: false,
+    events: [], selected: null, gold: null, goldFirstToday: null,
+    ticks: [], src: 'loading', urgentShown: {}, releasedShown: {}, atr: 30,
+  };
 
-function fmtNum(v,d){
-  if(v==null||isNaN(v))return '—';
-  const a=Math.abs(v);
-  if(a>=1e9)return(v/1e9).toFixed(2)+'B';
-  if(a>=1e6)return(v/1e6).toFixed(2)+'M';
-  if(a>=1e3&&d==null)return(v/1e3).toFixed(1)+'K';
-  return Number(v).toLocaleString('en-US',{maximumFractionDigits:d??2});
-}
+  /* ---------- helpers ---------- */
+  const $g = (id) => document.getElementById(id);
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const evId = (ev) => ev.title + '|' + ev.date;
 
-function thaiTime(iso){
-  try{
-    const d=new Date(iso);
-    const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);
-    const g=t=>p.find(x=>x.type===t).value;
-    return `${g('day')} ${THAI_M[+g('month')-1]} ${g('year')} ${g('hour')}:${g('minute')} น.`;
-  }catch{return '—'}
-}
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+    del(k) { try { localStorage.removeItem(k); } catch {} },
+  };
 
-function countdownText(ms){
-  if(ms<=0)return 'ออกแล้ว';
-  const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60),ss=s%60;
-  if(d>0)return `${d}วัน ${h}ชม`;
-  const p=n=>String(n).padStart(2,'0');
-  return `${p(h)}:${p(m)}:${p(ss)}`;
-}
+  /* ---------- consts ---------- */
+  const FF_URL = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+  const GOLD_URL = 'https://api.gold-api.com/price/XAU';
+  const THAI_MONTHS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const LS_RESULTS = 'gns_results';
+  const LS_TICKS = 'gns_ticks';
+  const LS_DAY = 'gns_day';
 
-async function gnsFetch(url,ms=8000){
-  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
-  try{const r=await fetch(url,{signal:c.signal,cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(t)}
-}
+  const TEMPLATES = [
+    { re: /non.?farm|payrolls|\bnfp\b/i, label: 'Non-Farm Payrolls (NFP)', hawkWhenHigh: true, scale: 150e3 },
+    { re: /unemployment/i, label: 'อัตราการว่างงาน', hawkWhenHigh: false, scale: 0.4 },
+    { re: /average hourly earnings/i, label: 'ค่าแรงเฉลี่ยรายชั่วโมง', hawkWhenHigh: true, scale: 0.3 },
+    { re: /\bcpi\b|consumer price/i, label: 'CPI (เงินเฟ้อผู้บริโภค)', hawkWhenHigh: true, scale: 0.5 },
+    { re: /\bppi\b|producer price/i, label: 'PPI (เงินเฟ้อผู้ผลิต)', hawkWhenHigh: true, scale: 0.5 },
+    { re: /fomc|interest rate|fed fund|rate decision|rate statement/i, label: 'FOMC / อัตราดอกเบี้ย', hawkWhenHigh: true, scale: 0.5 },
+    { re: /\bgdp\b/i, label: 'GDP', hawkWhenHigh: true, scale: 1.0 },
+    { re: /retail sales/i, label: 'ยอดค้าปลีก', hawkWhenHigh: true, scale: 1.0 },
+    { re: /ism (manufacturing|services)/i, label: 'ISM ดัชนีภาคธุรกิจ', hawkWhenHigh: true, scale: 8 },
+    { re: /jolts/i, label: 'JOLTS ตำแหน่งงานว่าง', hawkWhenHigh: true, scale: 500e3 },
+    { re: /jobless claims/i, label: 'ผู้ขอสวัสดิการว่างงาน', hawkWhenHigh: false, scale: 80e3 },
+    { re: /\badp\b/i, label: 'ADP จ้างงานเอกชน', hawkWhenHigh: true, scale: 150e3 },
+    { re: /durable goods/i, label: 'คำสั่งซื้อสินค้าคงทน', hawkWhenHigh: true, scale: 2.0 },
+    { re: /housing starts|building permits/i, label: 'Housing Starts / Permits', hawkWhenHigh: true, scale: 150e3 },
+    { re: /consumer confidence/i, label: 'ความเชื่อมั่นผู้บริโภค', hawkWhenHigh: true, scale: 10 },
+    { re: /trade balance/i, label: 'ดุลการค้า', hawkWhenHigh: false, scale: 10e9 },
+  ];
 
-async function gnsLoadGold(){
-  try{
-    const j=await gnsFetch(GNS_GOLD,6000);
-    const p=Number(j.price);if(!p)throw 0;
-    const today=new Date().toISOString().slice(0,10);
-    if(LS('gns_day')!==today){SS('gns_day',today);GS.goldFirst=p;SS('gns_first',String(p));}
-    else if(!GS.goldFirst){GS.goldFirst=Number(LS('gns_first'))||p;}
-    GS.goldFirst=GS.goldFirst||p;GS.gold=p;
-    GS.ticks.push({t:Date.now(),p});if(GS.ticks.length>600)GS.ticks=GS.ticks.slice(-600);
-    gnsRenderTicker();
-  }catch{if(!GS.gold&&$('gns-tickPrice'))$('gns-tickPrice').textContent='—';}
-}
-
-function gnsRenderTicker(){
-  const p=GS.gold;if(!p)return;
-  if($('gns-tickPrice'))$('gns-tickPrice').textContent='$'+fmtNum(p,2);
-  const ch=GS.goldFirst?((p-GS.goldFirst)/GS.goldFirst)*100:0;
-  const el=$('gns-tickChange');if(!el)return;
-  el.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%';
-  el.style.color=ch>0.01?'#22c55e':ch<-0.01?'#ef4444':'#8b93a7';
-}
-
-function gnsSrc(cls,label){
-  const dot=$('gns-srcDot'),lbl=$('gns-srcLabel');
-  if(dot)dot.style.background=cls==='live'?'#22c55e':cls==='warn'?'#f59e0b':'#ef4444';
-  if(lbl)lbl.textContent=label||'';
-}
-
-const TMPLS=[
-  {re:/non.?farm|payrolls|\bnfp\b/i,hawk:true,scale:150e3},
-  {re:/unemployment/i,hawk:false,scale:0.4},
-  {re:/average hourly earnings/i,hawk:true,scale:0.3},
-  {re:/\bcpi\b|consumer price/i,hawk:true,scale:0.5},
-  {re:/\bppi\b|producer price/i,hawk:true,scale:0.5},
-  {re:/fomc|interest rate|fed fund|rate decision/i,hawk:true,scale:0.5},
-  {re:/\bgdp\b/i,hawk:true,scale:1.0},
-  {re:/retail sales/i,hawk:true,scale:1.0},
-  {re:/ism/i,hawk:true,scale:8},
-  {re:/jolts/i,hawk:true,scale:500e3},
-  {re:/jobless claims/i,hawk:false,scale:80e3},
-  {re:/\badp\b/i,hawk:true,scale:150e3},
-];
-
-function matchTpl(title){return TMPLS.find(t=>t.re.test(title))||null}
-
-function parseNum(str){
-  if(str==null)return null;
-  const s=String(str).replace(/,/g,'').trim();if(!s)return null;
-  const m=s.match(/(-?\d+(?:\.\d+)?)\s*(K|M|B|T)?/i);if(!m)return null;
-  let v=parseFloat(m[1]);const u=(m[2]||'').toUpperCase();
-  if(u==='K')v*=1e3;if(u==='M')v*=1e6;if(u==='B')v*=1e9;if(u==='T')v*=1e12;
-  return v;
-}
-
-function computeScore(ev){
-  const tpl=matchTpl(ev.title);
-  let bias=50,mag=50,hasNum=false;const notes=[];
-  if(tpl){
-    const f=parseNum(ev.forecast),p=parseNum(ev.previous);
-    if(f!=null&&p!=null){
-      hasNum=true;const gap=f-p,dir=tpl.hawk?1:-1,raw=dir*gap;
-      bias=clamp(50+(raw/tpl.scale)*50,5,95);
-      mag=clamp((Math.abs(raw)/tpl.scale)*100,10,100);
-      const dw=raw>0?'กดทอง (ลง)':raw<0?'หนุนทอง (ขึ้น)':'กลาง';
-      notes.push(`คาด <b>${esc(ev.forecast||'—')}</b> vs เดิม <b>${esc(ev.previous||'—')}</b> → ${dw}`);
-    }else{notes.push('ไม่มีตัวเลขคาดการณ์ — รอข่าวออกก่อน')}
-  }else{notes.push('ข่าวนอกเทมเพลต — รอสไปก์แรก 2-3 นาที')}
-  const mom=GS.ticks.length>=5&&GS.gold?(()=>{
-    const pp=GS.ticks.map(x=>x.p),mn=Math.min(...pp),mx=Math.max(...pp);
-    return mx-mn<1e-9?null:clamp(((GS.gold-mn)/(mx-mn))*100,0,100);
-  })():null;
-  if(mom!=null)notes.push(mom>60?`ทองสูงในกรอบวัน (${mom.toFixed(0)}%) → แรงขายทำกำไร`:`ทองต่ำในกรอบ (${mom.toFixed(0)}%) → แรงซื้อหนุน`);
-  const impact=ev.impact==='High'?100:ev.impact==='Medium'?55:25;
-  const D=clamp(0.75*bias+0.25*(mom!=null?mom:50),0,100);
-  const dataConf=hasNum?80:40;
-  const C=clamp(0.40*impact+0.35*mag+0.25*dataConf,0,100);
-  return{D,C,bias,mag,impact,mom,notes,hasNum,tpl};
-}
-
-function verdict(D){
-  if(D<=32)return{cls:'buy',big:'BUY แรง — ซื้อทอง',sub:'โมเดลโน้มทองขึ้น — ใช้ SL เสมอ'};
-  if(D<=44)return{cls:'buy',big:'BUY — ซื้อทอง',sub:'โมเดลโน้มทองขึ้น'};
-  if(D<=56)return{cls:'neutral',big:'NEUTRAL — รอข่าว',sub:'ทิศทางไม่ชัด รอ second-wave'};
-  if(D<=68)return{cls:'sell',big:'SELL — ขายทอง',sub:'โมเดลโน้มทองลง'};
-  return{cls:'sell',big:'SELL แรง — ขายทอง',sub:'โมเดลโน้มทองลง — ใช้ SL เสมอ'};
-}
-
-function gnsResults(){try{return JSON.parse(LS('gns_results'))||[]}catch{return[]}}
-function gnsSaveResults(r){SS('gns_results',JSON.stringify(r))}
-function gnsFindResult(ev){return gnsResults().find(r=>r.title===ev.title&&r.date===ev.date)||null}
-
-function gnsRenderEvents(){
-  const list=$('gns-evList');if(!list)return;
-  if(!GS.events.length){list.innerHTML='<div style="color:#5c6478;font-size:13px;text-align:center;padding:24px">ไม่มีอีเวนต์</div>';return}
-  const now=Date.now();list.innerHTML='';
-  GS.events.forEach((ev,i)=>{
-    const ms=ev.ts-now,isU=ms>0&&ms<=15*60e3;
-    const cls=['gns-ev-card',GS.selected===ev?'gns-active':'',isU?'gns-urgent':''].filter(Boolean).join(' ');
-    const dv=[];
-    if(ev.forecast)dv.push(`คาด <b>${esc(ev.forecast)}</b>`);
-    if(ev.previous)dv.push(`เดิม <b>${esc(ev.previous)}</b>`);
-    if(ev.actual)dv.push(`จริง <b style="color:#ffd75e">${esc(ev.actual)}</b>`);
-    list.insertAdjacentHTML('beforeend',`<div class="${cls}" data-idx="${i}" role="button" tabindex="0"><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;font-weight:600;flex:1">${esc(ev.title)}</span><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(239,68,68,.15);color:#ef4444">${esc(ev.impact)}</span><span style="font-size:10px;color:#5c6478;white-space:nowrap">${countdownText(ms)}</span></div>${dv.length?`<div style="display:flex;gap:12px;margin-top:5px;font-size:11px;color:#8b93a7;flex-wrap:wrap"><span>⏰ ${thaiTime(ev.date)}</span><span>${dv.join(' · ')}</span></div>`:'<div style="font-size:11px;color:#5c6478;margin-top:4px">⏰ '+thaiTime(ev.date)+'</div>'}</div>`);
-  });
-  $('gns-evCount').textContent=GS.events.length+' อีเวนต์';
-  list.querySelectorAll('.gns-ev-card').forEach(card=>{
-    card.addEventListener('click',()=>{GS.selected=GS.events[+card.dataset.idx];gnsRenderEvents();gnsRenderScore()});
-  });
-}
-
-function gnsRenderScore(){
-  const ev=GS.selected;if(!ev)return;
-  const sc=computeScore(ev),v=verdict(sc.D);
-  const now=Date.now(),ms=ev.ts-now,isPast=ms<=0,isU=ms>0&&ms<=15*60e3;
-  const rec=gnsFindResult(ev);
-  if($('gns-heroEvTitle'))$('gns-heroEvTitle').textContent=ev.title+(ev.demo?' (สำรอง)':'');
-  if($('gns-heroEvMeta'))$('gns-heroEvMeta').textContent=`${ev.impact} · ${thaiTime(ev.date)} · คาด ${ev.forecast||'—'} / เดิม ${ev.previous||'—'}`;
-  if($('gns-heroLabel'))$('gns-heroLabel').textContent=ms>0?(isU?'ใกล้ปล่อยข่าว!':'เหลือเวลา'):'ข่าวออกแล้ว';
-  if($('gns-scoreName'))$('gns-scoreName').textContent=ev.title;
-  if($('gns-scoreTime'))$('gns-scoreTime').innerHTML=`⏰ ${thaiTime(ev.date)} · <b style="color:${isU?'#ef4444':'#8b93a7'}">${countdownText(ms)}</b>`;
-  if($('gns-scoreGauge'))$('gns-scoreGauge').innerHTML=`<div style="position:relative;height:16px;border-radius:20px;overflow:hidden;background:linear-gradient(90deg,rgba(34,197,94,.85) 0%,rgba(34,197,94,.35) 30%,rgba(255,255,255,.06) 50%,rgba(239,68,68,.35) 70%,rgba(239,68,68,.9) 100%);border:1px solid rgba(255,255,255,.08)"><div style="position:absolute;top:-3px;bottom:-3px;width:3px;background:#fff;border-radius:3px;box-shadow:0 0 10px rgba(255,255,255,.9);transition:left .8s cubic-bezier(.22,1,.36,1);left:${sc.D}%"></div></div><div style="display:flex;justify-content:space-between;font-size:10px;color:#5c6478;margin-top:5px"><span>ซื้อทอง</span><span>กลาง</span><span>ขายทอง</span></div>`;
-  const vb=$('gns-verdictBox');if(vb)vb.className='gns-verdict '+v.cls;
-  if($('gns-verdictBig'))$('gns-verdictBig').textContent=isPast&&rec?'จบแล้ว — ดูผล':v.big;
-  if($('gns-verdictSub'))$('gns-verdictSub').textContent=isPast&&rec?`ผล: ${rec.outcome==='win'?'ชนะ':rec.outcome==='loss'?'แพ้':'ไม่เทรด'}`:v.sub;
-  const brk=[['ทิศทางข่าว',sc.bias,sc.hasNum?'#ef4444':'#f59e0b'],['ขนาด deviation',sc.mag,'#f59e0b'],['น้ำหนักข่าว',sc.impact,sc.impact>55?'#ef4444':'#f59e0b'],['โมเมนตัมทอง',sc.mom!=null?sc.mom:50,sc.mom!=null&&sc.mom>60?'#ef4444':'#22c55e']];
-  if($('gns-brkBox'))$('gns-brkBox').innerHTML=brk.map(([n,val,c])=>`<div style="display:grid;grid-template-columns:120px 1fr 36px;align-items:center;gap:8px;font-size:11px"><span style="color:#8b93a7">${n}</span><div style="height:6px;border-radius:8px;background:rgba(255,255,255,.06);overflow:hidden"><div style="height:100%;border-radius:8px;background:${c};width:${val}%;transition:width .7s"></div></div><span style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">${val.toFixed(0)}</span></div>`).join('');
-  if($('gns-reasonBox'))$('gns-reasonBox').innerHTML='<b>เหตุผล:</b><ul style="margin:5px 0 0 16px">'+sc.notes.map(n=>`<li>${n}</li>`).join('')+'</ul>';
-
-  // playbook
-  const tpl=sc.tpl,atr=GS.atr,price=GS.gold||3400;
-  let scenHtml='<tr><th style="text-align:left;color:#5c6478;font-size:10px;padding:5px 7px;border-bottom:1px solid rgba(255,255,255,.08)">กรณี</th><th style="text-align:left;color:#5c6478;font-size:10px;padding:5px 7px;border-bottom:1px solid rgba(255,255,255,.08)">แนวทาง</th></tr>';
-  if(tpl){
-    if(tpl.hawk){
-      scenHtml+=`<tr><td style="padding:7px;color:#ef4444;font-weight:700;white-space:nowrap">Actual >> คาด</td><td style="padding:7px;font-size:11px">ร้อนแรงกว่าคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b> → Sell second-wave</td></tr>`;
-      scenHtml+=`<tr><td style="padding:7px;color:#f59e0b;font-weight:700">Actual ≈ คาด</td><td style="padding:7px;font-size:11px">ตรงคาด → ไร้ทิศทาง รอ 10-15 นาที</td></tr>`;
-      scenHtml+=`<tr><td style="padding:7px;color:#22c55e;font-weight:700">Actual << คาด</td><td style="padding:7px;font-size:11px">อ่อนกว่าคาด → ดอลลาร์อ่อน → <b>ทองขึ้น</b> → Buy หลัง pullback</td></tr>`;
-    }else{
-      scenHtml+=`<tr><td style="padding:7px;color:#22c55e;font-weight:700;white-space:nowrap">Actual >> คาด</td><td style="padding:7px;font-size:11px">แย่กว่าคาด → ดอลลาร์อ่อน → <b>ทองขึ้น</b></td></tr>`;
-      scenHtml+=`<tr><td style="padding:7px;color:#f59e0b;font-weight:700">Actual ≈ คาด</td><td style="padding:7px;font-size:11px">ตรงคาด → ไร้ทิศทาง</td></tr>`;
-      scenHtml+=`<tr><td style="padding:7px;color:#ef4444;font-weight:700">Actual << คาด</td><td style="padding:7px;font-size:11px">ดีกว่าคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b></td></tr>`;
-    }
-  }else{scenHtml+=`<tr><td colspan="2" style="padding:7px;font-size:11px;color:#8b93a7">ข่าวนอกเทมเพลต — รอสไปก์แรก 2-3 นาที แล้วเทรดตามเทรนด์ตลาด</td></tr>`}
-  if($('gns-scenRows'))$('gns-scenRows').innerHTML=scenHtml;
-
-  const h=0.55*atr;
-  const strats=[{n:1,name:'Straddle',params:[['Buy Stop','$'+fmtNum(price+h,2)],['Sell Stop','$'+fmtNum(price-h,2)],['SL','$'+fmtNum(atr*.8,2)],['TP','$'+fmtNum(atr*1.5,2)]]},{n:2,name:'Second-wave',params:[['เข้า','หลัง pullback'],['SL','$'+fmtNum(atr*.8,2)],['TP','$'+fmtNum(atr*2,2)]]}];
-  if($('gns-stratRows'))$('gns-stratRows').innerHTML=strats.map(s=>`<div style="margin-top:10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:11px 13px;font-size:12px"><div style="font-weight:700;margin-bottom:4px">${s.n}. ${s.name}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${s.params.map(([k,val])=>`<span style="font-size:10px;padding:2px 8px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#8b93a7">${k}: <b style="color:#e6eaf2">${val}</b></span>`).join('')}</div></div>`).join('');
-
-  const tr=$('gns-trackerBox');if(!tr)return;
-  if(isPast){
-    const actual=ev.actual||(rec?rec.actual:'');
-    tr.innerHTML=`<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center"><input id="gns-inActual" placeholder="Actual จริง" value="${esc(actual)}" style="flex:1;min-width:140px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:12px"><button onclick="gnsSubmitActual()" style="border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#e6eaf2;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">บันทึก</button><button onclick="gnsSetOutcome('win')" style="border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);color:#22c55e;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">🏆 ชนะ</button><button onclick="gnsSetOutcome('loss')" style="border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.08);color:#ef4444;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">💸 แพ้</button></div>`;
-  }else{
-    tr.innerHTML=`<div style="color:#5c6478;font-size:12px;text-align:center;padding:12px">⏳ หลังข่าวออกจะให้กรอก actual + บันทึกผล</div>`;
+  /* ---------- utils ---------- */
+  function fmtNum(v, digits) {
+    if (v == null || isNaN(v)) return '—';
+    const a = Math.abs(v);
+    if (a >= 1e12) return (v/1e12).toFixed(2)+'T';
+    if (a >= 1e9) return (v/1e9).toFixed(2)+'B';
+    if (a >= 1e6) return (v/1e6).toFixed(2)+'M';
+    if (a >= 1e3 && digits == null) return (v/1e3).toFixed(1)+'K';
+    return Number(v).toLocaleString('en-US',{maximumFractionDigits: digits ?? 2});
   }
-}
 
-function gnsRenderStats(){
-  const rs=gnsResults(),judged=rs.filter(r=>r.outcome==='win'||r.outcome==='loss');
-  const wins=judged.filter(r=>r.outcome==='win').length,wr=judged.length?((wins/judged.length)*100).toFixed(0)+'%':'—';
-  if($('gns-stWin'))$('gns-stWin').textContent=wins;
-  if($('gns-stLoss'))$('gns-stLoss').textContent=judged.length-wins;
-  if($('gns-stRate'))$('gns-stRate').textContent=wr;
-  const devs=rs.map(r=>r.deviation).filter(v=>v!=null);
-  const avg=devs.length?devs.reduce((a,b)=>a+b,0)/devs.length:null;
-  if($('gns-stDev'))$('gns-stDev').textContent=avg!=null?(avg>0?'+':'')+fmtNum(avg):'—';
-  const hl=$('gns-histList');if(!hl)return;hl.innerHTML='';
-  if(!rs.length){hl.innerHTML='<div style="color:#5c6478;font-size:12px;text-align:center;padding:16px">ยังไม่มีประวัติ</div>';return}
-  rs.slice().reverse().forEach(r=>{
-    const tag=r.outcome==='win'?'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(34,197,94,.15);color:#22c55e">ชนะ</span>':r.outcome==='loss'?'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(239,68,68,.15);color:#ef4444">แพ้</span>':'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(139,147,167,.15);color:#8b93a7">ไม่เทรด</span>';
-    hl.insertAdjacentHTML('beforeend',`<div style="display:flex;align-items:center;gap:8px;font-size:11px;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)">${tag}<span style="flex:1;color:#8b93a7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.title)}</span></div>`);
-  });
-}
+  function thaiTime(iso) {
+    try {
+      const d = new Date(iso);
+      const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);
+      const get = (t) => parts.find((p) => p.type===t).value;
+      return `${get('day')} ${THAI_MONTHS[+get('month')-1]} ${get('year')} ${get('hour')}:${get('minute')} น.`;
+    } catch { return '—'; }
+  }
 
-window.gnsCalcRisk=function(){
-  const bal=parseFloat($('gns-inBal').value)||0,rp=parseFloat($('gns-inRisk').value)||1,sl=parseFloat($('gns-inSL').value)||30;
-  const ru=bal*(rp/100),lots=ru/(sl*100),tp=sl*1.5;
-  if($('gns-riskUSD'))$('gns-riskUSD').textContent='$'+fmtNum(ru,2);
-  if($('gns-lotOut'))$('gns-lotOut').textContent=lots>0?lots.toFixed(2):'0.00';
-  if($('gns-slOut'))$('gns-slOut').textContent='$'+fmtNum(sl,2);
-  if($('gns-tpOut'))$('gns-tpOut').textContent='$'+fmtNum(tp,2);
-  SS('gns_bal',$('gns-inBal').value);SS('gns_risk',$('gns-inRisk').value);SS('gns_sl',$('gns-inSL').value);
-  GS.atr=sl||30;
-};
+  function countdownText(ms) {
+    if (ms <= 0) return 'ออกแล้ว';
+    const s = Math.floor(ms/1000);
+    const d = Math.floor(s/86400), h = Math.floor((s%86400)/3600), m = Math.floor((s%3600)/60), ss = s%60;
+    if (d > 0) return `${d}วัน ${h}ชม`;
+    const p = (n) => String(n).padStart(2,'0');
+    return `${p(h)}:${p(m)}:${p(ss)}`;
+  }
 
-window.gnsSubmitActual=function(){
-  const ev=GS.selected;if(!ev)return;
-  const val=$('gns-inActual').value.trim();if(!val)return;
-  ev.actual=val;
-  const rs=gnsResults(),rec=gnsFindResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now()};
-  rec.actual=val;
-  const f=parseNum(ev.forecast),a=parseNum(val);if(f!=null&&a!=null)rec.deviation=a-f;
-  const idx=rs.findIndex(r=>r.title===ev.title&&r.date===ev.date);
-  if(idx>=0)rs[idx]=rec;else rs.push(rec);
-  gnsSaveResults(rs);gnsRenderScore();gnsRenderStats();
-};
+  function matchTemplate(title) { return TEMPLATES.find((t) => t.re.test(title)) || null; }
 
-window.gnsSetOutcome=function(o){
-  const ev=GS.selected;if(!ev)return;
-  const rs=gnsResults(),rec=gnsFindResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now(),actual:ev.actual||''};
-  rec.outcome=o;
-  const idx=rs.findIndex(r=>r.title===ev.title&&r.date===ev.date);
-  if(idx>=0)rs[idx]=rec;else rs.push(rec);
-  gnsSaveResults(rs);gnsRenderScore();gnsRenderStats();
-};
+  function parseNum(str) {
+    if (str == null) return null;
+    const s = String(str).replace(/,/g,'').trim();
+    if (!s) return null;
+    const m = s.match(/(-?\d+(?:\.\d+)?)\s*(K|M|B|T|k|m|b|t|%)?/);
+    if (!m) return null;
+    let v = parseFloat(m[1]);
+    const u = (m[2]||'').toUpperCase();
+    if (u==='K') v*=1e3; if (u==='M') v*=1e6; if (u==='B') v*=1e9; if (u==='T') v*=1e12;
+    return v;
+  }
 
-window.gnsClearResults=function(){try{localStorage.removeItem('gns_results')}catch{}gnsRenderStats();};
+  /* ---------- fetch ---------- */
+  async function fetchJSON(url, ms=8000) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    try {
+      const r = await fetch(url, {signal:ctrl.signal, cache:'no-store'});
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      return await r.json();
+    } finally { clearTimeout(t); }
+  }
 
-window.gnsTab=function(btn){
-  document.querySelectorAll('.gns-tab').forEach(t=>t.classList.remove('gns-tab-active'));
-  document.querySelectorAll('.gns-tab-content').forEach(c=>{c.style.display='none'});
-  btn.classList.add('gns-tab-active');
-  const c=$('gns-tab-'+btn.dataset.tab);if(c)c.style.display='block';
-  if(btn.dataset.tab==='stats')gnsRenderStats();
-};
+  /* ---------- gold ---------- */
+  async function loadGold() {
+    try {
+      const j = await fetchJSON(GOLD_URL, 6000);
+      const p = Number(j.price);
+      if (!p) throw new Error('bad price');
+      const today = new Date().toISOString().slice(0,10);
+      if (store.get(LS_DAY) !== today) { store.set(LS_DAY, today); state.goldFirstToday = p; }
+      else if (state.goldFirstToday == null) { state.goldFirstToday = Number(store.get('gns_first')) || p; }
+      state.goldFirstToday = state.goldFirstToday || p;
+      store.set('gns_first', String(state.goldFirstToday));
+      state.gold = p;
+      pushTick(p);
+      renderTicker();
+    } catch {
+      if (!state.gold) { const el=$g('tickPrice'); if(el) el.textContent='ไม่สามารถโหลดราคาได้'; }
+    }
+  }
 
-window.gnsRefresh=async function(){await gnsLoadEvents();await gnsLoadGold();};
+  function pushTick(p) {
+    const now = Date.now();
+    state.ticks.push({t:now,p});
+    if (state.ticks.length>600) state.ticks=state.ticks.slice(-600);
+    store.set(LS_TICKS, JSON.stringify(state.ticks));
+  }
 
-async function gnsLoadEvents(){
-  gnsSrc('loading','กำลังโหลด…');
-  const endpoints=['/api/calendar',GNS_FF];
-  for(const url of endpoints){
-    try{
-      const j=await gnsFetch(url,10000);
-      let evs=null;
-      if(j&&Array.isArray(j.events)){evs=j.events;}
-      else if(Array.isArray(j)&&j.length){evs=j.filter(e=>e.country==='USD').map(e=>({...e,_src:'ff'}));}
-      if(evs&&evs.length){
-        const now=Date.now();
-        const high=evs.filter(e=>(e.country==='USD'||e.country==='US')&&e.impact==='High').map(e=>({...e,ts:new Date(e.date).getTime()})).filter(e=>!isNaN(e.ts)).sort((a,b)=>a.ts-b.ts);
-        GS.events=high;
-        gnsSrc('live','ForexFactory ('+high.length+' อีเวนต์)');
-        const selId=GS.selected?GS.selected.title+'|'+GS.selected.date:null;
-        let next=selId?high.find(e=>e.title+'|'+e.date===selId):null;
-        if(!next)next=high.find(e=>e.ts>=now-3600e3)||high[high.length-1]||null;
-        GS.selected=next;
-        gnsRenderEvents();gnsRenderScore();return;
+  function loadTicks() {
+    const raw = store.get(LS_TICKS);
+    if (raw) {
+      try {
+        const arr = JSON.parse(raw);
+        const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+        state.ticks = arr.filter((x) => x.t >= todayStart.getTime());
+      } catch { state.ticks = []; }
+    }
+  }
+
+  /* ---------- events ---------- */
+  function parseFFEvents(j) {
+    if (!Array.isArray(j)) return null;
+    return j.filter((e) => e.country==='USD').map((e) => ({...e, _src:'ff'}));
+  }
+
+  function normalizeKey(title, date) {
+    const t = (title||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const d = (date||'').slice(0,16);
+    return t+'|'+d;
+  }
+
+  function mergeEvents(tvEvents, ffEvents) {
+    const map = new Map();
+    for (const e of (ffEvents||[])) map.set(normalizeKey(e.title,e.date),e);
+    for (const e of (tvEvents||[])) {
+      const k = normalizeKey(e.title,e.date);
+      const existing = map.get(k);
+      if (existing) {
+        const merged = {...existing,...e,_src:'tv+ff'};
+        if (!e.actual && existing.actual) merged.actual = existing.actual;
+        map.set(k,merged);
+      } else { map.set(k,e); }
+    }
+    return Array.from(map.values());
+  }
+
+  async function loadEvents() {
+    setSrc('loading','กำลังโหลดปฏิทิน…');
+    const endpoints = ['/api/calendar','/.netlify/functions/calendar',FF_URL];
+    for (const url of endpoints) {
+      try {
+        const j = await fetchJSON(url, 10000);
+        if (j && Array.isArray(j.events) && j.events.length) {
+          const src = j._sources||{};
+          const parts = [];
+          if (src.tv==='fulfilled') parts.push('TradingView');
+          if (src.ff==='fulfilled') parts.push('ForexFactory');
+          state.events = j.events;
+          setSrc('live',`${parts.join(' + ')||'API'} (${j.events.length} อีเวนต์)`);
+          afterEvents(); return;
+        }
+        if (Array.isArray(j) && j.length) {
+          const parsed = parseFFEvents(j);
+          if (parsed && parsed.length) {
+            state.events = parsed;
+            setSrc('live',`ForexFactory (${parsed.length} อีเวนต์)`);
+            afterEvents(); return;
+          }
+        }
+      } catch {}
+    }
+    state.events = demoEvents();
+    setSrc('warn','ข้อมูลสำรอง (ไม่สามารถเชื่อมต่อได้)');
+    afterEvents();
+  }
+
+  function afterEvents() {
+    const now = Date.now();
+    const selId = state.selected ? evId(state.selected) : null;
+    const relevant = state.events
+      .filter((e) => (e.country==='USD'||e.country==='US') && e.impact==='High')
+      .map((e) => ({...e, ts:new Date(e.date).getTime()}))
+      .filter((e) => !isNaN(e.ts))
+      .sort((a,b) => a.ts-b.ts);
+    state.events = relevant;
+    let next = state.selected ? relevant.find((e) => evId(e)===selId) : null;
+    if (!next || next.ts < now) next = relevant.find((e) => e.ts >= now-3600e3) || relevant[relevant.length-1] || null;
+    state.selected = next;
+    renderEvents();
+    renderScore();
+  }
+
+  function demoEvents() {
+    const out = [], now = new Date();
+    for (let i=0; i<2; i++) {
+      const dt = new Date(now.getFullYear(), now.getMonth()+i, 1);
+      let fri=1; while (new Date(dt.getFullYear(),dt.getMonth(),fri).getDay()!==5) fri++;
+      const d = new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),fri,12,30));
+      if (d.getTime()>now.getTime()-24*3600e3) out.push({title:'Non-Farm Payrolls (NFP)',country:'USD',impact:'High',demo:true,date:d.toISOString(),forecast:'160K',previous:'175K'});
+    }
+    for (let i=0; i<2; i++) {
+      const dt = new Date(now.getFullYear(), now.getMonth()+i, 12);
+      const d = new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),12,12,30));
+      if (d.getTime()>now.getTime()-24*3600e3) out.push({title:'CPI y/y',country:'USD',impact:'High',demo:true,date:d.toISOString(),forecast:'3.0%',previous:'2.9%'});
+    }
+    return out;
+  }
+
+  function setSrc(cls, label) {
+    state.src = cls;
+    const dot=$g('srcDot'), lbl=$g('srcLabel');
+    if (dot) dot.className='source-dot '+(cls==='live'?'ok':cls==='warn'?'warn':'err');
+    if (lbl) lbl.textContent = label||'';
+  }
+
+  /* ---------- ticker ---------- */
+  function renderTicker() {
+    const p = state.gold; if (!p) return;
+    const el=$g('tickPrice'); if(el) el.textContent='$'+fmtNum(p,2);
+    const first=state.goldFirstToday, ch=first?((p-first)/first)*100:0;
+    const ce=$g('tickChange');
+    if (ce) {
+      if (first) { ce.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%'; ce.className='tick-change '+(ch>0.01?'up':ch<-0.01?'down':'flat'); }
+      else { ce.textContent='สด'; ce.className='tick-change flat'; }
+    }
+  }
+
+  /* ---------- score ---------- */
+  function momentumSellLean() {
+    if (state.ticks.length<5||!state.gold) return null;
+    const prices=state.ticks.map((x)=>x.p);
+    const min=Math.min(...prices),max=Math.max(...prices);
+    if (max-min<1e-9) return null;
+    return clamp(((state.gold-min)/(max-min))*100,0,100);
+  }
+
+  function computeScore(ev) {
+    const tpl=matchTemplate(ev.title), notes=[]; let bias=50,mag=50,hasNum=false;
+    if (tpl) {
+      const f=parseNum(ev.forecast),p=parseNum(ev.previous);
+      if (f!=null&&p!=null) {
+        hasNum=true;
+        const gap=f-p,dir=tpl.hawkWhenHigh?1:-1,raw=dir*gap;
+        bias=clamp(50+(raw/tpl.scale)*50,5,95);
+        mag=clamp((Math.abs(raw)/tpl.scale)*100,10,100);
+        const dirWord=raw>0?'กดทอง (ทองมีแนวโน้มลง)':raw<0?'หนุนทอง (ทองมีแนวโน้มขึ้น)':'กลาง';
+        notes.push(`ข่าวนี้คือ <b>${tpl.label}</b> — เลขสูง = ${tpl.hawkWhenHigh?'เงินเฟ้อ/เศรษฐกิจร้อนแรง (Hawkish)':'อ่อนแอ (Dovish)'}`);
+        notes.push(`คาดการณ์ (${esc(ev.forecast)}) vs ค่าเดิม (${esc(ev.previous)}) → ส่วนต่าง ${raw>0?'+':''}${fmtNum(raw)} → ${dirWord}`);
+      } else { notes.push(`ข่าวนี้คือ <b>${tpl.label}</b> แต่ฟีดไม่มีค่าคาดการณ์/ค่าเดิม → ใช้ทิศทางกลาง`); }
+    } else { notes.push(`ข่าวนี้ไม่ตรงกับเทมเพลตทิศทางทอง → ทิศทางกลางๆ`); }
+    const impact=ev.impact==='High'?100:ev.impact==='Medium'?55:25;
+    const mom=momentumSellLean();
+    const D=clamp(0.75*bias+0.25*(mom!=null?mom:50),0,100);
+    const dataConf=hasNum?80:40;
+    const C=clamp(0.40*impact+0.35*mag+0.25*dataConf,0,100);
+    if (mom!=null) notes.push(mom>60?`ราคาทองอยู่สูงในกรอบวันนี้ (${mom.toFixed(0)}% ของกรอบ) → มีแรงขายทำกำไร`:`ราคาทองอยู่ต่ำในกรอบวันนี้ (${mom.toFixed(0)}% ของกรอบ) → มีแรงซื้อหนุน`);
+    else notes.push(`ยังไม่มีข้อมูลราคาในวันนี้พอคำนวณโมเมนตัม → ใช้กลาง`);
+    return {D,C,bias,mag,impact,mom,notes,hasNum,tpl};
+  }
+
+  function verdict(D) {
+    if (D<=32) return {cls:'buy',big:'BUY แรง — ซื้อทอง',sub:'โมเดลโน้มไปทางทองขึ้นหลังข่าว — ใช้ SL เสมอ'};
+    if (D<=44) return {cls:'buy',big:'BUY — ซื้อทอง',sub:'โมเดลโน้มไปทางทองขึ้น แต่อย่าแรง'};
+    if (D<=56) return {cls:'neutral',big:'NEUTRAL — รอข่าวก่อน',sub:'ทิศทางไม่ชัด รอข่าวออก + เทรด second-wave แทน'};
+    if (D<=68) return {cls:'sell',big:'SELL — ขายทอง',sub:'โมเดลโน้มไปทางทองลง แต่อย่าแรง'};
+    return {cls:'sell',big:'SELL แรง — ขายทอง',sub:'โมเดลโน้มไปทางทองลงหลังข่าว — ใช้ SL เสมอ'};
+  }
+
+  function convictionLabel(C) {
+    if (C>=70) return {t:'แรง',cls:'sell'};
+    if (C>=45) return {t:'กลาง',cls:'neutral'};
+    return {t:'อ่อน',cls:'buy'};
+  }
+
+  /* ---------- playbook ---------- */
+  function buildPlaybook(ev, sc) {
+    const tpl=sc.tpl, atr=state.atr, price=state.gold||4360, rows=[];
+    if (tpl) {
+      const hawk=tpl.hawkWhenHigh, push=(when,cls,act)=>rows.push({when,cls,act});
+      if (hawk) {
+        push('Actual >> คาด (มาก)','sell','ข่าวร้อนแรงเกินคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b> รอ Sell second-wave');
+        push('Actual ≈ คาด','neutral','ตรงตามคาด → ไร้ทิศทาง รอ 10–15 นาทีก่อน');
+        push('Actual << คาด (น้อย)','buy','ข่าวอ่อนกว่า → ดอลลาร์อ่อน → <b>ทองขึ้น</b> รอ Buy หลัง pullback');
+      } else {
+        push('Actual >> คาด (มาก)','buy','ตัวเลขแย่กว่าคาด → ดอลลาร์อ่อน → <b>ทองขึ้น</b>');
+        push('Actual ≈ คาด','neutral','ตรงตามคาด → รอตลาดเลือกทาง');
+        push('Actual << คาด (น้อย)','sell','ตัวเลขดีกว่าคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b>');
       }
-    }catch(e){/* try next */}
+    } else { rows.push({when:'ทุกกรณี',cls:'neutral',act:'ข่าวนอกเทมเพลต — รอสไปก์แรก 2–3 นาที แล้วเทรดตามเทรนด์จริง'}); }
+    const half=0.55*atr;
+    const strats=[
+      {n:1,name:'Straddle (ทั้งสองทาง)',desc:'วาง Buy Stop เหนือราคา + Sell Stop ใต้ราคา ก่อนข่าว 10–15 นาที ฝั่งไหนโดนแตะให้อีกฝั่งปิดทันที',params:[['Buy Stop','$'+fmtNum(price+half,2)],['Sell Stop','$'+fmtNum(price-half,2)],['SL','ฝั่งตรงข้าม ~$'+fmtNum(atr*0.8,2)],['TP','$'+fmtNum(atr*1.5,2)]]},
+      {n:2,name:'Fade สไปก์แรงเกิน',desc:'รอ 1–3 นาทีให้แท่งแรกหมดแรง แล้ว Sell/Buy ตอนราคากลับเข้าเดิม, SL พ้นจุดสุดขั้ว',params:[['เข้า','เมื่อราคากลับเข้าช่วงก่อนข่าว'],['SL','พ้นจุดสุดขั้ว ~$'+fmtNum(atr*0.6,2)],['TP','กลับสู่กลางกรอบก่อนข่าว']]},
+      {n:3,name:'Second-wave (ตามเทรนด์จริง)',desc:'รอ pullback เล็กน้อยบน M5/M15 แล้วเข้าในทิศทางเดียวกับความจริงของข่าว (deviation)',params:[['เข้า','หลัง pullback ~50% ของสไปก์'],['SL','$'+fmtNum(atr*0.8,2)],['TP','$'+fmtNum(atr*2.0,2)]]},
+    ];
+    return {rows,strats,atr,price};
   }
-  GS.events=gnsDemoEvents();gnsSrc('warn','ข้อมูลสำรอง');
-  GS.selected=GS.events[0]||null;gnsRenderEvents();gnsRenderScore();
-}
 
-function gnsDemoEvents(){
-  const now=new Date(),out=[];
-  for(let i=0;i<2;i++){
-    const dt=new Date(now.getFullYear(),now.getMonth()+i,1);
-    let fri=1;while(new Date(dt.getFullYear(),dt.getMonth(),fri).getDay()!==5)fri++;
-    const d=new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),fri,12,30));
-    if(d.getTime()>Date.now()-86400e3)out.push({title:'Non-Farm Payrolls (NFP)',country:'USD',impact:'High',demo:true,date:d.toISOString(),forecast:'160K',previous:'175K',ts:d.getTime()});
+  /* ---------- risk calc ---------- */
+  function calcRisk() {
+    const bal=parseFloat($g('inBal').value)||0,rp=parseFloat($g('inRisk').value)||1,sl=parseFloat($g('inSL').value)||30;
+    const riskUSD=bal*(rp/100),lots=riskUSD/(sl*100),tp=sl*1.5;
+    $g('riskUSD').textContent='$'+fmtNum(riskUSD,2);
+    $g('lotOut').textContent=lots>0?lots.toFixed(2):'0.00';
+    $g('slOut').textContent='$'+fmtNum(sl,2);
+    $g('tpOut').textContent='$'+fmtNum(tp,2);
+    const warn=$g('riskWarn');
+    if (warn&&lots>0&&sl>0) warn.textContent=`ข่าวแรง: แนะนำเสี่ยงไม่เกิน 0.5–1% ต่ออีเวนต์ จำกัดขาดทุนรวมวัน ~$${fmtNum(riskUSD*2,0)}`;
   }
-  return out;
-}
 
-function gnsTick(){
-  const now=Date.now();
-  GS.events.forEach((ev,i)=>{
-    const ms=ev.ts-now;
-    const cards=$('gns-evList')?.querySelectorAll('.gns-ev-card');
-    if(cards&&cards[i]){
-      const spans=cards[i].querySelectorAll('span');
-      if(spans.length>=3)spans[spans.length-1].textContent=countdownText(ms);
-      cards[i].classList.toggle('gns-urgent',ms>0&&ms<=15*60e3);
+  /* ---------- tracker ---------- */
+  function getResults() { try { return JSON.parse(store.get(LS_RESULTS))||[]; } catch { return []; } }
+  function saveResults(r) { store.set(LS_RESULTS, JSON.stringify(r)); }
+
+  function clearResults() {
+    store.del(LS_RESULTS); renderStats(); renderEvents(); toast('ล้างประวัติแล้ว');
+  }
+
+  function findResult(ev) { return getResults().find((r)=>r.title===ev.title&&r.date===ev.date)||null; }
+
+  function recordResult(ev,actual,outcome) {
+    const rs=getResults();
+    const rec=findResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now()};
+    rec.actual=actual; rec.outcome=outcome;
+    const f=parseNum(ev.forecast),a=parseNum(actual);
+    if (f!=null&&a!=null) rec.deviation=a-f;
+    const idx=rs.findIndex((r)=>r.title===ev.title&&r.date===ev.date);
+    if (idx>=0) rs[idx]=rec; else rs.push(rec);
+    saveResults(rs); renderStats(); renderEvents(); toast('บันทึกผลแล้ว ✅');
+  }
+
+  function renderStats() {
+    const rs=getResults(),judged=rs.filter((r)=>r.outcome==='win'||r.outcome==='loss');
+    const wins=judged.filter((r)=>r.outcome==='win').length,losses=judged.length-wins;
+    const winRate=judged.length?(wins/judged.length)*100:0;
+    const devs=rs.map((r)=>r.deviation).filter((v)=>v!=null);
+    const avgDev=devs.length?devs.reduce((a,b)=>a+b,0)/devs.length:0;
+    const sw=$g('stWin'),sl=$g('stLoss'),sr=$g('stRate'),sd=$g('stDev');
+    if(sw) sw.textContent=wins; if(sl) sl.textContent=losses;
+    if(sr) sr.textContent=judged.length?winRate.toFixed(0)+'%':'—';
+    if(sd) sd.textContent=devs.length?(avgDev>0?'+':'')+fmtNum(avgDev):'—';
+    const list=$g('histList'); if(!list) return;
+    list.innerHTML='';
+    if (!rs.length) { list.innerHTML='<div class="empty">ยังไม่มีผลลัพธ์</div>'; return; }
+    rs.slice().reverse().forEach((r)=>{
+      const tag=r.outcome==='win'?'<span class="tag win">ชนะ</span>':r.outcome==='loss'?'<span class="tag loss">แพ้</span>':r.outcome==='skip'?'<span class="tag skip">ไม่เทรด</span>':'<span class="tag skip">ยังไม่ตัดสิน</span>';
+      const dev=r.deviation!=null?'dev '+(r.deviation>0?'+':'')+fmtNum(r.deviation):'';
+      list.insertAdjacentHTML('beforeend',`<div class="hist-item">${tag}<span class="ev">${esc(r.title)}</span><span class="dev">${esc(dev)}</span></div>`);
+    });
+  }
+
+  /* ---------- render events ---------- */
+  function renderEvents() {
+    const list=$g('evList'); if(!list) return;
+    if (!state.events.length) { list.innerHTML='<div class="empty">ไม่มีอีเวนต์ USD ที่สำคัญในสัปดาห์นี้</div>'; return; }
+    const now=Date.now(); list.innerHTML='';
+    state.events.forEach((ev)=>{
+      const msLeft=ev.ts-now, isUrgent=msLeft>0&&msLeft<=15*60e3;
+      const cls=['ev-card',state.selected===ev?'active':'',isUrgent?'urgent':''].join(' ');
+      const f=parseNum(ev.forecast),p=parseNum(ev.previous),devTxt=[];
+      if (f!=null) devTxt.push(`คาด <b>${esc(ev.forecast)}</b>`);
+      if (p!=null) devTxt.push(`เดิม <b>${esc(ev.previous)}</b>`);
+      if (ev.actual) devTxt.push(`จริง <b style="color:var(--gold-soft)">${esc(ev.actual)}</b>`);
+      const srcBadge=ev.demo?'<span class="pill gold">สำรอง</span>':ev._src==='tv+ff'?'<span class="pill tv">TV+FF</span>':ev._src==='tv'?'<span class="pill tv">TV</span>':ev._src==='ff'?'<span class="pill ff">FF</span>':'';
+      list.insertAdjacentHTML('beforeend',`<div class="${cls}" data-idx="${state.events.indexOf(ev)}" role="button" tabindex="0"><div class="ev-top"><span class="ev-title">${esc(ev.title)} ${srcBadge}</span><span class="ev-imp ${esc(ev.impact)}">${esc(ev.impact)}</span><span class="ev-count">${countdownText(msLeft)}</span></div><div class="ev-meta"><span>⏰ ${thaiTime(ev.date)}</span>${devTxt.length?'<span>'+devTxt.join(' · ')+'</span>':''}</div></div>`);
+    });
+    const ec=$g('evCount'); if(ec) ec.textContent=state.events.length+' อีเวนต์';
+    list.querySelectorAll('.ev-card').forEach((card)=>{
+      const sel=()=>{ state.selected=state.events[+card.dataset.idx]; renderEvents(); renderScore(); };
+      card.addEventListener('click',sel);
+      card.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();sel();} });
+    });
+  }
+
+  /* ---------- render score ---------- */
+  function renderScore() {
+    const ev=state.selected, panel=$g('scorePanel');
+    if (!ev) { if(panel) panel.innerHTML='<div class="empty">เลือกอีเวนต์เพื่อดูสัญญาณ</div>'; return; }
+    const sc=computeScore(ev), v=verdict(sc.D), cv=convictionLabel(sc.C);
+    const now=Date.now(), msLeft=ev.ts-now, isUrgent=msLeft>0&&msLeft<=15*60e3, isPast=msLeft<=0;
+    const rec=findResult(ev);
+    const brk=[
+      ['ทิศทางข่าว (Event Bias)',sc.bias,sc.hasNum?'sell':'neutral','40% ของทิศทาง'],
+      ['ขนาด deviation ที่คาด',sc.mag,'neutral','ความแรง'],
+      ['น้ำหนักข่าว (Impact)',sc.impact,sc.impact>55?'sell':'neutral','High = แรงสุด'],
+      ['โมเมนตัมทอง (ช่วงวัน)',sc.mom!=null?sc.mom:50,sc.mom!=null&&sc.mom>60?'sell':sc.mom!=null&&sc.mom<40?'buy':'neutral',sc.mom!=null?'จากกรอบราคาวันนี้':'ไม่มีข้อมูล'],
+    ].map(([name,val,cls,note])=>`<div class="brk-row"><span class="name">${name}<br><small style="color:var(--txt-faint)">${note}</small></span><div class="brk-bar"><div class="brk-fill ${cls}" style="width:${val}%"></div></div><span class="val">${val.toFixed(0)}</span></div>`).join('');
+    const big=(isPast&&rec)?'จบแล้ว — ดูผล':v.big;
+    const het=$g('heroEvTitle'); if(het) het.textContent=ev.title+(ev.demo?' (ข้อมูลสำรอง)':'');
+    const hem=$g('heroEvMeta'); if(hem) hem.textContent=`ระดับ ${ev.impact} · เวลาไทย ${thaiTime(ev.date)} · คาด ${ev.forecast||'—'} / เดิม ${ev.previous||'—'}`;
+    const sn=$g('scoreName'); if(sn) sn.innerHTML=`${esc(ev.title)}${ev.demo?' <span class="pill gold">ข้อมูลสำรอง</span>':''}`;
+    const st=$g('scoreTime'); if(st) st.innerHTML=`⏰ ${thaiTime(ev.date)} · <b style="color:${isUrgent?'var(--red)':'var(--txt-dim)'}">${countdownText(msLeft)}</b>`;
+    const sg=$g('scoreGauge'); if(sg) sg.innerHTML=`<div class="gauge-track"><div class="gauge-needle" style="left:${sc.D}%"></div></div><div class="gauge-labels"><span>ซื้อทอง</span><span>กลาง</span><span>ขายทอง</span></div>`;
+    const vb=$g('verdictBox'); if(vb) vb.className='verdict '+v.cls;
+    const vbig=$g('verdictBig'); if(vbig) vbig.textContent=big;
+    const vsub=$g('verdictSub'); if(vsub) vsub.textContent=(isPast&&rec)?`ข่าวออกแล้ว — deviation ${rec.deviation!=null?(rec.deviation>0?'+':'')+fmtNum(rec.deviation):'?'} · ผล: ${rec.outcome==='win'?'ชนะ':rec.outcome==='loss'?'แพ้':rec.outcome==='skip'?'ไม่เทรด':'ยังไม่บันทึก'}`:`${v.sub} · แรงข่าว: ${cv.t}`;
+    const bb=$g('brkBox'); if(bb) bb.innerHTML=brk;
+    const rb=$g('reasonBox'); if(rb) rb.innerHTML='<b>เหตุผล:</b><ul>'+sc.notes.map((n)=>`<li>${n}</li>`).join('')+'</ul>';
+    const warnBar=$g('warnBar');
+    if (warnBar) {
+      if (isUrgent) { warnBar.className='warn-bar show urgent'; warnBar.innerHTML='⚠️ <b>ใกล้ปล่อยข่าวแล้ว!</b> สเปรดจะกว้าง 5–20 เท่าใน 1–2 นาทีแรก'; }
+      else if (isPast) { warnBar.className='warn-bar show'; warnBar.innerHTML='ข่าวออกแล้ว — กรอก actual และกดผลลัพธ์ เพื่อเก็บสถิติ ↓'; }
+      else { warnBar.className='warn-bar'; warnBar.innerHTML=''; }
     }
-  });
-  const ev=GS.selected;
-  if(ev){
-    const ms=ev.ts-Date.now();
-    if($('gns-countdownTime'))$('gns-countdownTime').textContent=countdownText(ms);
-    if($('gns-heroLabel'))$('gns-heroLabel').textContent=ms>0?(ms<=15*60e3?'ใกล้ปล่อยข่าว!':'เหลือเวลา'):'ข่าวออกแล้ว';
+    const pb=buildPlaybook(ev,sc);
+    const sr2=$g('scenRows'); if(sr2) sr2.innerHTML=pb.rows.map((r)=>`<tr><td class="sc-when ${r.cls}">${r.when}</td><td>${r.act}</td></tr>`).join('');
+    const stratr=$g('stratRows'); if(stratr) stratr.innerHTML=pb.strats.map((s)=>`<div class="strat"><h4><span class="n">${s.n}</span>${s.name}</h4><p>${s.desc}</p><div class="params">${s.params.map(([k,val])=>`<span class="chip">${k}: <b>${val}</b></span>`).join('')}</div></div>`).join('');
+    const tr=$g('trackerBox'); if(tr) {
+      if (isPast) {
+        const actual=ev.actual||(rec?rec.actual:'');
+        const dev=computeDeviation(ev,actual);
+        tr.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><input id="inActual" placeholder="Actual จริง (เช่น 250K / 3.2%)" value="${esc(actual)}" style="flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--txt);padding:9px 11px;border-radius:10px;font-family:inherit"><button class="btn" onclick="window.gnsApp.submitActual()">บันทึก actual</button><button class="btn" onclick="window.gnsApp.setOutcome('win')">🏆 ชนะ</button><button class="btn" onclick="window.gnsApp.setOutcome('loss')">💸 แพ้</button><button class="btn" onclick="window.gnsApp.setOutcome('skip')">⏭ ไม่เทรด</button></div><div class="reason-box mt" style="margin-top:10px">${actual?`deviation = <b>${dev!=null?(dev>0?'+':'')+fmtNum(dev):'—'}</b>`:'กรอก actual เพื่อคำนวณ deviation'}</div>`;
+      } else {
+        tr.innerHTML=`<div class="empty">⏳ หลังข่าวออก (~${countdownText(msLeft)} เหลือ) ตรงนี้จะให้กรอก actual + บันทึกผลชนะ/แพ้</div>`;
+      }
+    }
   }
-}
 
-window.openNewsSignal=function(){
-  const sc=$('news-screen');if(sc)sc.classList.remove('hidden');
-  if(!GS.inited){
-    GS.inited=true;
-    const bal=LS('gns_bal')||'1000',risk=LS('gns_risk')||'1',sl=LS('gns_sl')||'30';
-    if($('gns-inBal'))$('gns-inBal').value=bal;
-    if($('gns-inRisk'))$('gns-inRisk').value=risk;
-    if($('gns-inSL')){$('gns-inSL').value=sl;GS.atr=parseFloat(sl)||30;}
-    gnsLoadGold();gnsLoadEvents();
-    setInterval(gnsTick,1000);
-    setInterval(gnsLoadGold,30000);
+  function computeDeviation(ev,actual) {
+    const f=parseNum(ev.forecast),a=parseNum(actual);
+    if (f==null||a==null) return null;
+    return a-f;
   }
-};
 
-window.closeNewsSignal=function(){
-  const sc=$('news-screen');if(sc)sc.classList.add('hidden');
-};
+  function submitActual() {
+    const ev=state.selected; if(!ev) return;
+    const val=$g('inActual').value.trim();
+    if (!val) { toast('กรอกค่า actual ก่อน'); return; }
+    ev.actual=val;
+    const rec=findResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now()};
+    rec.actual=val;
+    const f=parseNum(ev.forecast),a=parseNum(val);
+    if (f!=null&&a!=null) rec.deviation=a-f;
+    const rs=getResults();
+    const idx=rs.findIndex((r)=>r.title===ev.title&&r.date===ev.date);
+    if (idx>=0) rs[idx]=rec; else rs.push(rec);
+    saveResults(rs); renderStats(); renderScore(); toast('บันทึก actual แล้ว');
+  }
+
+  function setOutcome(o) {
+    const ev=state.selected; if(!ev) return;
+    const rs=getResults();
+    const rec=findResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now(),actual:ev.actual||''};
+    rec.outcome=o;
+    const idx=rs.findIndex((r)=>r.title===ev.title&&r.date===ev.date);
+    if (idx>=0) rs[idx]=rec; else rs.push(rec);
+    saveResults(rs); renderStats(); renderScore();
+    toast(o==='win'?'บันทึก: ชนะ 🏆':o==='loss'?'บันทึก: แพ้ 💸':'บันทึก: ไม่เทรด');
+  }
+
+  /* ---------- toast ---------- */
+  let toastTimer=null;
+  function toast(msg) {
+    const bar=$g('gns-statusBar'); if(!bar) return;
+    bar.innerHTML=msg; bar.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>bar.classList.remove('show'),3200);
+  }
+
+  /* ---------- tick ---------- */
+  function tick() {
+    const now=Date.now(); if(!state.events.length) return;
+    state.events.forEach((ev)=>{
+      const msLeft=ev.ts-now;
+      if (msLeft>0&&msLeft<=15*60e3&&!state.urgentShown[ev.title+ev.date]) {
+        state.urgentShown[ev.title+ev.date]=true;
+        toast(`⚠️ ${ev.title} จะออกใน < 15 นาที!`);
+        if (!state.selected||state.selected.ts<now) { state.selected=ev; renderEvents(); renderScore(); }
+      }
+      if (msLeft<=0&&msLeft>-6*3600e3&&!state.releasedShown[ev.title+ev.date]) {
+        state.releasedShown[ev.title+ev.date]=true;
+        toast(`📢 ข่าว ${ev.title} ออกแล้ว! กรอก actual ดู deviation`);
+        if (state.selected===ev) renderScore();
+      }
+    });
+    document.querySelectorAll('#news-screen .ev-card').forEach((card)=>{
+      const ev=state.events[+card.dataset.idx]; if(!ev) return;
+      const msLeft=ev.ts-now;
+      const ec=card.querySelector('.ev-count'); if(ec) ec.textContent=countdownText(msLeft);
+      card.classList.toggle('urgent',msLeft>0&&msLeft<=15*60e3);
+    });
+    const ev=state.selected;
+    if (ev) {
+      const msLeft=ev.ts-now;
+      const ct=$g('countdownTime'); if(ct){ ct.textContent=countdownText(msLeft); ct.classList.toggle('urgent',msLeft>0&&msLeft<=15*60e3); }
+      const hc=$g('heroCard'); if(hc) hc.classList.toggle('urgent',msLeft>0&&msLeft<=15*60e3);
+      const hl=$g('heroLabel'); if(hl) hl.textContent=msLeft>0?(msLeft<=15*60e3?'ใกล้ปล่อยข่าว! เหลือ':'เหลือเวลาจนกว่าข่าวออก'):'ข่าวออกแล้ว';
+    }
+  }
+
+  /* ---------- tabs ---------- */
+  function setupTabs() {
+    document.querySelectorAll('#news-screen .tab').forEach((tab)=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('#news-screen .tab').forEach((t)=>{ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+        document.querySelectorAll('#news-screen .tab-content').forEach((c)=>c.classList.remove('active'));
+        tab.classList.add('active'); tab.setAttribute('aria-selected','true');
+        const tc=$g('tab-'+tab.dataset.tab); if(tc) tc.classList.add('active');
+      });
+    });
+  }
+
+  /* ---------- init (called once from openNewsSignal) ---------- */
+  function init() {
+    loadTicks();
+    setupTabs();
+    const rb=$g('refreshBtn');
+    if(rb) rb.addEventListener('click',async()=>{ toast('กำลังรีเฟรชข้อมูล…'); await loadEvents(); await loadGold(); toast('อัปเดตล่าสุดแล้ว ✅'); });
+    ['inBal','inRisk','inSL'].forEach((id)=>{
+      const el=$g(id); if(!el) return;
+      el.addEventListener('input',()=>{ calcRisk(); state.atr=parseFloat($g('inSL').value)||30; store.set('gns_'+id.replace('in','').toLowerCase(),$g(id).value); });
+    });
+    const ib=$g('inBal'); if(ib) ib.value=store.get('gns_bal')||'1000';
+    const ir=$g('inRisk'); if(ir) ir.value=store.get('gns_risk')||'1';
+    const isl=$g('inSL'), savedSL=store.get('gns_sl');
+    if(isl&&savedSL) { isl.value=savedSL; state.atr=parseFloat(savedSL)||30; }
+    calcRisk();
+    loadGold();
+    loadEvents();
+    setInterval(tick,1000);
+    setInterval(loadGold,30000);
+    setInterval(()=>{ if(!document.hidden) loadEvents(); },90e3);
+    state.inited=true;
+  }
+
+  /* ---------- public API ---------- */
+  window.openNewsSignal = function() {
+    const el=document.getElementById('news-screen');
+    if(el) el.classList.remove('hidden');
+    if(!state.inited) init();
+    else { renderEvents(); renderScore(); }
+  };
+
+  window.closeNewsSignal = function() {
+    const el=document.getElementById('news-screen');
+    if(el) el.classList.add('hidden');
+  };
+
+  window.gnsApp = { calcRisk, clearResults, submitActual, setOutcome };
 
 })();
 </script>
+</div>
+
 </body>
 </html>
