@@ -209,6 +209,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .forex-analyze-btn{width:100%;margin-top:20px;padding:14px;border-radius:12px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:.15s;display:none}
 .forex-analyze-btn:hover{background:#c62a37}
 .forex-analyze-btn:disabled{opacity:.5;cursor:not-allowed}
+.forex-progress-wrap{width:100%;margin-top:12px;display:none;flex-direction:column;gap:6px;align-items:center}
+.forex-progress-bar-bg{width:100%;height:8px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
+.forex-progress-bar-fill{height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .3s ease}
+.forex-progress-pct{font-size:13px;font-weight:700;color:var(--accent)}
+.forex-extra-prompt{width:100%;margin-top:14px;padding:12px 14px;border-radius:12px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;resize:vertical;min-height:70px;outline:none;font-family:inherit;box-sizing:border-box;transition:.15s}
+.forex-extra-prompt:focus{border-color:var(--accent)}
+.forex-extra-prompt::placeholder{color:var(--muted2)}
 .forex-result{margin-top:20px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:20px;display:none;white-space:pre-wrap;font-size:13px;line-height:1.7;color:var(--text)}
 .forex-result.show{display:block}
 /* ── User Avatar in topbar ── */
@@ -292,7 +299,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       <span style="font-size:22px;font-weight:800;color:#fff">Deep<span style="font-weight:300">GPT</span></span>
     </div>
     <div class="auth-title" id="auth-title-text">เข้าสู่ระบบ</div>
-    <div class="auth-sub">AI Assistant · Powered by OpenRouter · <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj48cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHJ4PSI0IiBmaWxsPSIjRkZENzAwIi8+PHRleHQgeD0iMTAiIHk9IjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMwYTBlMWEiIGxldHRlci1zcGFjaW5nPSItMC41Ij5leDwvdGV4dD48L3N2Zz4=" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;margin:0 4px 1px 0"/>Exness</div>
+    <div class="auth-sub">AI Assistant · Powered by DeepGPT · <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj48cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHJ4PSI0IiBmaWxsPSIjRkZENzAwIi8+PHRleHQgeD0iMTAiIHk9IjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMwYTBlMWEiIGxldHRlci1zcGFjaW5nPSItMC41Ij5leDwvdGV4dD48L3N2Zz4=" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;margin:0 4px 1px 0"/>Exness</div>
     <div class="auth-panel active" id="panel-login">
       <div class="auth-err-msg" id="login-err"></div>
       <input class="auth-field" id="login-email" type="email" placeholder="อีเมล" autocomplete="email"/>
@@ -335,7 +342,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       </svg>
       <span style="font-size:18px;font-weight:800;color:#fff">Deep<span style="font-weight:300">GPT</span></span>
     </div>
-    <div class="gate-title">ใส่ OpenRouter API Key</div>
+    <div class="gate-title">ใส่ DeepGPT API Key</div>
     <div class="gate-sub">DeepGPT ใช้ OpenRouter เพื่อเรียก AI model — สมัครฟรี ไม่มีค่าใช้จ่าย key จะเก็บไว้ในเบราว์เซอร์ของคุณเท่านั้น</div>
     <div class="gate-steps">
       1. ไปที่ <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
@@ -372,7 +379,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       </svg>
       <span style="font-size:18px;font-weight:800;color:#fff">Deep<span style="font-weight:300">GPT</span></span>
     </div>
-    <div class="gate-title">ใส่ OpenRouter API Key</div>
+    <div class="gate-title">ใส่ DeepGPT API Key</div>
     <div class="gate-sub">DeepGPT ใช้ OpenRouter เพื่อเรียก AI model — สมัครฟรี ไม่มีค่าใช้จ่าย key จะเก็บไว้ในเบราว์เซอร์ของคุณเท่านั้น</div>
     <div class="gate-steps">
       1. ไปที่ <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
@@ -419,6 +426,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
       </svg>
       Signal Forex
+    </button>
+    <button class="drawer-nav-btn" onclick="openNewsSignal();setTimeout(closeDrawer,150)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
+      </svg>
+      Signal News
     </button>
   </div>
 </div>
@@ -633,6 +646,7 @@ function saveOrKey() {
 }
 
 function openSettings() {
+  sessionStorage.setItem('deepgpt_screen', 'settings');
   // เปิด key-gate full-screen เหมือนตอนส่งแล้วไม่มี key
   const gate = document.getElementById('key-gate');
   const input = document.getElementById('gate-key-input');
@@ -646,6 +660,7 @@ function openSettings() {
 }
 
 function closeSettings() {
+  sessionStorage.removeItem('deepgpt_screen');
   document.getElementById('key-gate').classList.add('hidden');
 }
 
@@ -757,7 +772,7 @@ function newChat() {
   chats.unshift({ id, title: 'New conversation', messages: [], created: Date.now() });
   saveChats(); activateChat(id);
 }
-function activateChat(id){ activeChatId=id; renderChatList(); renderMessages(); }
+function activateChat(id){ activeChatId=id; sessionStorage.setItem('deepgpt_chat', id); sessionStorage.removeItem('deepgpt_screen'); renderChatList(); renderMessages(); }
 function saveChats(){}
 function getActiveChat(){ return chats.find(c=>c.id===activeChatId); }
 
@@ -944,7 +959,7 @@ async function send(){
 
     thinkEl.remove();
     let fullText='';
-    const assistantMsg={role:'assistant',content:'',provider:'OpenRouter'};
+    const assistantMsg={role:'assistant',content:'',provider:'DeepGPT'};
     chat.messages.push(assistantMsg);
 
     renderMessages();
@@ -1171,10 +1186,15 @@ function updateUserUI(user) {
       }
       checkGate();
       renderChatList();
-      showEmpty();
+      const savedChatId = sessionStorage.getItem('deepgpt_chat');
+      if (savedChatId && chats[savedChatId]) { activeChatId = savedChatId; renderMessages(); } else { showEmpty(); }
+      const scr = sessionStorage.getItem('deepgpt_screen');
+      if (scr === 'forex') openForexSignal();
+      else if (scr === 'settings') openSettings();
     } catch(e) {
-      localStorage.removeItem('deepgpt_user');
-      authScreen.classList.remove('hidden');
+      console.error('[initAuth error]', e);
+      // ไม่ logout เมื่อ error — แค่ show empty
+      try { showEmpty(); } catch(_) {}
     }
   } else {
     currentUser = null;
@@ -1209,7 +1229,7 @@ const I18N = {
     serverError: 'เชื่อมต่อ server ไม่ได้',
     registerOk: 'สมัครสำเร็จ! กรุณาเข้าสู่ระบบ',
     // Key gate
-    gateTitle: 'ใส่ OpenRouter API Key',
+    gateTitle: 'ใส่ DeepGPT API Key',
     gateSub: 'DeepGPT ใช้ OpenRouter เพื่อเรียก AI model — สมัครฟรี ไม่มีค่าใช้จ่าย key จะเก็บไว้ในเบราว์เซอร์ของคุณเท่านั้น',
     gateStep1: 'ไปที่',
     gateStep2: 'คลิก',
@@ -1230,8 +1250,7 @@ const I18N = {
     settingsTitle: 'คลิกเพื่อเปลี่ยน key',
     // Drawer nav
     signalForex: 'Signal Forex',
-        signalNews: 'Signal News',
-        signalNews: 'Signal News',
+    signalNews: 'Signal News',
     // Input area
     inputPlaceholder: 'พิมพ์ข้อความ… (Ctrl+V วางรูป, + แนบไฟล์)',
     hint: 'DeepGPT · ไม่มีข้อจำกัด · ไม่มีตัวกรอง · ไม่มีคำขอโทษ',
@@ -1265,7 +1284,8 @@ const I18N = {
     forexAnalyzing: '⏳ กำลังวิเคราะห์...',
     forexNoKey: 'กรุณาใส่ OpenRouter API key ก่อน',
     forexNoResult: 'ไม่ได้รับผลลัพธ์',
-    forexPrompt: 'วิเคราะห์ chart {n} รูปนี้แบบ Scalp Trading: ระบุ trend, support/resistance, entry point, stop loss, take profit และ signal ซื้อหรือขาย พร้อม reasoning สั้นๆ ตอบเป็นภาษาไทย',
+    forexPrompt: 'IMPORTANT: You MUST reply in Thai language only. Do NOT use English at all.\n\nวิเคราะห์ chart {n} รูปนี้ แล้วตอบในรูปแบบนี้เท่านั้น (ภาษาไทยทั้งหมด):\n\n📍 จุดเข้า: [ราคา] ([Long/Short])\n🛑 Stop Loss: [ราคา] (เหตุผล: [1 ประโยค])\n🎯 Take Profit: TP1 [ราคา] / TP2 [ราคา]\n\n💬 สรุป: [2-3 ประโยค อธิบายง่ายๆ]\n\nห้ามตอบภาษาอังกฤษ ตอบไทยเท่านั้น',
+    forexExtraPlaceholder: 'เพิ่มเทคนิคหรือเงื่อนไขพิเศษ... (ไม่บังคับ)',
     // Role labels
     roleYou: 'คุณ',
     roleAI: 'Rome',
@@ -1292,7 +1312,7 @@ const I18N = {
     registerFail: 'Registration failed',
     serverError: 'Cannot connect to server',
     registerOk: 'Account created! Please sign in.',
-    gateTitle: 'Enter OpenRouter API Key',
+    gateTitle: 'Enter DeepGPT API Key',
     gateSub: 'DeepGPT uses OpenRouter to call AI models — free to sign up, no cost. Your key is stored only in your browser.',
     gateStep1: 'Go to',
     gateStep2: 'Click',
@@ -1311,7 +1331,7 @@ const I18N = {
     logoutTitle: 'Sign out',
     settingsTitle: 'Click to change key',
     signalForex: 'Signal Forex',
-        signalNews: 'Signal News',
+    signalNews: 'Signal News',
     inputPlaceholder: 'Type a message… (Ctrl+V to paste image, + to attach file)',
     hint: 'DeepGPT · No limits · No filters · No apologies',
     attachTitle: 'Attach file',
@@ -1341,7 +1361,8 @@ const I18N = {
     forexAnalyzing: '⏳ Analyzing...',
     forexNoKey: 'Please enter your OpenRouter API key first',
     forexNoResult: 'No result received',
-    forexPrompt: 'Analyze these {n} trading chart(s) for Scalp Trading: identify trend, support/resistance, entry point, stop loss, take profit and buy/sell signal with brief reasoning.',
+    forexPrompt: 'Analyze these {n} chart(s) and reply ONLY in this format:\n\n📍 Entry: [price] ([Long/Short])\n🛑 Stop Loss: [price] (because [1 sentence reason])\n🎯 Take Profit: TP1 [price] / TP2 [price]\n\n💬 Summary: [2-3 simple sentences explaining why this trade setup makes sense]\n\nKeep it short and clear.',
+    forexExtraPlaceholder: 'Add extra technique or conditions... (optional)',
     roleYou: 'You',
     roleAI: 'Rome',
   }
@@ -1364,8 +1385,8 @@ function setLang(lang) {
   // sync forex topbar
   const ftb = document.getElementById('forex-lang-btn-th');
   const feb = document.getElementById('forex-lang-btn-en');
-  if (ftb) { ftb.classList.toggle('active', lang === 'th'); ftb.style.background = lang === 'th' ? 'var(--accent)' : 'transparent'; ftb.style.color = lang === 'th' ? '#fff' : 'var(--muted2)'; }
-  if (feb) { feb.classList.toggle('active', lang === 'en'); feb.style.background = lang === 'en' ? 'var(--accent)' : 'transparent'; feb.style.color = lang === 'en' ? '#fff' : 'var(--muted2)'; }
+  if (ftb) ftb.classList.toggle('active', lang === 'th');
+  if (feb) feb.classList.toggle('active', lang === 'en');
   applyLang();
 }
 
@@ -1469,6 +1490,8 @@ function applyLang() {
     fsb.textContent = t('forexSelectBtn');
     if (svgEl2) fsb.prepend(svgEl2);
   }
+  const fep = document.getElementById('forex-extra-prompt');
+  if (fep) fep.placeholder = t('forexExtraPlaceholder');
   const fab = document.getElementById('forex-analyze-btn');
   if (fab && !fab.disabled) fab.textContent = t('forexAnalyzeBtn');
 
@@ -1509,11 +1532,11 @@ function applyLang() {
   const _eb = document.getElementById('lang-btn-en');
   if (_tb) _tb.classList.toggle('active', currentLang === 'th');
   if (_eb) _eb.classList.toggle('active', currentLang === 'en');
-  // forex buttons — may not exist yet, setLang will sync when forex opens
+  // forex buttons sync
   const _ftb = document.getElementById('forex-lang-btn-th');
   const _feb = document.getElementById('forex-lang-btn-en');
-  if (_ftb) { _ftb.style.background = currentLang === 'th' ? 'var(--accent)' : 'transparent'; _ftb.style.color = currentLang === 'th' ? '#fff' : 'var(--muted2)'; }
-  if (_feb) { _feb.style.background = currentLang === 'en' ? 'var(--accent)' : 'transparent'; _feb.style.color = currentLang === 'en' ? '#fff' : 'var(--muted2)'; }
+  if (_ftb) _ftb.classList.toggle('active', currentLang === 'th');
+  if (_feb) _feb.classList.toggle('active', currentLang === 'en');
   applyLang();
 })();
 
@@ -1663,6 +1686,7 @@ let forexImages = []; // [{mime, b64, url}]
 
 function openForexSignal() {
   document.getElementById('forex-screen').classList.remove('hidden');
+  sessionStorage.setItem('deepgpt_screen', 'forex');
   const ftb = document.getElementById('forex-lang-btn-th');
   const feb = document.getElementById('forex-lang-btn-en');
   if (ftb) ftb.classList.toggle('active', currentLang === 'th');
@@ -1671,6 +1695,7 @@ function openForexSignal() {
 }
 function closeForexSignal() {
   document.getElementById('forex-screen').classList.add('hidden');
+  sessionStorage.removeItem('deepgpt_screen');
 }
 function forexHandleDropMulti(e) {
   e.preventDefault();
@@ -1688,6 +1713,23 @@ function forexHandleFiles(files) {
     reader.readAsDataURL(file);
   });
 }
+// Ctrl+V paste support for forex screen
+document.addEventListener('paste', function(e) {
+  if (document.getElementById('forex-screen').classList.contains('hidden')) return;
+  const items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  const imageFiles = [];
+  for (const item of items) {
+    if (item.kind === 'file' && item.type.startsWith('image/')) {
+      imageFiles.push(item.getAsFile());
+    }
+  }
+  if (imageFiles.length) {
+    e.preventDefault();
+    forexHandleFiles(imageFiles);
+  }
+});
+
 function forexRenderGrid() {
   const grid = document.getElementById('forex-preview-grid');
   grid.innerHTML = '';
@@ -1701,7 +1743,7 @@ function forexRenderGrid() {
   grid.style.display = forexImages.length ? 'grid' : 'none';
   document.getElementById('forex-analyze-btn').style.display = forexImages.length ? 'block' : 'none';
   document.getElementById('forex-result').classList.remove('show');
-  document.getElementById('forex-result').textContent = '';
+  document.getElementById('forex-result').innerHTML = '';
 }
 function forexRemoveImg(i) {
   forexImages.splice(i, 1);
@@ -1714,16 +1756,38 @@ async function forexAnalyze() {
   const resultEl = document.getElementById('forex-result');
   btn.disabled = true;
   btn.textContent = t('forexAnalyzing');
-  resultEl.textContent = '';
+  resultEl.innerHTML = '';
   resultEl.classList.remove('show');
+
+  // start progress bar
+  const wrap = document.getElementById('forex-progress-wrap');
+  const fill = document.getElementById('forex-progress-fill');
+  const pct  = document.getElementById('forex-progress-pct');
+  wrap.style.display = 'flex';
+  fill.style.width = '0%';
+  pct.textContent = '0%';
+  let progress = 0;
+  const interval = setInterval(() => {
+    // slow approach: fast to 85, then creep
+    const step = progress < 60 ? 2.5 : progress < 85 ? 0.8 : 0.1;
+    progress = Math.min(progress + step, 95);
+    fill.style.width = progress.toFixed(1) + '%';
+    pct.textContent = Math.round(progress) + '%';
+  }, 150);
   const orKey = getOrKey();
   if (!orKey) { alert(t('forexNoKey')); btn.disabled = false; btn.textContent = t('forexAnalyzeBtn'); return; }
   try {
     const content = forexImages.map(img => ({ type: 'image_url', image_url: { url: 'data:' + img.mime + ';base64,' + img.b64 } }));
-    content.push({ type: 'text', text: t('forexPrompt').replace('{n}', forexImages.length) });
+    const extraText = document.getElementById('forex-extra-prompt')?.value.trim();
+    const basePrompt = t('forexPrompt').replace('{n}', forexImages.length);
+    const finalPrompt = extraText ? basePrompt + ' Additional technique/conditions: ' + extraText : basePrompt;
+    content.push({ type: 'text', text: finalPrompt });
+    const forexSystem = currentLang === 'th'
+      ? 'คุณเป็น trader ผู้เชี่ยวชาญ ตอบเป็นภาษาไทยเท่านั้น ห้ามตอบภาษาอังกฤษ'
+      : 'You are an expert trader. Reply in English only.';
     const body = {
-      model: 'google/gemini-2.0-flash-exp:free',
-      messages: [{ role: 'user', content }]
+      model: 'nvidia/nemotron-3.5-super-vl:free',
+      messages: [{ role: 'system', content: forexSystem }, { role: 'user', content }]
     };
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -1732,12 +1796,25 @@ async function forexAnalyze() {
     });
     const d = await res.json();
     const text = d.choices?.[0]?.message?.content || d.error?.message || t('forexNoResult');
-    resultEl.textContent = text;
+    const lines = text.split('\n').filter(l => l.trim());
+    resultEl.innerHTML = '';
+    lines.forEach(line => {
+      const p = document.createElement('p');
+      p.textContent = line;
+      resultEl.appendChild(p);
+    });
     resultEl.classList.add('show');
   } catch(e) {
-    resultEl.textContent = 'Error: ' + e.message;
+    resultEl.innerHTML = '<p>Error: ' + e.message + '</p>';
     resultEl.classList.add('show');
   }
+  // finish progress
+  clearInterval(interval);
+  fill.style.transition = 'width .4s ease';
+  fill.style.width = '100%';
+  pct.textContent = '100%';
+  setTimeout(() => { wrap.style.display = 'none'; fill.style.width = '0%'; }, 600);
+
   btn.disabled = false;
   btn.textContent = t('forexAnalyzeBtn');
 }
@@ -1776,8 +1853,13 @@ async function forexAnalyze() {
     </div>
     <input type="file" id="forex-file-input" accept="image/*" multiple style="display:none" onchange="forexHandleFiles(this.files)"/>
     <div id="forex-preview-grid" style="display:none;margin-top:16px;display:none"></div>
+    <textarea id="forex-extra-prompt" class="forex-extra-prompt" placeholder="Add extra technique or conditions... (optional)"></textarea>
     <button class="forex-analyze-btn" id="forex-analyze-btn" onclick="forexAnalyze()">🔍 Analyze Chart</button>
-    <div class="forex-result" id="forex-result"></div>
+<div class="forex-progress-wrap" id="forex-progress-wrap">
+  <div class="forex-progress-bar-bg"><div class="forex-progress-bar-fill" id="forex-progress-fill"></div></div>
+  <div class="forex-progress-pct" id="forex-progress-pct">0%</div>
+</div>
+    <div class="forex-result" id="forex-result" translate="yes"></div>
   </div>
 </div>
 
