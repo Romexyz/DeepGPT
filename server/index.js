@@ -374,7 +374,7 @@ app.post('/api/chat', async (req, res) => {
         headers: {
           'Authorization': `Bearer ${orKey}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'http://localhost:3001',
+          'HTTP-Referer': 'https://deepgpt-43wy.onrender.com',
           'X-Title': 'DeepGPT'
         },
         responseType: 'stream'
@@ -423,7 +423,7 @@ app.post('/api/forex', express.json({ limit: '20mb' }), async (req, res) => {
         headers: {
           'Authorization': `Bearer ${orKey}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'http://localhost:3001',
+          'HTTP-Referer': 'https://deepgpt-43wy.onrender.com',
           'X-Title': 'DeepGPT'
         },
         timeout: 60000
