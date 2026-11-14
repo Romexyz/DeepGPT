@@ -427,6 +427,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       </svg>
       Signal Forex
     </button>
+    <button class="drawer-nav-btn" onclick="openNewsSignal();setTimeout(closeDrawer,150)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
+      </svg>
+      Signal News
+    </button>
   </div>
 </div>
 <div id="app">
@@ -1244,6 +1250,7 @@ const I18N = {
     settingsTitle: 'คลิกเพื่อเปลี่ยน key',
     // Drawer nav
     signalForex: 'Signal Forex',
+    signalNews: 'Signal News',
     // Input area
     inputPlaceholder: 'พิมพ์ข้อความ… (Ctrl+V วางรูป, + แนบไฟล์)',
     hint: 'DeepGPT · ไม่มีข้อจำกัด · ไม่มีตัวกรอง · ไม่มีคำขอโทษ',
@@ -1324,6 +1331,7 @@ const I18N = {
     logoutTitle: 'Sign out',
     settingsTitle: 'Click to change key',
     signalForex: 'Signal Forex',
+    signalNews: 'Signal News',
     inputPlaceholder: 'Type a message… (Ctrl+V to paste image, + to attach file)',
     hint: 'DeepGPT · No limits · No filters · No apologies',
     attachTitle: 'Attach file',
@@ -1854,5 +1862,109 @@ async function forexAnalyze() {
     <div class="forex-result" id="forex-result" translate="yes"></div>
   </div>
 </div>
+
+<!-- ── News Signal Screen ── -->
+<div id="news-screen" class="hidden">
+  <div id="forex-topbar">
+    <button class="back-btn" onclick="closeNewsSignal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div style="flex:1">
+      <h1>📰 Forex News</h1>
+      <p>Economic calendar &amp; high-impact events this week</p>
+    </div>
+    <button onclick="loadForexNews()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:600">↻ Refresh</button>
+  </div>
+  <div class="forex-body" style="max-width:860px;margin:0 auto;padding:16px">
+    <div id="news-filter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="news-filter-btn active" data-impact="all" onclick="filterNews('all')">All</button>
+      <button class="news-filter-btn" data-impact="High" onclick="filterNews('High')" style="color:#ef4444">🔴 High</button>
+      <button class="news-filter-btn" data-impact="Medium" onclick="filterNews('Medium')" style="color:#f59e0b">🟡 Medium</button>
+      <button class="news-filter-btn" data-impact="Low" onclick="filterNews('Low')" style="color:#6b7280">⚪ Low</button>
+    </div>
+    <div id="news-list" style="display:flex;flex-direction:column;gap:10px">
+      <div style="text-align:center;padding:40px;color:var(--text2)">Loading news...</div>
+    </div>
+  </div>
+</div>
+<style>
+.news-filter-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:12px;cursor:pointer;transition:.15s}
+.news-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.news-card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start}
+.news-card.impact-High{border-left:3px solid #ef4444}
+.news-card.impact-Medium{border-left:3px solid #f59e0b}
+.news-card.impact-Low{border-left:3px solid #6b7280}
+.news-time{font-size:11px;color:var(--text2);min-width:60px;padding-top:2px}
+.news-body{flex:1}
+.news-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.news-meta{font-size:12px;color:var(--text2);display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.news-badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge-High{background:#ef444420;color:#ef4444}
+.badge-Medium{background:#f59e0b20;color:#f59e0b}
+.badge-Low{background:#6b728020;color:#9ca3af}
+</style>
+<script>
+let _newsData=[];
+let _newsFilter='all';
+function openNewsSignal(){
+  document.getElementById('news-screen').classList.remove('hidden');
+  if(_newsData.length===0)loadForexNews();
+}
+function closeNewsSignal(){
+  document.getElementById('news-screen').classList.add('hidden');
+}
+async function loadForexNews(){
+  document.getElementById('news-list').innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)">Loading...</div>';
+  try{
+    const r=await fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json?v='+Date.now());
+    _newsData=await r.json();
+    renderNews();
+  }catch(e){
+    document.getElementById('news-list').innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)">Failed to load. Try again.</div>';
+  }
+}
+function filterNews(impact){
+  _newsFilter=impact;
+  document.querySelectorAll('.news-filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.impact===impact));
+  renderNews();
+}
+function renderNews(){
+  const list=document.getElementById('news-list');
+  const filtered=_newsFilter==='all'?_newsData:_newsData.filter(n=>n.impact===_newsFilter);
+  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)">No events found.</div>';return;}
+  const groups={};
+  filtered.forEach(n=>{
+    const d=new Date(n.date);
+    const key=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    if(!groups[key])groups[key]=[];
+    groups[key].push(n);
+  });
+  let out='';
+  for(const[day,events]of Object.entries(groups)){
+    out+=`<div style="font-size:12px;font-weight:700;color:var(--text2);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">${day}</div>`;
+    events.forEach(n=>{
+      const t=new Date(n.date);
+      const time=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+      const prev=n.previous!=null?`<span>Prev: ${n.previous}</span>`:'';
+      const fore=n.forecast!=null?`<span>Forecast: ${n.forecast}</span>`:'';
+      const actual=n.actual!=null&&n.actual!==''?`<span style="font-weight:700;color:var(--accent)">Actual: ${n.actual}</span>`:'';
+      out+=`<div class="news-card impact-${n.impact}">
+        <div class="news-time">${time}</div>
+        <div class="news-body">
+          <div class="news-title">${n.title}</div>
+          <div class="news-meta">
+            <span class="news-badge badge-${n.impact}">${n.impact}</span>
+            <span>${n.country}</span>
+            <span>${n.currency}</span>
+            ${prev}${fore}${actual}
+          </div>
+        </div>
+      </div>`;
+    });
+  }
+  list.innerHTML=out;
+}
+</script>
+
 </body>
 </html>
