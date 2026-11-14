@@ -1230,6 +1230,8 @@ const I18N = {
     settingsTitle: 'คลิกเพื่อเปลี่ยน key',
     // Drawer nav
     signalForex: 'Signal Forex',
+        signalNews: 'Signal News',
+        signalNews: 'Signal News',
     // Input area
     inputPlaceholder: 'พิมพ์ข้อความ… (Ctrl+V วางรูป, + แนบไฟล์)',
     hint: 'DeepGPT · ไม่มีข้อจำกัด · ไม่มีตัวกรอง · ไม่มีคำขอโทษ',
@@ -1309,6 +1311,7 @@ const I18N = {
     logoutTitle: 'Sign out',
     settingsTitle: 'Click to change key',
     signalForex: 'Signal Forex',
+        signalNews: 'Signal News',
     inputPlaceholder: 'Type a message… (Ctrl+V to paste image, + to attach file)',
     hint: 'DeepGPT · No limits · No filters · No apologies',
     attachTitle: 'Attach file',
@@ -1777,5 +1780,497 @@ async function forexAnalyze() {
     <div class="forex-result" id="forex-result"></div>
   </div>
 </div>
+
+<!-- ── Gold News Signal Screen (embedded) ── -->
+<div id="news-screen" class="hidden">
+  <div id="forex-topbar">
+    <button class="back-btn" onclick="closeNewsSignal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div style="flex:1">
+      <h1>⚡ Gold News Signal</h1>
+      <p>สัญญาณข่าวเศรษฐกิจ · NFP · CPI · FOMC · XAUUSD</p>
+    </div>
+  </div>
+
+  <div id="gns-wrap" style="height:calc(100vh - 60px);overflow-y:auto">
+  <div class="gns-container">
+
+    <!-- Header price ticker -->
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px">
+        <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#f0b90b,#b45309);display:grid;place-items:center;font-size:16px;box-shadow:0 0 14px rgba(240,185,11,.35)">⚡</div>
+        <div>Gold News Signal<small style="display:block;font-size:10px;font-weight:400;color:#5c6478;letter-spacing:.5px">สัญญาณเทรดข่าว XAUUSD · NFP · CPI · FOMC</small></div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px;background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);padding:7px 14px;border-radius:12px">
+        <span style="font-size:11px;color:#5c6478;text-transform:uppercase;letter-spacing:.6px">XAUUSD</span>
+        <span style="font-size:16px;font-weight:700;color:#ffd75e;font-variant-numeric:tabular-nums" id="gns-tickPrice">…</span>
+        <span id="gns-tickChange" style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:8px;color:#8b93a7;background:rgba(255,255,255,.05)">สด</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#5c6478">
+        <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;flex-shrink:0" id="gns-srcDot"></span>
+        <span id="gns-srcLabel">เชื่อมต่อ…</span>
+      </div>
+      <button onclick="gnsRefresh()" style="border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#e6eaf2;padding:7px 13px;border-radius:9px;font-family:inherit;font-size:12px;cursor:pointer">⟳ รีเฟรช</button>
+    </div>
+
+    <!-- Hero countdown -->
+    <div style="padding:16px 18px 0">
+      <div id="gns-heroCard" style="background:linear-gradient(135deg,rgba(240,185,11,.10),rgba(255,255,255,.02)),#121a2b;border:1px solid rgba(240,185,11,.35);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:11px;letter-spacing:.8px;color:#ffd75e;text-transform:uppercase" id="gns-heroLabel">เลือกอีเวนต์</div>
+          <h2 style="font-size:20px;margin-top:2px;font-weight:700" id="gns-heroEvTitle">…</h2>
+          <div style="color:#8b93a7;font-size:12px;margin-top:4px" id="gns-heroEvMeta">…</div>
+        </div>
+        <div style="text-align:center;padding:4px 10px">
+          <div style="font-size:11px;color:#5c6478;text-transform:uppercase;letter-spacing:1px" id="gns-countLabel">เวลานับถอยหลัง</div>
+          <div style="font-size:36px;font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;color:#ffd75e;text-shadow:0 0 24px rgba(240,185,11,.35);line-height:1.15" id="gns-countdownTime">--:--:--</div>
+        </div>
+      </div>
+      <div id="gns-warnBar" style="margin-top:10px;padding:10px 14px;border-radius:11px;font-size:12px;display:none;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.4)"></div>
+    </div>
+
+    <!-- Main grid -->
+    <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:16px;padding:16px 18px;align-items:start" id="gns-grid">
+
+      <!-- Event list -->
+      <div style="background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600;font-size:13px">
+          📅 ปฏิทินข่าวสำคัญ USD
+          <span style="margin-left:auto;font-size:11px;color:#5c6478;font-weight:400" id="gns-evCount"></span>
+        </div>
+        <div style="max-height:580px;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:7px" id="gns-evList">
+          <div style="color:#5c6478;font-size:13px;text-align:center;padding:24px">กำลังโหลด…</div>
+        </div>
+      </div>
+
+      <!-- Score panel -->
+      <div style="background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden" id="gns-scorePanel">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600;font-size:13px">
+          🎯 Signal Score
+          <span style="margin-left:auto;font-size:11px;color:#5c6478;font-weight:400">ซ้าย=ซื้อ · ขวา=ขาย</span>
+        </div>
+        <div style="padding:15px" id="gns-scorePanelBody">
+          <div style="font-size:14px;font-weight:700" id="gns-scoreName">เลือกอีเวนต์</div>
+          <div style="font-size:11px;color:#8b93a7;margin-top:2px" id="gns-scoreTime">…</div>
+          <div style="text-align:center;padding:8px 0 4px" id="gns-scoreGauge"></div>
+          <div class="gns-verdict neutral" id="gns-verdictBox">
+            <div style="font-size:24px;font-weight:800;letter-spacing:1px" id="gns-verdictBig">—</div>
+            <div style="font-size:11px;color:#8b93a7;margin-top:3px" id="gns-verdictSub">…</div>
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px" id="gns-brkBox"></div>
+          <div style="margin-top:12px;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font-size:12px;color:#8b93a7;line-height:1.65" id="gns-reasonBox"></div>
+
+          <!-- tabs -->
+          <div style="display:flex;gap:5px;padding:8px 0 0;border-bottom:1px solid rgba(255,255,255,.08);margin-top:14px">
+            <button class="gns-tab gns-tab-active" data-tab="playbook" onclick="gnsTab(this)">📖 Playbook</button>
+            <button class="gns-tab" data-tab="risk" onclick="gnsTab(this)">🛡 Risk</button>
+            <button class="gns-tab" data-tab="stats" onclick="gnsTab(this)">📊 สถิติ</button>
+          </div>
+
+          <div id="gns-tab-playbook" class="gns-tab-content" style="display:block;padding:13px 0 0">
+            <div style="font-size:11px;color:#5c6478;margin-bottom:4px">เปรียบ Actual กับคาดการณ์ หลังข่าวออก:</div>
+            <table style="width:100%;border-collapse:collapse;font-size:12px" id="gns-scenRows"></table>
+            <div style="font-size:11px;color:#5c6478;margin-top:12px">กลยุทธ์ก่อน/หลังข่าว:</div>
+            <div id="gns-stratRows"></div>
+          </div>
+
+          <div id="gns-tab-risk" class="gns-tab-content" style="display:none;padding:13px 0 0">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">ยอดเงิน (USD)</label><input type="number" id="gns-inBal" min="0" step="50" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
+              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">ความเสี่ยง (%)</label><input type="number" id="gns-inRisk" min="0.1" max="10" step="0.1" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
+              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">SL (USD)</label><input type="number" id="gns-inSL" min="1" step="1" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
+              <div style="display:flex;align-items:flex-end"><button onclick="gnsCalcRisk()" style="width:100%;background:linear-gradient(135deg,#f0b90b,#d97706);color:#1a1204;font-weight:700;border:none;border-radius:9px;padding:9px;font-family:inherit;font-size:12px;cursor:pointer">คำนวณ Lot</button></div>
+            </div>
+            <div style="margin-top:12px;padding:12px;border-radius:11px;background:rgba(240,185,11,.06);border:1px solid rgba(240,185,11,.35);font-size:12px" id="gns-riskResult">
+              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>ความเสี่ยง (USD)</span><b style="color:#ffd75e" id="gns-riskUSD">—</b></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Lot แนะนำ</span><b style="color:#ffd75e" id="gns-lotOut">—</b></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>SL</span><b style="color:#ffd75e" id="gns-slOut">—</b></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>TP (1.5×SL)</span><b style="color:#ffd75e" id="gns-tpOut">—</b></div>
+            </div>
+          </div>
+
+          <div id="gns-tab-stats" class="gns-tab-content" style="display:none;padding:13px 0 0">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#22c55e" id="gns-stWin">0</div><div style="font-size:10px;color:#5c6478;margin-top:1px">ชนะ</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#ef4444" id="gns-stLoss">0</div><div style="font-size:10px;color:#5c6478;margin-top:1px">แพ้</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#ffd75e" id="gns-stRate">—</div><div style="font-size:10px;color:#5c6478;margin-top:1px">Win rate</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800" id="gns-stDev">—</div><div style="font-size:10px;color:#5c6478;margin-top:1px">dev เฉลี่ย</div></div>
+            </div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px" id="gns-histList"></div>
+            <button onclick="gnsClearResults()" style="margin-top:10px;border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#8b93a7;padding:6px 12px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">🗑 ล้างประวัติ</button>
+          </div>
+
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)" id="gns-trackerBox"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- disclaimer -->
+    <div style="margin:0 18px 20px;padding:11px 15px;border-radius:11px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.3);font-size:11px;color:#8b93a7;line-height:1.6">
+      <b style="color:#f59e0b">⚠️ คำเตือน:</b> เครื่องมือนี้เป็นโมเดลกลยุทธ์ ไม่ใช่คำทำนาย — ใช้ SL เสมอ ทดลองในบัญชีเดโม่ก่อน
+    </div>
+  </div>
+  </div>
+</div>
+<!-- end Gold News Signal Screen -->
+
+<style>
+.gns-container { font-family: "Prompt", system-ui, sans-serif; }
+.gns-verdict { margin-top:12px;padding:12px;border-radius:11px;text-align:center;border:1px solid rgba(255,255,255,.08) }
+.gns-verdict.buy { background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.35) }
+.gns-verdict.buy div:first-child { color:#22c55e }
+.gns-verdict.sell { background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.35) }
+.gns-verdict.sell div:first-child { color:#ef4444 }
+.gns-verdict.neutral { background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.35) }
+.gns-verdict.neutral div:first-child { color:#f59e0b }
+.gns-tab { padding:7px 13px;font-size:12px;border-radius:9px 9px 0 0;cursor:pointer;border:1px solid transparent;border-bottom:none;color:#8b93a7;transition:.15s;font-family:inherit;background:transparent }
+.gns-tab-active { background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.08);color:#e6eaf2 }
+.gns-ev-card { border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px 12px;cursor:pointer;transition:.15s ease;background:rgba(255,255,255,.015) }
+.gns-ev-card:hover { border-color:rgba(240,185,11,.35);transform:translateX(2px) }
+.gns-ev-card.gns-active { border-color:#f0b90b;background:rgba(240,185,11,.07) }
+.gns-ev-card.gns-urgent { border-color:rgba(239,68,68,.55) }
+@media(max-width:860px){ #gns-grid{grid-template-columns:1fr} }
+</style>
+
+<script>
+(function(){
+'use strict';
+const GNS_FF='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+const GNS_GOLD='https://api.gold-api.com/price/XAU';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp=(v,lo,hi)=>Math.min(hi,Math.max(lo,v));
+const THAI_M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const LS=k=>{try{return localStorage.getItem(k)}catch{return null}};
+const SS=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+
+const GS={events:[],selected:null,gold:null,goldFirst:null,ticks:[],atr:30,inited:false};
+
+function fmtNum(v,d){
+  if(v==null||isNaN(v))return '—';
+  const a=Math.abs(v);
+  if(a>=1e9)return(v/1e9).toFixed(2)+'B';
+  if(a>=1e6)return(v/1e6).toFixed(2)+'M';
+  if(a>=1e3&&d==null)return(v/1e3).toFixed(1)+'K';
+  return Number(v).toLocaleString('en-US',{maximumFractionDigits:d??2});
+}
+
+function thaiTime(iso){
+  try{
+    const d=new Date(iso);
+    const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);
+    const g=t=>p.find(x=>x.type===t).value;
+    return `${g('day')} ${THAI_M[+g('month')-1]} ${g('year')} ${g('hour')}:${g('minute')} น.`;
+  }catch{return '—'}
+}
+
+function countdownText(ms){
+  if(ms<=0)return 'ออกแล้ว';
+  const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60),ss=s%60;
+  if(d>0)return `${d}วัน ${h}ชม`;
+  const p=n=>String(n).padStart(2,'0');
+  return `${p(h)}:${p(m)}:${p(ss)}`;
+}
+
+async function gnsFetch(url,ms=8000){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+  try{const r=await fetch(url,{signal:c.signal,cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(t)}
+}
+
+async function gnsLoadGold(){
+  try{
+    const j=await gnsFetch(GNS_GOLD,6000);
+    const p=Number(j.price);if(!p)throw 0;
+    const today=new Date().toISOString().slice(0,10);
+    if(LS('gns_day')!==today){SS('gns_day',today);GS.goldFirst=p;SS('gns_first',String(p));}
+    else if(!GS.goldFirst){GS.goldFirst=Number(LS('gns_first'))||p;}
+    GS.goldFirst=GS.goldFirst||p;GS.gold=p;
+    GS.ticks.push({t:Date.now(),p});if(GS.ticks.length>600)GS.ticks=GS.ticks.slice(-600);
+    gnsRenderTicker();
+  }catch{if(!GS.gold&&$('gns-tickPrice'))$('gns-tickPrice').textContent='—';}
+}
+
+function gnsRenderTicker(){
+  const p=GS.gold;if(!p)return;
+  if($('gns-tickPrice'))$('gns-tickPrice').textContent='$'+fmtNum(p,2);
+  const ch=GS.goldFirst?((p-GS.goldFirst)/GS.goldFirst)*100:0;
+  const el=$('gns-tickChange');if(!el)return;
+  el.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%';
+  el.style.color=ch>0.01?'#22c55e':ch<-0.01?'#ef4444':'#8b93a7';
+}
+
+function gnsSrc(cls,label){
+  const dot=$('gns-srcDot'),lbl=$('gns-srcLabel');
+  if(dot)dot.style.background=cls==='live'?'#22c55e':cls==='warn'?'#f59e0b':'#ef4444';
+  if(lbl)lbl.textContent=label||'';
+}
+
+const TMPLS=[
+  {re:/non.?farm|payrolls|\bnfp\b/i,hawk:true,scale:150e3},
+  {re:/unemployment/i,hawk:false,scale:0.4},
+  {re:/average hourly earnings/i,hawk:true,scale:0.3},
+  {re:/\bcpi\b|consumer price/i,hawk:true,scale:0.5},
+  {re:/\bppi\b|producer price/i,hawk:true,scale:0.5},
+  {re:/fomc|interest rate|fed fund|rate decision/i,hawk:true,scale:0.5},
+  {re:/\bgdp\b/i,hawk:true,scale:1.0},
+  {re:/retail sales/i,hawk:true,scale:1.0},
+  {re:/ism/i,hawk:true,scale:8},
+  {re:/jolts/i,hawk:true,scale:500e3},
+  {re:/jobless claims/i,hawk:false,scale:80e3},
+  {re:/\badp\b/i,hawk:true,scale:150e3},
+];
+
+function matchTpl(title){return TMPLS.find(t=>t.re.test(title))||null}
+
+function parseNum(str){
+  if(str==null)return null;
+  const s=String(str).replace(/,/g,'').trim();if(!s)return null;
+  const m=s.match(/(-?\d+(?:\.\d+)?)\s*(K|M|B|T)?/i);if(!m)return null;
+  let v=parseFloat(m[1]);const u=(m[2]||'').toUpperCase();
+  if(u==='K')v*=1e3;if(u==='M')v*=1e6;if(u==='B')v*=1e9;if(u==='T')v*=1e12;
+  return v;
+}
+
+function computeScore(ev){
+  const tpl=matchTpl(ev.title);
+  let bias=50,mag=50,hasNum=false;const notes=[];
+  if(tpl){
+    const f=parseNum(ev.forecast),p=parseNum(ev.previous);
+    if(f!=null&&p!=null){
+      hasNum=true;const gap=f-p,dir=tpl.hawk?1:-1,raw=dir*gap;
+      bias=clamp(50+(raw/tpl.scale)*50,5,95);
+      mag=clamp((Math.abs(raw)/tpl.scale)*100,10,100);
+      const dw=raw>0?'กดทอง (ลง)':raw<0?'หนุนทอง (ขึ้น)':'กลาง';
+      notes.push(`คาด <b>${esc(ev.forecast||'—')}</b> vs เดิม <b>${esc(ev.previous||'—')}</b> → ${dw}`);
+    }else{notes.push('ไม่มีตัวเลขคาดการณ์ — รอข่าวออกก่อน')}
+  }else{notes.push('ข่าวนอกเทมเพลต — รอสไปก์แรก 2-3 นาที')}
+  const mom=GS.ticks.length>=5&&GS.gold?(()=>{
+    const pp=GS.ticks.map(x=>x.p),mn=Math.min(...pp),mx=Math.max(...pp);
+    return mx-mn<1e-9?null:clamp(((GS.gold-mn)/(mx-mn))*100,0,100);
+  })():null;
+  if(mom!=null)notes.push(mom>60?`ทองสูงในกรอบวัน (${mom.toFixed(0)}%) → แรงขายทำกำไร`:`ทองต่ำในกรอบ (${mom.toFixed(0)}%) → แรงซื้อหนุน`);
+  const impact=ev.impact==='High'?100:ev.impact==='Medium'?55:25;
+  const D=clamp(0.75*bias+0.25*(mom!=null?mom:50),0,100);
+  const dataConf=hasNum?80:40;
+  const C=clamp(0.40*impact+0.35*mag+0.25*dataConf,0,100);
+  return{D,C,bias,mag,impact,mom,notes,hasNum,tpl};
+}
+
+function verdict(D){
+  if(D<=32)return{cls:'buy',big:'BUY แรง — ซื้อทอง',sub:'โมเดลโน้มทองขึ้น — ใช้ SL เสมอ'};
+  if(D<=44)return{cls:'buy',big:'BUY — ซื้อทอง',sub:'โมเดลโน้มทองขึ้น'};
+  if(D<=56)return{cls:'neutral',big:'NEUTRAL — รอข่าว',sub:'ทิศทางไม่ชัด รอ second-wave'};
+  if(D<=68)return{cls:'sell',big:'SELL — ขายทอง',sub:'โมเดลโน้มทองลง'};
+  return{cls:'sell',big:'SELL แรง — ขายทอง',sub:'โมเดลโน้มทองลง — ใช้ SL เสมอ'};
+}
+
+function gnsResults(){try{return JSON.parse(LS('gns_results'))||[]}catch{return[]}}
+function gnsSaveResults(r){SS('gns_results',JSON.stringify(r))}
+function gnsFindResult(ev){return gnsResults().find(r=>r.title===ev.title&&r.date===ev.date)||null}
+
+function gnsRenderEvents(){
+  const list=$('gns-evList');if(!list)return;
+  if(!GS.events.length){list.innerHTML='<div style="color:#5c6478;font-size:13px;text-align:center;padding:24px">ไม่มีอีเวนต์</div>';return}
+  const now=Date.now();list.innerHTML='';
+  GS.events.forEach((ev,i)=>{
+    const ms=ev.ts-now,isU=ms>0&&ms<=15*60e3;
+    const cls=['gns-ev-card',GS.selected===ev?'gns-active':'',isU?'gns-urgent':''].filter(Boolean).join(' ');
+    const dv=[];
+    if(ev.forecast)dv.push(`คาด <b>${esc(ev.forecast)}</b>`);
+    if(ev.previous)dv.push(`เดิม <b>${esc(ev.previous)}</b>`);
+    if(ev.actual)dv.push(`จริง <b style="color:#ffd75e">${esc(ev.actual)}</b>`);
+    list.insertAdjacentHTML('beforeend',`<div class="${cls}" data-idx="${i}" role="button" tabindex="0"><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;font-weight:600;flex:1">${esc(ev.title)}</span><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(239,68,68,.15);color:#ef4444">${esc(ev.impact)}</span><span style="font-size:10px;color:#5c6478;white-space:nowrap">${countdownText(ms)}</span></div>${dv.length?`<div style="display:flex;gap:12px;margin-top:5px;font-size:11px;color:#8b93a7;flex-wrap:wrap"><span>⏰ ${thaiTime(ev.date)}</span><span>${dv.join(' · ')}</span></div>`:'<div style="font-size:11px;color:#5c6478;margin-top:4px">⏰ '+thaiTime(ev.date)+'</div>'}</div>`);
+  });
+  $('gns-evCount').textContent=GS.events.length+' อีเวนต์';
+  list.querySelectorAll('.gns-ev-card').forEach(card=>{
+    card.addEventListener('click',()=>{GS.selected=GS.events[+card.dataset.idx];gnsRenderEvents();gnsRenderScore()});
+  });
+}
+
+function gnsRenderScore(){
+  const ev=GS.selected;if(!ev)return;
+  const sc=computeScore(ev),v=verdict(sc.D);
+  const now=Date.now(),ms=ev.ts-now,isPast=ms<=0,isU=ms>0&&ms<=15*60e3;
+  const rec=gnsFindResult(ev);
+  if($('gns-heroEvTitle'))$('gns-heroEvTitle').textContent=ev.title+(ev.demo?' (สำรอง)':'');
+  if($('gns-heroEvMeta'))$('gns-heroEvMeta').textContent=`${ev.impact} · ${thaiTime(ev.date)} · คาด ${ev.forecast||'—'} / เดิม ${ev.previous||'—'}`;
+  if($('gns-heroLabel'))$('gns-heroLabel').textContent=ms>0?(isU?'ใกล้ปล่อยข่าว!':'เหลือเวลา'):'ข่าวออกแล้ว';
+  if($('gns-scoreName'))$('gns-scoreName').textContent=ev.title;
+  if($('gns-scoreTime'))$('gns-scoreTime').innerHTML=`⏰ ${thaiTime(ev.date)} · <b style="color:${isU?'#ef4444':'#8b93a7'}">${countdownText(ms)}</b>`;
+  if($('gns-scoreGauge'))$('gns-scoreGauge').innerHTML=`<div style="position:relative;height:16px;border-radius:20px;overflow:hidden;background:linear-gradient(90deg,rgba(34,197,94,.85) 0%,rgba(34,197,94,.35) 30%,rgba(255,255,255,.06) 50%,rgba(239,68,68,.35) 70%,rgba(239,68,68,.9) 100%);border:1px solid rgba(255,255,255,.08)"><div style="position:absolute;top:-3px;bottom:-3px;width:3px;background:#fff;border-radius:3px;box-shadow:0 0 10px rgba(255,255,255,.9);transition:left .8s cubic-bezier(.22,1,.36,1);left:${sc.D}%"></div></div><div style="display:flex;justify-content:space-between;font-size:10px;color:#5c6478;margin-top:5px"><span>ซื้อทอง</span><span>กลาง</span><span>ขายทอง</span></div>`;
+  const vb=$('gns-verdictBox');if(vb)vb.className='gns-verdict '+v.cls;
+  if($('gns-verdictBig'))$('gns-verdictBig').textContent=isPast&&rec?'จบแล้ว — ดูผล':v.big;
+  if($('gns-verdictSub'))$('gns-verdictSub').textContent=isPast&&rec?`ผล: ${rec.outcome==='win'?'ชนะ':rec.outcome==='loss'?'แพ้':'ไม่เทรด'}`:v.sub;
+  const brk=[['ทิศทางข่าว',sc.bias,sc.hasNum?'#ef4444':'#f59e0b'],['ขนาด deviation',sc.mag,'#f59e0b'],['น้ำหนักข่าว',sc.impact,sc.impact>55?'#ef4444':'#f59e0b'],['โมเมนตัมทอง',sc.mom!=null?sc.mom:50,sc.mom!=null&&sc.mom>60?'#ef4444':'#22c55e']];
+  if($('gns-brkBox'))$('gns-brkBox').innerHTML=brk.map(([n,val,c])=>`<div style="display:grid;grid-template-columns:120px 1fr 36px;align-items:center;gap:8px;font-size:11px"><span style="color:#8b93a7">${n}</span><div style="height:6px;border-radius:8px;background:rgba(255,255,255,.06);overflow:hidden"><div style="height:100%;border-radius:8px;background:${c};width:${val}%;transition:width .7s"></div></div><span style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">${val.toFixed(0)}</span></div>`).join('');
+  if($('gns-reasonBox'))$('gns-reasonBox').innerHTML='<b>เหตุผล:</b><ul style="margin:5px 0 0 16px">'+sc.notes.map(n=>`<li>${n}</li>`).join('')+'</ul>';
+
+  // playbook
+  const tpl=sc.tpl,atr=GS.atr,price=GS.gold||3400;
+  let scenHtml='<tr><th style="text-align:left;color:#5c6478;font-size:10px;padding:5px 7px;border-bottom:1px solid rgba(255,255,255,.08)">กรณี</th><th style="text-align:left;color:#5c6478;font-size:10px;padding:5px 7px;border-bottom:1px solid rgba(255,255,255,.08)">แนวทาง</th></tr>';
+  if(tpl){
+    if(tpl.hawk){
+      scenHtml+=`<tr><td style="padding:7px;color:#ef4444;font-weight:700;white-space:nowrap">Actual >> คาด</td><td style="padding:7px;font-size:11px">ร้อนแรงกว่าคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b> → Sell second-wave</td></tr>`;
+      scenHtml+=`<tr><td style="padding:7px;color:#f59e0b;font-weight:700">Actual ≈ คาด</td><td style="padding:7px;font-size:11px">ตรงคาด → ไร้ทิศทาง รอ 10-15 นาที</td></tr>`;
+      scenHtml+=`<tr><td style="padding:7px;color:#22c55e;font-weight:700">Actual << คาด</td><td style="padding:7px;font-size:11px">อ่อนกว่าคาด → ดอลลาร์อ่อน → <b>ทองขึ้น</b> → Buy หลัง pullback</td></tr>`;
+    }else{
+      scenHtml+=`<tr><td style="padding:7px;color:#22c55e;font-weight:700;white-space:nowrap">Actual >> คาด</td><td style="padding:7px;font-size:11px">แย่กว่าคาด → ดอลลาร์อ่อน → <b>ทองขึ้น</b></td></tr>`;
+      scenHtml+=`<tr><td style="padding:7px;color:#f59e0b;font-weight:700">Actual ≈ คาด</td><td style="padding:7px;font-size:11px">ตรงคาด → ไร้ทิศทาง</td></tr>`;
+      scenHtml+=`<tr><td style="padding:7px;color:#ef4444;font-weight:700">Actual << คาด</td><td style="padding:7px;font-size:11px">ดีกว่าคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b></td></tr>`;
+    }
+  }else{scenHtml+=`<tr><td colspan="2" style="padding:7px;font-size:11px;color:#8b93a7">ข่าวนอกเทมเพลต — รอสไปก์แรก 2-3 นาที แล้วเทรดตามเทรนด์ตลาด</td></tr>`}
+  if($('gns-scenRows'))$('gns-scenRows').innerHTML=scenHtml;
+
+  const h=0.55*atr;
+  const strats=[{n:1,name:'Straddle',params:[['Buy Stop','$'+fmtNum(price+h,2)],['Sell Stop','$'+fmtNum(price-h,2)],['SL','$'+fmtNum(atr*.8,2)],['TP','$'+fmtNum(atr*1.5,2)]]},{n:2,name:'Second-wave',params:[['เข้า','หลัง pullback'],['SL','$'+fmtNum(atr*.8,2)],['TP','$'+fmtNum(atr*2,2)]]}];
+  if($('gns-stratRows'))$('gns-stratRows').innerHTML=strats.map(s=>`<div style="margin-top:10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:11px 13px;font-size:12px"><div style="font-weight:700;margin-bottom:4px">${s.n}. ${s.name}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${s.params.map(([k,val])=>`<span style="font-size:10px;padding:2px 8px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#8b93a7">${k}: <b style="color:#e6eaf2">${val}</b></span>`).join('')}</div></div>`).join('');
+
+  const tr=$('gns-trackerBox');if(!tr)return;
+  if(isPast){
+    const actual=ev.actual||(rec?rec.actual:'');
+    tr.innerHTML=`<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center"><input id="gns-inActual" placeholder="Actual จริง" value="${esc(actual)}" style="flex:1;min-width:140px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:12px"><button onclick="gnsSubmitActual()" style="border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#e6eaf2;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">บันทึก</button><button onclick="gnsSetOutcome('win')" style="border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);color:#22c55e;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">🏆 ชนะ</button><button onclick="gnsSetOutcome('loss')" style="border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.08);color:#ef4444;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">💸 แพ้</button></div>`;
+  }else{
+    tr.innerHTML=`<div style="color:#5c6478;font-size:12px;text-align:center;padding:12px">⏳ หลังข่าวออกจะให้กรอก actual + บันทึกผล</div>`;
+  }
+}
+
+function gnsRenderStats(){
+  const rs=gnsResults(),judged=rs.filter(r=>r.outcome==='win'||r.outcome==='loss');
+  const wins=judged.filter(r=>r.outcome==='win').length,wr=judged.length?((wins/judged.length)*100).toFixed(0)+'%':'—';
+  if($('gns-stWin'))$('gns-stWin').textContent=wins;
+  if($('gns-stLoss'))$('gns-stLoss').textContent=judged.length-wins;
+  if($('gns-stRate'))$('gns-stRate').textContent=wr;
+  const devs=rs.map(r=>r.deviation).filter(v=>v!=null);
+  const avg=devs.length?devs.reduce((a,b)=>a+b,0)/devs.length:null;
+  if($('gns-stDev'))$('gns-stDev').textContent=avg!=null?(avg>0?'+':'')+fmtNum(avg):'—';
+  const hl=$('gns-histList');if(!hl)return;hl.innerHTML='';
+  if(!rs.length){hl.innerHTML='<div style="color:#5c6478;font-size:12px;text-align:center;padding:16px">ยังไม่มีประวัติ</div>';return}
+  rs.slice().reverse().forEach(r=>{
+    const tag=r.outcome==='win'?'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(34,197,94,.15);color:#22c55e">ชนะ</span>':r.outcome==='loss'?'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(239,68,68,.15);color:#ef4444">แพ้</span>':'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(139,147,167,.15);color:#8b93a7">ไม่เทรด</span>';
+    hl.insertAdjacentHTML('beforeend',`<div style="display:flex;align-items:center;gap:8px;font-size:11px;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)">${tag}<span style="flex:1;color:#8b93a7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.title)}</span></div>`);
+  });
+}
+
+window.gnsCalcRisk=function(){
+  const bal=parseFloat($('gns-inBal').value)||0,rp=parseFloat($('gns-inRisk').value)||1,sl=parseFloat($('gns-inSL').value)||30;
+  const ru=bal*(rp/100),lots=ru/(sl*100),tp=sl*1.5;
+  if($('gns-riskUSD'))$('gns-riskUSD').textContent='$'+fmtNum(ru,2);
+  if($('gns-lotOut'))$('gns-lotOut').textContent=lots>0?lots.toFixed(2):'0.00';
+  if($('gns-slOut'))$('gns-slOut').textContent='$'+fmtNum(sl,2);
+  if($('gns-tpOut'))$('gns-tpOut').textContent='$'+fmtNum(tp,2);
+  SS('gns_bal',$('gns-inBal').value);SS('gns_risk',$('gns-inRisk').value);SS('gns_sl',$('gns-inSL').value);
+  GS.atr=sl||30;
+};
+
+window.gnsSubmitActual=function(){
+  const ev=GS.selected;if(!ev)return;
+  const val=$('gns-inActual').value.trim();if(!val)return;
+  ev.actual=val;
+  const rs=gnsResults(),rec=gnsFindResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now()};
+  rec.actual=val;
+  const f=parseNum(ev.forecast),a=parseNum(val);if(f!=null&&a!=null)rec.deviation=a-f;
+  const idx=rs.findIndex(r=>r.title===ev.title&&r.date===ev.date);
+  if(idx>=0)rs[idx]=rec;else rs.push(rec);
+  gnsSaveResults(rs);gnsRenderScore();gnsRenderStats();
+};
+
+window.gnsSetOutcome=function(o){
+  const ev=GS.selected;if(!ev)return;
+  const rs=gnsResults(),rec=gnsFindResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now(),actual:ev.actual||''};
+  rec.outcome=o;
+  const idx=rs.findIndex(r=>r.title===ev.title&&r.date===ev.date);
+  if(idx>=0)rs[idx]=rec;else rs.push(rec);
+  gnsSaveResults(rs);gnsRenderScore();gnsRenderStats();
+};
+
+window.gnsClearResults=function(){try{localStorage.removeItem('gns_results')}catch{}gnsRenderStats();};
+
+window.gnsTab=function(btn){
+  document.querySelectorAll('.gns-tab').forEach(t=>t.classList.remove('gns-tab-active'));
+  document.querySelectorAll('.gns-tab-content').forEach(c=>{c.style.display='none'});
+  btn.classList.add('gns-tab-active');
+  const c=$('gns-tab-'+btn.dataset.tab);if(c)c.style.display='block';
+  if(btn.dataset.tab==='stats')gnsRenderStats();
+};
+
+window.gnsRefresh=async function(){await gnsLoadEvents();await gnsLoadGold();};
+
+async function gnsLoadEvents(){
+  gnsSrc('loading','กำลังโหลด…');
+  const endpoints=['/api/calendar',GNS_FF];
+  for(const url of endpoints){
+    try{
+      const j=await gnsFetch(url,10000);
+      let evs=null;
+      if(j&&Array.isArray(j.events)){evs=j.events;}
+      else if(Array.isArray(j)&&j.length){evs=j.filter(e=>e.country==='USD').map(e=>({...e,_src:'ff'}));}
+      if(evs&&evs.length){
+        const now=Date.now();
+        const high=evs.filter(e=>(e.country==='USD'||e.country==='US')&&e.impact==='High').map(e=>({...e,ts:new Date(e.date).getTime()})).filter(e=>!isNaN(e.ts)).sort((a,b)=>a.ts-b.ts);
+        GS.events=high;
+        gnsSrc('live','ForexFactory ('+high.length+' อีเวนต์)');
+        const selId=GS.selected?GS.selected.title+'|'+GS.selected.date:null;
+        let next=selId?high.find(e=>e.title+'|'+e.date===selId):null;
+        if(!next)next=high.find(e=>e.ts>=now-3600e3)||high[high.length-1]||null;
+        GS.selected=next;
+        gnsRenderEvents();gnsRenderScore();return;
+      }
+    }catch(e){/* try next */}
+  }
+  GS.events=gnsDemoEvents();gnsSrc('warn','ข้อมูลสำรอง');
+  GS.selected=GS.events[0]||null;gnsRenderEvents();gnsRenderScore();
+}
+
+function gnsDemoEvents(){
+  const now=new Date(),out=[];
+  for(let i=0;i<2;i++){
+    const dt=new Date(now.getFullYear(),now.getMonth()+i,1);
+    let fri=1;while(new Date(dt.getFullYear(),dt.getMonth(),fri).getDay()!==5)fri++;
+    const d=new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),fri,12,30));
+    if(d.getTime()>Date.now()-86400e3)out.push({title:'Non-Farm Payrolls (NFP)',country:'USD',impact:'High',demo:true,date:d.toISOString(),forecast:'160K',previous:'175K',ts:d.getTime()});
+  }
+  return out;
+}
+
+function gnsTick(){
+  const now=Date.now();
+  GS.events.forEach((ev,i)=>{
+    const ms=ev.ts-now;
+    const cards=$('gns-evList')?.querySelectorAll('.gns-ev-card');
+    if(cards&&cards[i]){
+      const spans=cards[i].querySelectorAll('span');
+      if(spans.length>=3)spans[spans.length-1].textContent=countdownText(ms);
+      cards[i].classList.toggle('gns-urgent',ms>0&&ms<=15*60e3);
+    }
+  });
+  const ev=GS.selected;
+  if(ev){
+    const ms=ev.ts-Date.now();
+    if($('gns-countdownTime'))$('gns-countdownTime').textContent=countdownText(ms);
+    if($('gns-heroLabel'))$('gns-heroLabel').textContent=ms>0?(ms<=15*60e3?'ใกล้ปล่อยข่าว!':'เหลือเวลา'):'ข่าวออกแล้ว';
+  }
+}
+
+window.openNewsSignal=function(){
+  const sc=$('news-screen');if(sc)sc.classList.remove('hidden');
+  if(!GS.inited){
+    GS.inited=true;
+    const bal=LS('gns_bal')||'1000',risk=LS('gns_risk')||'1',sl=LS('gns_sl')||'30';
+    if($('gns-inBal'))$('gns-inBal').value=bal;
+    if($('gns-inRisk'))$('gns-inRisk').value=risk;
+    if($('gns-inSL')){$('gns-inSL').value=sl;GS.atr=parseFloat(sl)||30;}
+    gnsLoadGold();gnsLoadEvents();
+    setInterval(gnsTick,1000);
+    setInterval(gnsLoadGold,30000);
+  }
+};
+
+window.closeNewsSignal=function(){
+  const sc=$('news-screen');if(sc)sc.classList.add('hidden');
+};
+
+})();
+</script>
 </body>
 </html>
