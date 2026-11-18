@@ -766,17 +766,17 @@ let dlUsageCache = null; // { pct, limitPct, label }
 // session token counter
 let dlSessionTokens = 0;
 let dlOrRaw = null; // OR API raw data — stored separately so dlAddTokens can't clobber it
-const DL_SESSION_MAX = 200000; // 200k chars ≈ 100%
+const dlCapChars = 200000; // 200k chars ≈ 100%
 
 function dlAddTokens(n){
   dlSessionTokens += n;
-  const pct = Math.min(dlSessionTokens / DL_SESSION_MAX * 100, 100);
+  const pct = Math.min(dlSessionTokens / dlCapChars * 100, 100);
   dlRenderCircle(pct);
   if(dlPopupOpen) dlRenderPopup(dlBuildCache());
 }
 
 function dlBuildCache(){
-  const sessPct = Math.min(dlSessionTokens / DL_SESSION_MAX * 100, 100);
+  const sessPct = Math.min(dlSessionTokens / dlCapChars * 100, 100);
   if(dlOrRaw){
     const used = parseFloat(dlOrRaw.usage || 0);
     const limit = parseFloat(dlOrRaw.limit || 0);
