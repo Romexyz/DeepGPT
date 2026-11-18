@@ -763,13 +763,15 @@ const userInput = document.getElementById('user-input');
 let dlPopupOpen = false;
 let dlUsageCache = null; // { pct, limitPct, label }
 
-// session token counter
-let dlSessionTokens = 0;
-let dlOrRaw = null; // OR API raw data — stored separately so dlAddTokens can't clobber it
-const dlCapChars = 200000; // 200k chars ≈ 100%
+// session token counter — persisted per-day in localStorage
+let dlOrRaw = null;
+const dlCapChars = 200000;
+const _dlKey = 'dl_sess_' + new Date().toISOString().slice(0,10);
+let dlSessionTokens = parseInt(localStorage.getItem(_dlKey) || '0', 10);
 
 function dlAddTokens(n){
   dlSessionTokens += n;
+  localStorage.setItem(_dlKey, dlSessionTokens);
   const pct = Math.min(dlSessionTokens / dlCapChars * 100, 100);
   dlRenderCircle(pct);
   if(dlPopupOpen) dlRenderPopup(dlBuildCache());
