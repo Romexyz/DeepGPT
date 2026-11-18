@@ -765,25 +765,28 @@ let dlUsageCache = null; // { pct, limitPct, label }
 
 // session token counter
 let dlSessionTokens = 0;
-const DL_SESSION_MAX = 200000; // 200k tokens = 100%
+let dlOrRaw = null; // OR API raw data — stored separately so dlAddTokens can't clobber it
+const DL_SESSION_MAX = 200000; // 200k chars ≈ 100%
 
-function dlAddTokens(n){ dlSessionTokens += n; dlUsageCache = dlBuildCache(); dlRenderCircle(dlUsageCache ? dlUsageCache.pct : 0); }
+function dlAddTokens(n){
+  dlSessionTokens += n;
+  const pct = Math.min(dlSessionTokens / DL_SESSION_MAX * 100, 100);
+  dlRenderCircle(pct);
+  if(dlPopupOpen) dlRenderPopup(dlBuildCache());
+}
 
 function dlBuildCache(){
-  const orInfo = dlUsageCache && dlUsageCache._orRaw ? dlUsageCache._orRaw : null;
   const sessPct = Math.min(dlSessionTokens / DL_SESSION_MAX * 100, 100);
-  // OR API info
-  if(orInfo){
-    const used = parseFloat(orInfo.usage || 0);
-    const limit = parseFloat(orInfo.limit || 0);
+  if(dlOrRaw){
+    const used = parseFloat(dlOrRaw.usage || 0);
+    const limit = parseFloat(dlOrRaw.limit || 0);
     const limitPct = limit > 0 ? Math.min(used/limit*100, 100) : 0;
     const creditLabel = limit > 0
       ? `$${used.toFixed(4)} / $${limit.toFixed(2)} used`
       : `Free tier · $${used.toFixed(4)} used`;
-    return { pct: sessPct, limitPct, label: creditLabel, used, limit, _orRaw: orInfo,
-             sessTokens: dlSessionTokens };
+    return { pct: sessPct, limitPct, label: creditLabel, used, limit, sessTokens: dlSessionTokens };
   }
-  return { pct: sessPct, limitPct: 0, label: 'No API key', used: 0, limit: 0, sessTokens: dlSessionTokens };
+  return { pct: sessPct, limitPct: 0, label: 'Session only', used: 0, limit: 0, sessTokens: dlSessionTokens };
 }
 
 async function dlFetchUsage(){
@@ -794,8 +797,7 @@ async function dlFetchUsage(){
     if(!r.ok) return null;
     const d = await r.json();
     const raw = d.data || d;
-    // เก็บ OR raw แล้ว rebuild cache
-    if(dlUsageCache) dlUsageCache._orRaw = raw; else dlUsageCache = { _orRaw: raw };
+    dlOrRaw = raw; // เก็บ OR raw ใน global แยก
     return dlBuildCache();
   } catch(e){ return null; }
 }
@@ -829,9 +831,9 @@ function dlRenderPopup(info){
 }
 
 async function dlRefresh(){
-  const info = await dlFetchUsage();
-  if(info) dlUsageCache = info;
-  const cache = dlUsageCache || dlBuildCache();
+  await dlFetchUsage(); // updates dlOrRaw
+  const cache = dlBuildCache();
+  dlUsageCache = cache;
   dlRenderCircle(cache.pct);
   if(dlPopupOpen) dlRenderPopup(cache);
 }
@@ -3207,7 +3209,7 @@ async function forexAnalyze() {
 
 
 <!-- Daily Limit Popup -->
-<div id="dl-popup" style="display:none;position:fixed;bottom:85px;right:70px;z-index:9999;
+<div id="dl-popup" style="display:none;position:fixed;bottom:145px;right:16px;z-index:9999;
   background:var(--surface,#1a1a2e);border:1px solid var(--border2,rgba(255,255,255,.12));
   border-radius:14px;padding:16px 20px;min-width:260px;box-shadow:0 8px 32px rgba(0,0,0,.55);
   backdrop-filter:blur(16px)">
