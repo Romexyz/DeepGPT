@@ -167,6 +167,25 @@ async function handleFfEvents() {
   return { statusCode: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify([]) };
 }
 
+async function handleAdminUpdateFf(body, headers) {
+  // simple secret guard — set ADMIN_SECRET env var in Netlify
+  const secret = process.env.ADMIN_SECRET || '';
+  const provided = (headers['x-admin-secret'] || headers['X-Admin-Secret'] || '');
+  if (secret && provided !== secret) return json(403, { error: 'forbidden' });
+
+  const { events } = body;
+  if (!Array.isArray(events) || events.length === 0)
+    return json(400, { error: 'events array required' });
+
+  const db = await getDb();
+  await db.collection('ff_events_cache').replaceOne(
+    { _id: 'latest' },
+    { _id: 'latest', events, updatedAt: new Date() },
+    { upsert: true }
+  );
+  return json(200, { ok: true, saved: events.length, updatedAt: new Date().toISOString() });
+}
+
 async function handleOrUsage(headers) {
   const key = (headers['x-or-key'] || headers['X-Or-Key'] || '');
   if (!key) return json(401, { error: 'no key' });
@@ -190,8 +209,9 @@ exports.handler = async (event) => {
     if (path === '/auth/login'    && method === 'POST') return handleLogin(body);
     if (path === '/auth/logout'   && method === 'POST') return handleLogout(body);
     if (path === '/auth/me'       && method === 'GET')  return handleMe(event.headers);
-    if (path === '/ff-events'     && method === 'GET')  return handleFfEvents();
-    if (path === '/or-usage'      && method === 'GET')  return handleOrUsage(event.headers);
+    if (path === '/ff-events'          && method === 'GET')  return handleFfEvents();
+    if (path === '/admin/update-ff'    && method === 'POST') return handleAdminUpdateFf(body, event.headers);
+    if (path === '/or-usage'           && method === 'GET')  return handleOrUsage(event.headers);
     return json(404, { error: 'not found', path });
   } catch (err) {
     console.error(err);
