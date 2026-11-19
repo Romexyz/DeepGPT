@@ -44,7 +44,7 @@ async function handleRegister(body) {
   const db = await getDb();
   const portStr = String(exnessPort).trim();
   const allowed = await db.collection('exness_ports').findOne({ port: portStr });
-  if (!allowed) return json(403, { message: 'เลขพอร์ต Exness ไม่ถูกต้องหรือไม่มีในระบบ' });
+  if (!allowed) return json(403, { message: 'เลขพอร์ต Exness ไม่มีในระบบ โปรดติดต่อ Line: @870bfqsa ใช้งานฟรี' });
   if (await db.collection('users').findOne({ email })) return json(409, { message: 'อีเมลนี้มีบัญชีแล้ว' });
   if (await db.collection('users').findOne({ exnessPort: portStr })) return json(409, { message: 'เลขพอร์ต Exness นี้ถูกใช้งานแล้ว' });
   const passwordHash = await bcrypt.hash(password, 10);

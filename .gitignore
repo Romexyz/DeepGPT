@@ -6,3 +6,9 @@ oo.zip
 
 server/tokens.json
 server/exness_ports.json
+
+# Local Netlify folder
+.netlify
+
+deepgpt.bundle
+Claude outputs/
