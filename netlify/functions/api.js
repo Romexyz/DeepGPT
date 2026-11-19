@@ -114,28 +114,57 @@ async function handleFfEvents() {
     'https://nfs.faireconomy.media/ff_calendar_thisweek.json',
     'https://nfs.faireconomy.media/ff_calendar_nextweek.json',
   ];
-  const results = await Promise.all(
-    urls.map(u =>
-      fetch(u, { headers: FF_HEADERS })
-        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .catch(() => [])
-    )
-  );
-  const merged = results.flat().filter(e => e && e.country && e.date);
-  // if both failed, try allorigins proxy as fallback
+
+  // try direct fetch
+  let merged = [];
+  try {
+    const results = await Promise.all(
+      urls.map(u =>
+        fetch(u, { headers: FF_HEADERS })
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+          .catch(() => [])
+      )
+    );
+    merged = results.flat().filter(e => e && e.country && e.date);
+  } catch {}
+
+  // fallback: allorigins proxy for thisweek only
   if (merged.length === 0) {
     try {
-      const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://nfs.faireconomy.media/ff_calendar_thisweek.json');
+      const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(urls[0]);
       const pr = await fetch(proxyUrl);
       if (pr.ok) {
         const pj = await pr.json();
         if (Array.isArray(pj) && pj.length) {
-          return { statusCode: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(pj.filter(e => e && e.country && e.date)) };
+          merged = pj.filter(e => e && e.country && e.date);
         }
       }
     } catch {}
   }
-  return { statusCode: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(merged) };
+
+  // if we got live data → save to MongoDB cache
+  if (merged.length > 0) {
+    try {
+      const db = await getDb();
+      await db.collection('ff_events_cache').replaceOne(
+        { _id: 'latest' },
+        { _id: 'latest', events: merged, updatedAt: new Date() },
+        { upsert: true }
+      );
+    } catch {}
+    return { statusCode: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(merged) };
+  }
+
+  // last resort: serve from MongoDB cache
+  try {
+    const db = await getDb();
+    const cached = await db.collection('ff_events_cache').findOne({ _id: 'latest' });
+    if (cached && Array.isArray(cached.events) && cached.events.length > 0) {
+      return { statusCode: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'X-Cache': 'HIT' }, body: JSON.stringify(cached.events) };
+    }
+  } catch {}
+
+  return { statusCode: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify([]) };
 }
 
 async function handleOrUsage(headers) {
