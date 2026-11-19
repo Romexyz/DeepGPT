@@ -322,6 +322,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       <input class="auth-field" id="reg-email" type="email" placeholder="อีเมล" autocomplete="email"/>
       <input class="auth-field" id="reg-pass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)" autocomplete="new-password"/>
       <input class="auth-field" id="reg-confirm" type="password" placeholder="ยืนยันรหัสผ่านอีกครั้ง" autocomplete="new-password"/>
+      <input class="auth-field" id="reg-exness" type="text" placeholder="เลขพอร์ต Exness ของคุณ" autocomplete="off" inputmode="numeric"/>
+      <p style="font-size:11px;color:rgba(255,255,255,0.4);margin:-6px 0 8px 2px;">จำเป็นต้องกรอก — ใช้ยืนยันตัวตน</p>
       <button class="auth-btn" id="reg-btn" onclick="authRegister()">สมัครสมาชิก</button>
       <p class="auth-switch">มีบัญชีแล้ว? <a onclick="authTab('login');document.getElementById('auth-title-text').textContent='เข้าสู่ระบบ'" href="#">เข้าสู่ระบบ</a></p>
     </div>
@@ -441,6 +443,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
       </svg>
       Signal News
+    </button>
+    <button class="drawer-nav-btn" onclick="openEbook();setTimeout(closeDrawer,150)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      E-Book
     </button>
   </div>
 </div>
@@ -827,7 +835,7 @@ function dlRenderPopup(info){
   const sessK = ((info.sessTokens||0)/1000).toFixed(1);
   if(bar)  { bar.style.width = info.pct + '%'; bar.style.background = info.pct>=90?'#ef4444':info.pct>=70?'#f59e0b':'#22c55e'; }
   if(pctEl) pctEl.textContent = p + '% used';
-  if(sub)  sub.textContent = `Session: ${sessK}k tokens · ${info.label}`;
+  if(sub)  sub.textContent = `${sessK}k tokens in flight this session`;
   if(bar2) { bar2.style.width = info.limitPct + '%'; bar2.style.background = '#3b82f6'; }
   if(pct2) pct2.textContent = info.limit > 0 ? info.limitPct.toFixed(1)+'%' : '∞';
 }
@@ -846,6 +854,16 @@ function dlTogglePopup(){
   dlPopupOpen = !dlPopupOpen;
   if(dlPopupOpen){
     pop.style.display = 'block';
+    const wrap = document.getElementById('daily-limit-wrap');
+    if(wrap){
+      const rect = wrap.getBoundingClientRect();
+      pop.style.bottom = 'auto';
+      pop.style.top = (rect.top - pop.offsetHeight - 8) + 'px';
+      pop.style.right = (window.innerWidth - rect.right) + 'px';
+      requestAnimationFrame(()=>{
+        pop.style.top = (rect.top - pop.offsetHeight - 8) + 'px';
+      });
+    }
     dlRenderPopup(dlUsageCache);
     dlRefresh();
   } else {
@@ -959,8 +977,8 @@ function renderBubble(m){
   const saves = extractSaveables(raw);
   const contentHtml = formatContent(raw);
   const saveRow = buildSaveRow(saves);
-  const providerLabel = m.provider || 'Rome';
-  return `<div class="msg-wrap assistant"><div class="avatar">AI</div><div class="msg-body"><div class="role-label">${esc(providerLabel)}</div><div class="bubble">${contentHtml}</div>${saveRow}</div></div>`;
+  const providerLabel = m.provider || 'DeepGPT';
+  return `<div class="msg-wrap assistant"><div class="avatar" style="background:#111;padding:0;overflow:visible"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="22" height="22"><g transform="translate(18,18)"><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(60)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(120)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(240)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(300)"/><circle cx="0" cy="0" r="3" fill="#e53935"/></g></svg></div><div class="msg-body"><div class="role-label">${esc(providerLabel)}</div><div class="bubble">${contentHtml}</div>${saveRow}</div></div>`;
 }
 
 function formatContent(text){
@@ -1046,7 +1064,7 @@ async function send(){
 
   const thinkEl=document.createElement('div');
   thinkEl.className='msg-wrap assistant';
-  thinkEl.innerHTML=`<div class="avatar">AI</div><div class="msg-body"><div class="role-label">Rome</div><div class="bubble"><div class="thinking"><span></span><span></span><span></span></div></div></div>`;
+  thinkEl.innerHTML=`<div class="avatar" style="background:#111;padding:0;overflow:visible"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="22" height="22"><g transform="translate(18,18)"><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(60)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(120)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(240)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(300)"/><circle cx="0" cy="0" r="3" fill="#e53935"/></g></svg></div><div class="msg-body"><div class="role-label">DeepGPT</div><div class="bubble"><div class="thinking"><span></span><span></span><span></span></div></div></div>`;
   messagesInner.appendChild(thinkEl);
   document.getElementById('messages').scrollTop=9999999;
   sendBtn.disabled=true;
@@ -1108,6 +1126,7 @@ async function send(){
         }catch{}
       }
     }
+    fullText = fullText.replace(/^\[C\]\s*/,'').replace(/\n\[C\]\s*/g,'\n').trimStart();
     assistantMsg.content=fullText;
     saveChats(); renderMessages();
   } catch(err){
@@ -1211,8 +1230,8 @@ async function authLogin() {
     const r = await fetch(API_BASE + '/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password: pass}) });
     const d = await r.json();
     if (!r.ok) { errEl.textContent = d.message || t('loginFail'); return; }
-    localStorage.setItem('deepgpt_user', JSON.stringify(d.user));
-    currentUser = d.user;
+    localStorage.setItem('deepgpt_user', JSON.stringify({email: d.email, token: d.token}));
+    currentUser = {email: d.email, token: d.token};
     document.getElementById('auth-screen').classList.add('hidden');
     updateUserUI(currentUser);
     const greetName = document.getElementById('greeting-name');
@@ -1230,12 +1249,14 @@ async function authRegister() {
   const okEl = document.getElementById('reg-ok');
   const btn = document.getElementById('reg-btn');
   errEl.textContent = ''; okEl.textContent = '';
+  const exnessPort = document.getElementById('reg-exness').value.trim();
   if (!email || !pass || !confirm) { errEl.textContent = t('fillAll'); return; }
   if (pass !== confirm) { errEl.textContent = t('passNoMatch'); return; }
   if (pass.length < 6) { errEl.textContent = t('passTooShort'); return; }
+  if (!exnessPort) { errEl.textContent = 'กรุณากรอกเลขพอร์ต Exness'; return; }
   btn.disabled = true; btn.textContent = t('registerLoading');
   try {
-    const r = await fetch(API_BASE + '/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password: pass}) });
+    const r = await fetch(API_BASE + '/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password: pass, exnessPort}) });
     const d = await r.json();
     if (!r.ok) { errEl.textContent = d.message || t('registerFail'); return; }
     okEl.textContent = t('registerOk');
@@ -1398,11 +1419,11 @@ const I18N = {
     forexAnalyzing: '⏳ กำลังวิเคราะห์...',
     forexNoKey: 'กรุณาใส่ OpenRouter API key ก่อน',
     forexNoResult: 'ไม่ได้รับผลลัพธ์',
-    forexPrompt: 'IMPORTANT: You MUST reply in Thai language only. Do NOT use English at all.\n\nวิเคราะห์ chart {n} รูปนี้ แล้วตอบในรูปแบบนี้เท่านั้น (ภาษาไทยทั้งหมด):\n\n📍 จุดเข้า: [ราคา] ([Long/Short])\n🛑 Stop Loss: [ราคา] (เหตุผล: [1 ประโยค])\n🎯 Take Profit: TP1 [ราคา] / TP2 [ราคา]\n\n💬 สรุป: [2-3 ประโยค อธิบายง่ายๆ]\n\nห้ามตอบภาษาอังกฤษ ตอบไทยเท่านั้น',
+    forexPrompt: 'IMPORTANT: You MUST reply in Thai language only. Do NOT use English at all.\n\nวิเคราะห์ chart {n} รูปนี้ ถ้า setup ไม่มี RR อย่างน้อย 1:1 ให้ตอบว่า "❌ Setup นี้ไม่เข้าเงื่อนไข RR ต่ำกว่า 1:1" และหยุดทันที\n\nถ้า RR ≥ 1:1 ให้ตอบในรูปแบบนี้เท่านั้น (ภาษาไทยทั้งหมด):\n\n📍 จุดเข้า: [ราคา] ([Long/Short])\n🛑 Stop Loss: [ราคา] (เหตุผล: [1 ประโยค])\n🎯 Take Profit: TP1 [ราคา] / TP2 [ราคา]\n⚖️ RR: 1:[X]\n\n💬 สรุป: [2-3 ประโยค อธิบายง่ายๆ]\n\nห้ามตอบภาษาอังกฤษ ตอบไทยเท่านั้น',
     forexExtraPlaceholder: 'เพิ่มเทคนิคหรือเงื่อนไขพิเศษ... (ไม่บังคับ)',
     // Role labels
     roleYou: 'คุณ',
-    roleAI: 'Rome',
+    roleAI: 'DeepGPT',
   },
   en: {
     loginTitle: 'Sign In',
@@ -1475,10 +1496,10 @@ const I18N = {
     forexAnalyzing: '⏳ Analyzing...',
     forexNoKey: 'Please enter your OpenRouter API key first',
     forexNoResult: 'No result received',
-    forexPrompt: 'Analyze these {n} chart(s) and reply ONLY in this format:\n\n📍 Entry: [price] ([Long/Short])\n🛑 Stop Loss: [price] (because [1 sentence reason])\n🎯 Take Profit: TP1 [price] / TP2 [price]\n\n💬 Summary: [2-3 simple sentences explaining why this trade setup makes sense]\n\nKeep it short and clear.',
+    forexPrompt: 'Analyze these {n} chart(s). If the setup has RR below 1:1, reply ONLY: "❌ Setup rejected — RR below 1:1" and stop.\n\nIf RR ≥ 1:1, reply ONLY in this format:\n\n📍 Entry: [price] ([Long/Short])\n🛑 Stop Loss: [price] (because [1 sentence reason])\n🎯 Take Profit: TP1 [price] / TP2 [price]\n⚖️ RR: 1:[X]\n\n💬 Summary: [2-3 simple sentences explaining why this trade setup makes sense]\n\nKeep it short and clear.',
     forexExtraPlaceholder: 'Add extra technique or conditions... (optional)',
     roleYou: 'You',
-    roleAI: 'Rome',
+    roleAI: 'DeepGPT',
   }
 };
 
@@ -1798,6 +1819,13 @@ function applyLang() {
 // ── Forex Signal ──────────────────────────────────────────────
 let forexImages = []; // [{mime, b64, url}]
 
+function openEbook() {
+  document.getElementById('ebook-screen').classList.remove('hidden');
+  /* ไม่ set sessionStorage — ไม่ต้องการ restore หน้านี้ตอน reload */
+}
+function closeEbook() {
+  document.getElementById('ebook-screen').classList.add('hidden');
+}
 function openForexSignal() {
   document.getElementById('forex-screen').classList.remove('hidden');
   sessionStorage.setItem('deepgpt_screen', 'forex');
@@ -1897,8 +1925,8 @@ async function forexAnalyze() {
     const finalPrompt = extraText ? basePrompt + ' Additional technique/conditions: ' + extraText : basePrompt;
     content.push({ type: 'text', text: finalPrompt });
     const forexSystem = currentLang === 'th'
-      ? 'คุณเป็น trader ผู้เชี่ยวชาญ ตอบเป็นภาษาไทยเท่านั้น ห้ามตอบภาษาอังกฤษ'
-      : 'You are an expert trader. Reply in English only.';
+      ? 'คุณเป็น trader ผู้เชี่ยวชาญด้าน scalping ตอบเป็นภาษาไทยเท่านั้น ห้ามตอบภาษาอังกฤษ กฎสำคัญ: ต้องตรวจสอบ RR (Risk:Reward) ทุกครั้ง ถ้า RR ต่ำกว่า 1:1 ห้ามแนะนำให้เข้าออเดอร์เด็ดขาด'
+      : 'You are an expert scalp trader. Reply in English only. Critical rule: always calculate RR (Risk:Reward). If RR is below 1:1, do NOT recommend the trade under any circumstances.';
     const body = {
       model: 'nvidia/nemotron-3.5-super-vl:free',
       messages: [{ role: 'system', content: forexSystem }, { role: 'user', content }]
@@ -1977,6 +2005,404 @@ async function forexAnalyze() {
   </div>
 </div>
 
+
+<!-- ── E-Book Screen ── -->
+<div id="ebook-screen" class="hidden">
+<style>
+#ebook-screen {
+  position:fixed;inset:0;z-index:9000;background:#0a0a0f;display:flex;flex-direction:column;overflow:hidden;
+}
+#ebook-screen.hidden{display:none!important;}
+
+/* ── topbar ── */
+#ebook-topbar {
+  display:flex;align-items:center;gap:12px;padding:14px 20px;
+  background:rgba(10,10,15,.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;
+  position:relative;z-index:2;
+}
+#ebook-back-btn {
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:#fff;cursor:pointer;padding:6px 10px;border-radius:10px;
+  display:flex;align-items:center;transition:background .15s;
+}
+#ebook-back-btn:hover{background:rgba(255,255,255,.12)}
+.eb-topbar-title {
+  font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px;
+  background:linear-gradient(135deg,#fff 40%,#e11d48);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.eb-topbar-sub {
+  margin-left:auto;font-size:11px;color:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  padding:3px 10px;border-radius:20px;white-space:nowrap;
+}
+
+/* ── hero banner ── */
+#ebook-hero {
+  flex-shrink:0;padding:28px 24px 20px;
+  background:linear-gradient(160deg,rgba(225,29,72,.12) 0%,rgba(10,10,15,0) 60%);
+  border-bottom:1px solid rgba(255,255,255,.05);position:relative;overflow:hidden;
+}
+#ebook-hero::before {
+  content:'';position:absolute;top:-40px;right:-20px;width:280px;height:280px;
+  background:radial-gradient(circle,rgba(225,29,72,.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.eb-hero-label {
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:#e11d48;margin-bottom:6px;
+}
+.eb-hero-heading {
+  font-size:26px;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-.5px;margin-bottom:6px;
+}
+.eb-hero-heading span{color:#e11d48;}
+.eb-hero-desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.5;}
+
+/* ── filter ── */
+#ebook-filter-bar {
+  display:flex;gap:7px;padding:14px 20px;overflow-x:auto;flex-shrink:0;
+  scrollbar-width:none;background:rgba(10,10,15,.6);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+#ebook-filter-bar::-webkit-scrollbar{display:none}
+.eb-filter-btn {
+  flex-shrink:0;padding:6px 16px;border-radius:30px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.45);font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .2s;white-space:nowrap;font-family:inherit;letter-spacing:.2px;
+}
+.eb-filter-btn:hover{background:rgba(225,29,72,.1);border-color:rgba(225,29,72,.3);color:rgba(255,255,255,.8);}
+.eb-filter-btn.active{
+  background:linear-gradient(135deg,#e11d48,#be123c);border-color:transparent;
+  color:#fff;box-shadow:0 4px 15px rgba(225,29,72,.35);
+}
+
+/* ── grid ── */
+#ebook-grid {
+  flex:1;overflow-y:auto;padding:12px 14px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent;
+  align-content:start;
+}
+@media(min-width:600px){
+  #ebook-grid{grid-template-columns:repeat(3,1fr);gap:12px;padding:14px 16px;}
+}
+@media(min-width:900px){
+  #ebook-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:18px 20px;}
+}
+#ebook-grid::-webkit-scrollbar{width:3px}
+#ebook-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
+
+/* ── card ── */
+.eb-card {
+  border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
+  background:#0f0f14;border:1px solid rgba(255,255,255,.08);
+  transition:transform .22s cubic-bezier(.34,1.4,.64,1),box-shadow .22s,border-color .22s;
+  display:flex;flex-direction:column;
+}
+.eb-card:active{
+  transform:scale(.97);
+  border-color:rgba(225,29,72,.35);
+}
+@media(min-width:900px){
+  .eb-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 44px rgba(0,0,0,.7),0 0 0 1px rgba(225,29,72,.45);
+    border-color:rgba(225,29,72,.35);
+  }
+}
+/* รูปปก 16:9 — ใช้ padding-top trick เพราะ aspect-ratio ใช้ใน flex column ไม่ได้ */
+.eb-card-cover-wrap{
+  width:100%;position:relative;background:#111;overflow:hidden;
+  padding-top:56.25%; /* 9/16 = 56.25% */
+}
+.eb-card-cover{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;object-position:center center;display:block;
+  transition:transform .3s;
+}
+.eb-card:hover .eb-card-cover{transform:scale(1.04);}
+
+/* badge อ่านเลย — desktop hover เท่านั้น */
+.eb-card-read {
+  position:absolute;top:6px;right:6px;z-index:2;
+  background:rgba(225,29,72,.92);color:#fff;
+  font-size:8px;font-weight:700;padding:3px 8px;border-radius:7px;
+  opacity:0;transform:scale(.8);transition:all .16s;letter-spacing:.5px;text-transform:uppercase;
+}
+@media(min-width:900px){
+  .eb-card:hover .eb-card-read{opacity:1;transform:scale(1);}
+}
+
+/* info ด้านล่างรูป */
+.eb-card-overlay{display:none;}
+.eb-card-info{
+  padding:7px 9px 9px;border-top:1px solid rgba(255,255,255,.05);
+}
+.eb-card-tag{
+  display:inline-flex;align-items:center;
+  font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;
+  letter-spacing:.4px;text-transform:uppercase;
+  background:rgba(225,29,72,.2);color:#fb7185;
+  border:1px solid rgba(225,29,72,.25);margin-bottom:5px;
+}
+.eb-card-title{
+  font-size:11px;font-weight:700;color:#fff;line-height:1.35;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.eb-card-pages{
+  font-size:9px;color:rgba(255,255,255,.3);margin-top:4px;
+}
+@media(min-width:600px){
+  .eb-card-tag{font-size:9px;}
+  .eb-card-title{font-size:12px;}
+  .eb-card-info{padding:9px 11px 11px;}
+}
+
+/* ── viewer ── */
+#eb-viewer {
+  display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(0,0,0,.97);backdrop-filter:blur(30px);
+  flex-direction:column;align-items:center;justify-content:center;
+}
+#eb-viewer.open{display:flex}
+#eb-viewer-top {
+  position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);z-index:1;
+}
+#eb-viewer-title{color:#fff;font-size:14px;font-weight:700;letter-spacing:-.2px;}
+#eb-viewer-badge{
+  color:rgba(255,255,255,.4);font-size:11px;margin-left:10px;
+  background:rgba(255,255,255,.08);padding:2px 10px;border-radius:20px;
+}
+#eb-viewer-close{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);
+  color:#fff;font-size:14px;cursor:pointer;padding:6px 12px;border-radius:10px;
+  transition:background .15s;
+}
+#eb-viewer-close:hover{background:rgba(225,29,72,.4);}
+#eb-main-img{
+  max-width:calc(100vw - 80px);max-height:calc(100vh - 120px);
+  object-fit:contain;user-select:none;-webkit-user-drag:none;
+  border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.8);
+  margin-top:50px;
+}
+@media(max-width:600px){
+  #eb-main-img{max-width:100vw;max-height:calc(100vh - 100px);margin-top:44px;border-radius:0;}
+}
+.eb-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  color:#fff;font-size:20px;width:36px;height:60px;border-radius:10px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.eb-nav:hover{background:rgba(225,29,72,.5);border-color:rgba(225,29,72,.6);}
+#eb-prev{left:6px}#eb-next{right:6px}
+#eb-thumbs{
+  position:absolute;bottom:0;left:0;right:0;display:flex;gap:5px;padding:8px 12px 12px;
+  overflow-x:auto;background:linear-gradient(to top,rgba(0,0,0,.95),transparent);
+  scrollbar-width:none;
+}
+#eb-thumbs::-webkit-scrollbar{display:none}
+.eb-thumb{
+  flex-shrink:0;width:44px;height:30px;object-fit:cover;border-radius:5px;
+  border:2px solid transparent;cursor:pointer;opacity:.4;transition:all .15s;
+}
+.eb-thumb:hover{opacity:.7;}
+.eb-thumb.active{border-color:#e11d48;opacity:1;box-shadow:0 0 10px rgba(225,29,72,.5);}
+</style>
+
+<div id="ebook-topbar">
+  <button id="ebook-back-btn" onclick="closeEbook()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <span class="eb-topbar-title">E-Book Library</span>
+  <span class="eb-topbar-sub">📚 52 เล่ม · ฟรี</span>
+</div>
+
+<div id="ebook-hero">
+  <div class="eb-hero-label">Free Trading Education</div>
+  <div class="eb-hero-heading">เรียนรู้ <span>Forex</span><br>จากศูนย์สู่โปร</div>
+  <div class="eb-hero-desc">รวม E-Book 52 เล่ม ครอบคลุมทุก concept — ICT, SMC, MSNR, Liquidity และอื่นๆ</div>
+</div>
+
+<div id="ebook-filter-bar">
+  <button class="eb-filter-btn active" onclick="ebFilter('all',this)">✦ ทั้งหมด</button>
+  <button class="eb-filter-btn" onclick="ebFilter('พื้นฐาน',this)">พื้นฐาน</button>
+  <button class="eb-filter-btn" onclick="ebFilter('ICT',this)">ICT</button>
+  <button class="eb-filter-btn" onclick="ebFilter('MSNR',this)">MSNR</button>
+  <button class="eb-filter-btn" onclick="ebFilter('SMC',this)">SMC</button>
+  <button class="eb-filter-btn" onclick="ebFilter('Liquidity',this)">Liquidity</button>
+  <button class="eb-filter-btn" onclick="ebFilter('Indicator',this)">Indicator</button>
+  <button class="eb-filter-btn" onclick="ebFilter('Chart Pattern',this)">Chart Pattern</button>
+  <button class="eb-filter-btn" onclick="ebFilter('Fibonacci',this)">Fibonacci</button>
+  <button class="eb-filter-btn" onclick="ebFilter('Zone Trading',this)">Zone Trading</button>
+</div>
+<div id="ebook-grid"></div>
+<div id="eb-viewer">
+  <div id="eb-viewer-top">
+    <div><span id="eb-viewer-title"></span><span id="eb-viewer-badge"></span></div>
+    <button id="eb-viewer-close" onclick="ebCloseViewer()">✕</button>
+  </div>
+  <button class="eb-nav" id="eb-prev" onclick="ebNav(-1)">‹</button>
+  <img id="eb-main-img" src="" alt="" oncontextmenu="return false" draggable="false">
+  <button class="eb-nav" id="eb-next" onclick="ebNav(1)">›</button>
+  <div id="eb-thumbs"></div>
+</div>
+<script>
+(function(){
+const BASE='https://tradewaen-ebook.netlify.app/';
+const BOOKS=[
+  {tag:"พื้นฐาน",count:16,title:"Price Action",folder:"assets/images/books/priceaction"},
+  {tag:"พื้นฐาน",count:13,title:"Basic Support & Resistance",folder:"assets/images/books/sr"},
+  {tag:"Chart Pattern",count:13,title:"Chart Pattern",folder:"assets/images/books/chartpattern"},
+  {tag:"พื้นฐาน",count:12,title:"Basic Market Structure",folder:"assets/images/books/basicms"},
+  {tag:"ขั้นสูง",count:13,title:"Advance Market Structure",folder:"assets/images/books/advms"},
+  {tag:"Liquidity",count:18,title:"Basic Liquidity Part 1",folder:"assets/images/books/liq1"},
+  {tag:"Liquidity",count:15,title:"Basic Liquidity Part 2",folder:"assets/images/books/liq2"},
+  {tag:"Zone Trading",count:17,title:"Demand & Supply Zone",folder:"assets/images/books/demandsupply"},
+  {tag:"Fibonacci",count:12,title:"Premium & Discount Zone",folder:"assets/images/books/fibo"},
+  {tag:"Fibonacci ขั้นสูง",count:11,title:"ADV Fibo Premium & Discount Zone",folder:"assets/images/books/advfibo"},
+  {tag:"SMC",count:14,title:"SMC All Concept",folder:"assets/images/books/smc"},
+  {tag:"Indicator",count:17,title:"RSI",folder:"assets/images/books/rsi"},
+  {tag:"Indicator",count:15,title:"MACD",folder:"assets/images/books/macd"},
+  {tag:"Indicator",count:13,title:"EMA",folder:"assets/images/books/ema"},
+  {tag:"พื้นฐาน",count:13,title:"Basic Trend Line",folder:"assets/images/books/trendline"},
+  {tag:"MSNR",count:14,title:"MSNR - Support & Resistance",folder:"assets/images/books/msnrsr"},
+  {tag:"MSNR",count:13,title:"MSNR - Open Close Level",folder:"assets/images/books/ocl"},
+  {tag:"MSNR",count:15,title:"Quasimodo Level (QML)",folder:"assets/images/books/qml"},
+  {tag:"MSNR",count:14,title:"Advance QML Part 1",folder:"assets/images/books/advqml1"},
+  {tag:"MSNR",count:13,title:"Advance QML Part 2",folder:"assets/images/books/advqml2"},
+  {tag:"Indicator",count:13,title:"VWAP",folder:"assets/images/books/vwap"},
+  {tag:"Indicator",count:15,title:"Fixed Range Volume Profile",folder:"assets/images/books/frvp"},
+  {tag:"Indicator ขั้นสูง",count:13,title:"Advance VWAP Ultimate Setup",folder:"assets/images/books/advvwap"},
+  {tag:"Indicator",count:14,title:"Bollinger Band",folder:"assets/images/books/bb"},
+  {tag:"Indicator",count:17,title:"Stochastic Oscillator",folder:"assets/images/books/stoch"},
+  {tag:"MSNR",count:13,title:"MSNR - Killzone",folder:"assets/images/books/killzone"},
+  {tag:"MSNR",count:14,title:"MSNR - Trendline",folder:"assets/images/books/msnrtrendline"},
+  {tag:"MSNR",count:13,title:"MSNR - Killzone Part 2",folder:"assets/images/books/killzonelondon"},
+  {tag:"MSNR",count:13,title:"MSNR - Killzone Part 3",folder:"assets/images/books/killzonenewyork"},
+  {tag:"MSNR",count:14,title:"MSNR - Fibonacci",folder:"assets/images/books/fibomsnr"},
+  {tag:"MSNR",count:13,title:"MSNR - Fibonacci Circle",folder:"assets/images/books/fibocircle"},
+  {tag:"MSNR",count:13,title:"MSNR - Complete Edition",folder:"assets/images/books/msnrcomplete"},
+  {tag:"ICT",count:14,title:"ICT - IPDA",folder:"assets/images/books/ictipda"},
+  {tag:"ICT",count:13,title:"ICT - Turtle Soup",folder:"assets/images/books/ictturtlesoup"},
+  {tag:"ICT",count:14,title:"ICT - PD Array Part 1",folder:"assets/images/books/ictpdarray1"},
+  {tag:"ICT",count:14,title:"ICT - PD Array Part 2",folder:"assets/images/books/ictpdarray2"},
+  {tag:"ICT",count:16,title:"ICT - Premium & Discount",folder:"assets/images/books/ictpremiumdiscount"},
+  {tag:"ICT",count:14,title:"ICT - ERL & IRL",folder:"assets/images/books/icterlirl"},
+  {tag:"ICT",count:15,title:"ICT - Killzone",folder:"assets/images/books/ictkillzone"},
+  {tag:"ICT",count:14,title:"ICT - Daily Profile",folder:"assets/images/books/ictdailyprofile"},
+  {tag:"ICT",count:14,title:"ICT - SMT Divergence",folder:"assets/images/books/ictsmt"},
+  {tag:"ICT",count:14,title:"ICT - Silver Bullet",folder:"assets/images/books/ictsilverbullet"},
+  {tag:"ICT",count:15,title:"ICT - MMBM MMSM",folder:"assets/images/books/ictmmxm"},
+  {tag:"พื้นฐาน",count:13,title:"Basic Forex 101",folder:"assets/images/books/basicforex"},
+  {tag:"พื้นฐาน",count:17,title:"Trading Terms 101",folder:"assets/images/books/tradingterms101"},
+  {tag:"ICT",count:13,title:"ICT - Optimal Trade Entry",folder:"assets/images/books/ictote"},
+  {tag:"ICT",count:18,title:"ICT - Killzones Toolkit (LuxAlgo)",folder:"assets/images/books/ictkilltoolkits"},
+  {tag:"ICT",count:15,title:"ICT - Weekly Profile",folder:"assets/images/books/ictweeklyprofile"},
+  {tag:"ICT",count:14,title:"ICT - รวมเล่ม Trade Setup",folder:"assets/images/books/ictcompilation"},
+  {tag:"พื้นฐาน",count:16,title:"Basic Forex - ข่าวเศรษฐกิจสำคัญ",folder:"assets/images/books/ictnews"},
+  {tag:"ICT",count:14,title:"ICT - MTF Breaks (Makuchaku)",folder:"assets/images/books/ictdayweekbreak"},
+  {tag:"ICT",count:15,title:"ICT - Standard Deviation (STDV)",folder:"assets/images/books/ictstdv"},
+];
+function pageSrc(b,n){return BASE+b.folder+'/page-'+String(n).padStart(2,'0')+'.jpg';}
+const DEEPGPT_LOGO_B64='iVBORw0KGgoAAAANSUhEUgAAAC4AAAAyCAIAAACsz36AAAAFi0lEQVR4AexWzW9UVRS/536892Za+mFtqHy0BEGi4auIqcpCDcSNxA8SY+LSlX+BS9y4csHGpUsSgxuNutAIMaJEaVyAEEATviiolFIKnZn33r33XH8zJaSF187gbFjMy6/Tc84995zfPffe857s6V72mECKx+bpUCnaik5VOlUpqkCRrXNWOlUpqkCRrd2z8iTz3rT2WWBgb5ZCLcrSkq1dKoPMvcb0NNCrNdSW0hY5tUuln7mk1DJjgLJSUIuytGRrm4oQJa3BA4DQ31LSYqd2qfSIEBF1ad2llJESanGeFqxNqHSHsMr7Ye+HmFF881DEhEhLWVYKJQEVqA+4IMJa7zY7+6LNt1uLaA843FebUAGJdSKsl7SRxKgIo84Nsdf3ZwtBQeAhIeqBQphTYQFAYqu1e5x9X4g9Ur4u5U5E8A5DhahHKByYM2YkpJSRlNgCXJOhONqq1Bb2K9jHoc7CkmAhMmYAAlQhRB/zqLXvePdeZJ4vlVaUSgNx3G2MIbqL4UXQhMqkVDc4cAiSKMFN0RpXd7Uxm6TcgGvMfDeE3PtZ54DMe6gj3u/y7l2jXy6Xh8tl8MAUTeSYz3I4ox/e5HvUmlC5Q3SNCCvOmX0IOA29UdQfx31RNGz0ehI2hNR78Ji1tup9xPyaCDuSZLira6Sra1W5nGjtQqg4d8fa35W6LhfNuOjAPapC3JLyhKBLziMckHkfN/arW+mulOpXatLaQ7UUuJ5lm5XaFsfLk2QwSXC9kf5mmt5I0z+y/IBUl5S6H/ZhoTkVzAGbi0TnnJ+xdibPb1trmZWUsVIXpfqYxb4025flnwh5Tpv6mVCq6tzlSuVytTpRrf6SZQfhuSQPZJH4awWzROeV+pPDhdxOZ9ntPEeymvdHPO/qHzy8aQzY2T+4H3Sdm0rTK5XKxdnZo5XKAc8/mAiLaZqlVSoIZIXATp9U6jiHKdQly6etwzn4aNXalVEMQEhD+K1au1apnK3WvvB+v4lOaY2JmN4Uj0BlLpYKAddYh5CEAHnOuOBXyozkDRJe0FJHY8GcuvIIVMBgtffbmMe0WhPF3UkyEseG6NOJ81fzDIAQEz2bxH3l0nOl0pta7XZug3OYKFp4ZAs+dZde5me8G0OmKBqM4ieiCE2vJOWrWh2cnnzl5DhwaHrybUnLpOwzZihJVpZKLyTxbkkvOTfA6H9i6aclKsuZN4Sw0UQDSYK++WQc4+74EHCxR5g/IPFWHAEfKlrDHt3FhVA2ZiX6WwM74mgsMFpfu1TAY3vgdVr3aI1egq8TXBw0DNzqCWvPeW+M3hJFW4whrU9wOJ1lk2mKdoImBP/+KBqIolGt32CPN9oSbJpUBYUdDqFbaXR9vIGx3Ft5PpVlU3l+ydnjRLmUkdLghzezkmpGqV+Jjmf5P7Xa1Wr13zRFpzZoiY1vq43MWNhibJpQwQfiCiFICMeMVd7KMiz3QpaNez8uFbpFIoQiQv8FIJRCuCbVT1p/5/yxBpvrtRoao/VeEj1NYsT/3zdzLALehVgZeKCt3cyzo8w/K4UWnhMJIfByk0RGKSxdEemGEf3wtNbfKP2t8383Gv9ta7GtOF5JfV2YVwBZYJtnuiLVKRInA4+HcIToR20uKxXmOdQvRmg8QtT/zRsC1zNaf6XN14K+53DYMyJckItmXHRgLia24LzSZ5WeUOqmlH7OOu/XkQCbnBmAAHXeYF3MiK4o9ZfWx4w5oQ3kurXorwmVoikLbNUgLHPqfeochArPL9kCz6ZKu1RmhUA9cA5qzHUqjbPSNGuhQ9tU8GHlfc05AB0PB7YwTSvGdqnMSIl61KvifZUZaitZC33apXKX6EtjPicCIEAtTNOKsV0qreRo0adDpahQnap0qlJUgSJb56wUVeU/AAAA//+O/L9xAAAABklEQVQDAFnay4U1peKKAAAAAElFTkSuQmCC';
+function ebCoverDataUrl(title){
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  /* word-wrap ชื่อ */
+  const lines=[];const maxLen=22;let w=title;
+  while(w.length>maxLen){const sp=w.lastIndexOf(' ',maxLen);const cut=sp>5?sp:maxLen;lines.push(w.slice(0,cut));w=w.slice(cut).trim();}
+  lines.push(w);
+  const lh=19;
+  /* วาง title block ใต้ logo ตรงกลาง */
+  const totalTH=lines.length*lh;
+  const titleStartY=182;
+  const titleBlocks=lines.map((l,i)=>`<text x="200" y="${titleStartY+i*lh}" font-family="'Sarabun',sans-serif" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">${esc(l)}</text>`).join('');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="225" viewBox="0 0 400 225">
+<defs>
+  <linearGradient id="bgG" x1="0" y1="0" x2="0.6" y2="1"><stop offset="0%" stop-color="#09090f"/><stop offset="100%" stop-color="#16060a"/></linearGradient>
+  <radialGradient id="glow2" cx="50%" cy="42%" r="38%"><stop offset="0%" stop-color="#e63946" stop-opacity="0.18"/><stop offset="100%" stop-color="#e63946" stop-opacity="0"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<!-- bg -->
+<rect width="400" height="225" fill="url(#bgG)"/>
+<!-- red glow behind logo -->
+<rect width="400" height="225" fill="url(#glow2)"/>
+<!-- top bar -->
+<rect x="0" y="0" width="400" height="4" fill="#e63946"/>
+<!-- bottom bar -->
+<rect x="0" y="221" width="400" height="4" fill="#e63946"/>
+<!-- left bar -->
+<rect x="0" y="4" width="3" height="217" fill="#e63946" opacity="0.6"/>
+<!-- right bar -->
+<rect x="397" y="4" width="3" height="217" fill="#e63946" opacity="0.6"/>
+<!-- subtle horizontal lines -->
+<line x1="20" y1="72" x2="380" y2="72" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+<line x1="20" y1="170" x2="380" y2="170" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+<!-- DeepGPT label top -->
+<text x="200" y="22" font-family="'Sarabun',sans-serif" font-size="10" fill="rgba(230,57,70,0.7)" text-anchor="middle" letter-spacing="5" font-weight="600">DeepGPT</text>
+<!-- logo circle bg -->
+<circle cx="200" cy="92" r="50" fill="rgba(230,57,70,0.07)" />
+<circle cx="200" cy="92" r="42" fill="rgba(5,5,12,0.75)" stroke="#e63946" stroke-width="1" stroke-opacity="0.3"/>
+<!-- logo -->
+<image href="data:image/png;base64,${DEEPGPT_LOGO_B64}" x="162" y="54" width="76" height="76"/>
+<!-- title lines -->
+${titleBlocks}
+<!-- presented by -->
+<text x="200" y="${titleStartY+lines.length*lh+12}" font-family="'Sarabun',sans-serif" font-size="8.5" fill="rgba(255,255,255,0.3)" text-anchor="middle" letter-spacing="4">PRESENTED BY DeepGPT</text>
+</svg>`;
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+let curBook=null,curPage=0;
+function renderGrid(filter){
+  const grid=document.getElementById('ebook-grid');
+  const list=filter==='all'?BOOKS:BOOKS.filter(b=>b.tag.includes(filter));
+  grid.innerHTML=list.map((b)=>{
+    const idx=BOOKS.indexOf(b);
+    return `<div class="eb-card" onclick="ebOpenBook(${idx})"><span class="eb-card-read">อ่านเลย</span><div class="eb-card-cover-wrap"><img class="eb-card-cover" src="${ebCoverDataUrl(b.title)}" loading="lazy" alt="${b.title}"></div><div class="eb-card-info"><span class="eb-card-tag">${b.tag}</span><div class="eb-card-title">${b.title}</div><div class="eb-card-pages">${b.count} หน้า</div></div></div>`;
+  }).join('');
+}
+window.ebFilter=function(f,btn){
+  document.querySelectorAll('.eb-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderGrid(f);
+};
+window.ebOpenBook=function(idx){
+  curBook=BOOKS[idx];curPage=0;
+  document.getElementById('eb-viewer-title').textContent=curBook.title;
+  ebRender();ebBuildThumbs();
+  document.getElementById('eb-viewer').classList.add('open');
+};
+function ebRender(){
+  document.getElementById('eb-main-img').src=curPage===0?ebCoverDataUrl(curBook.title):pageSrc(curBook,curPage+1);
+  document.getElementById('eb-viewer-badge').textContent=' '+(curPage+1)+' / '+curBook.count;
+  document.querySelectorAll('.eb-thumb').forEach((t,i)=>{
+    t.classList.toggle('active',i===curPage);
+    if(i===curPage)t.scrollIntoView({inline:'center',behavior:'smooth'});
+  });
+}
+function ebBuildThumbs(){
+  document.getElementById('eb-thumbs').innerHTML=Array.from({length:curBook.count},(_,i)=>
+    `<img class="eb-thumb${i===0?' active':''}" src="${pageSrc(curBook,i+1)}" loading="lazy" onclick="ebJump(${i})">`
+  ).join('');
+}
+window.ebJump=function(i){curPage=i;ebRender();};
+window.ebNav=function(d){curPage=Math.max(0,Math.min(curBook.count-1,curPage+d));ebRender();};
+window.ebCloseViewer=function(){document.getElementById('eb-viewer').classList.remove('open');};
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('eb-viewer').classList.contains('open'))return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')ebNav(1);
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp')ebNav(-1);
+  else if(e.key==='Escape')ebCloseViewer();
+});
+renderGrid('all');
+})();
+</script>
+</div>
 
 <!-- ── Gold News Signal Screen (embedded) ── -->
 <div id="news-screen" class="hidden">
@@ -2519,7 +2945,6 @@ async function forexAnalyze() {
         <div class="time" id="countdownTime">--:--:--</div>
       </div>
     </div>
-    <div class="warn-bar" id="warnBar" style="margin-top:10px;padding:11px 15px;border-radius:12px;font-size:12.5px;display:none"></div>
   </section>
 
   <!-- ===== Main grid ===== -->
@@ -2549,61 +2974,8 @@ async function forexAnalyze() {
         <div class="breakdown" id="brkBox"></div>
         <div class="reason-box" id="reasonBox"></div>
 
-        <div class="tabs" style="margin-top:16px;border-bottom:1px solid var(--border)" role="tablist">
-          <button class="tab active" data-tab="playbook" role="tab" aria-selected="true">📖 Playbook</button>
-          <button class="tab" data-tab="risk" role="tab" aria-selected="false">🛡 Risk</button>
-          <button class="tab" data-tab="stats" role="tab" aria-selected="false">📊 สถิติ</button>
-        </div>
-
-        <div class="tab-content active" id="tab-playbook">
-          <div style="font-size:12px;color:var(--txt-faint);margin-bottom:4px">เทียบ Actual กับค่าคาดการณ์ (forecast) หลังข่าวออก:</div>
-          <table class="scenario-table" id="scenRows"></table>
-          <div style="font-size:12px;color:var(--txt-faint);margin-top:14px">กลยุทธ์ก่อน/หลังข่าว (ใช้กับราคาปัจจุบัน):</div>
-          <div id="stratRows"></div>
-        </div>
-
-        <div class="tab-content" id="tab-risk">
-          <div class="calc-grid">
-            <div class="field">
-              <label>ยอดเงินในบัญชี (USD)</label>
-              <input type="number" id="inBal" min="0" step="50">
-            </div>
-            <div class="field">
-              <label>ความเสี่ยงต่ออีเวนต์ (%)</label>
-              <input type="number" id="inRisk" min="0.1" max="10" step="0.1">
-            </div>
-            <div class="field">
-              <label>ระยะ SL (USD ของทอง) — แนะนำ 1×ATR</label>
-              <input type="number" id="inSL" min="1" step="1">
-            </div>
-            <div class="field" style="display:flex;align-items:flex-end">
-              <button class="btn btn-gold" style="width:100%" onclick="window.gnsApp.calcRisk()">คำนวณขนาด Lot</button>
-            </div>
-          </div>
-          <div class="result-box">
-            <div class="row"><span>ความเสี่ยงเป็นเงิน (USD)</span><b id="riskUSD">—</b></div>
-            <div class="row"><span>ขนาด Lot ที่แนะนำ (XAUUSD)</span><b id="lotOut">—</b></div>
-            <div class="row"><span>SL</span><b id="slOut">—</b></div>
-            <div class="row"><span>TP แนะนำ (1.5×SL)</span><b id="tpOut">—</b></div>
-          </div>
-          <div style="font-size:11.5px;color:var(--txt-faint);margin-top:10px" id="riskWarn"></div>
-          <div style="font-size:11px;color:var(--txt-faint);margin-top:8px">สูตร: Lot = เงินเสี่ยง ÷ (SL × 100) — XAUUSD 1 lot = 100 ออนซ์ · ข่าวแรงให้หักเผื่อ slippage 15–20%</div>
-        </div>
-
-        <div class="tab-content" id="tab-stats">
-          <div class="stat-cards">
-            <div class="stat-card green"><div class="num" id="stWin">0</div><div class="lbl">ชนะ</div></div>
-            <div class="stat-card red"><div class="num" id="stLoss">0</div><div class="lbl">แพ้</div></div>
-            <div class="stat-card gold"><div class="num" id="stRate">—</div><div class="lbl">Win rate</div></div>
-            <div class="stat-card"><div class="num" id="stDev">—</div><div class="lbl">dev เฉลี่ย</div></div>
-          </div>
-          <div class="history" id="histList"></div>
-          <div style="margin-top:12px">
-            <button class="btn" style="font-size:11px" onclick="window.gnsApp.clearResults()">🗑 ล้างประวัติ</button>
-          </div>
-        </div>
-
-        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)" id="trackerBox"></div>
+        <div id="tab-risk" style="display:none"><input type="number" id="inBal"><input type="number" id="inRisk"><input type="number" id="inSL"><span id="riskUSD"></span><span id="lotOut"></span><span id="slOut"></span><span id="tpOut"></span><span id="riskWarn"></span></div>
+        <div id="tab-stats" style="display:none"><span id="stWin"></span><span id="stLoss"></span><span id="stRate"></span><span id="stDev"></span><div id="histList"></div></div>
       </div>
     </section>
   </div>
@@ -3072,15 +3444,6 @@ async function forexAnalyze() {
     const pb=buildPlaybook(ev,sc);
     const sr2=$g('scenRows'); if(sr2) sr2.innerHTML=pb.rows.map((r)=>`<tr><td class="sc-when ${r.cls}">${r.when}</td><td>${r.act}</td></tr>`).join('');
     const stratr=$g('stratRows'); if(stratr) stratr.innerHTML=pb.strats.map((s)=>`<div class="strat"><h4><span class="n">${s.n}</span>${s.name}</h4><p>${s.desc}</p><div class="params">${s.params.map(([k,val])=>`<span class="chip">${k}: <b>${val}</b></span>`).join('')}</div></div>`).join('');
-    const tr=$g('trackerBox'); if(tr) {
-      if (isPast) {
-        const actual=ev.actual||(rec?rec.actual:'');
-        const dev=computeDeviation(ev,actual);
-        tr.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><input id="inActual" placeholder="Actual จริง (เช่น 250K / 3.2%)" value="${esc(actual)}" style="flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--txt);padding:9px 11px;border-radius:10px;font-family:inherit"><button class="btn" onclick="window.gnsApp.submitActual()">บันทึก actual</button><button class="btn" onclick="window.gnsApp.setOutcome('win')">🏆 ชนะ</button><button class="btn" onclick="window.gnsApp.setOutcome('loss')">💸 แพ้</button><button class="btn" onclick="window.gnsApp.setOutcome('skip')">⏭ ไม่เทรด</button></div><div class="reason-box mt" style="margin-top:10px">${actual?`deviation = <b>${dev!=null?(dev>0?'+':'')+fmtNum(dev):'—'}</b>`:'กรอก actual เพื่อคำนวณ deviation'}</div>`;
-      } else {
-        tr.innerHTML=`<div class="empty">⏳ หลังข่าวออก (~${countdownText(msLeft)} เหลือ) ตรงนี้จะให้กรอก actual + บันทึกผลชนะ/แพ้</div>`;
-      }
-    }
   }
 
   function computeDeviation(ev,actual) {
@@ -3223,15 +3586,7 @@ async function forexAnalyze() {
     <div id="dl-popup-bar" style="height:100%;width:0%;border-radius:2px;background:#22c55e;transition:width .5s ease"></div>
   </div>
   <div id="dl-popup-sub" style="font-size:11px;color:rgba(255,255,255,.4)">—</div>
-  <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <span style="font-size:11px;color:rgba(255,255,255,.4)">Usage limit</span>
-      <span id="dl-popup-pct2" style="font-size:11px;color:rgba(255,255,255,.4)">∞</span>
-    </div>
-    <div style="height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden">
-      <div id="dl-popup-bar2" style="height:100%;width:0%;border-radius:2px;background:#3b82f6;transition:width .5s ease"></div>
-    </div>
-  </div>
+
 </div>
 
 </body>

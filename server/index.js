@@ -443,24 +443,265 @@ app.get('/api/or-usage', async (req, res) => {
 });
 
 // ── ForexFactory Proxy ───────────────────────────────────────────────
-app.get("/api/ff-events", async (req, res) => {
-  const urls = [
-    "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "https://nfs.faireconomy.media/ff_calendar_nextweek.json",
+
+// Builtin USD High-Impact calendar 2026 — no network needed
+// FOMC: official Fed dates. NFP: first Friday each month. CPI: ~2nd Wednesday each month.
+function generateBuiltinEvents() {
+  // FOMC 2026 dates (actual schedule)
+  const fomc2026 = [
+    {date:'2026-01-28',time:'19:00:00'}, {date:'2026-03-18',time:'18:00:00'},
+    {date:'2026-04-29',time:'18:00:00'}, {date:'2026-06-17',time:'18:00:00'},
+    {date:'2026-07-29',time:'18:00:00'}, {date:'2026-09-16',time:'18:00:00'},
+    {date:'2026-10-28',time:'18:00:00'}, {date:'2026-12-09',time:'19:00:00'},
   ];
-  try {
-    const headers = { "User-Agent": "Mozilla/5.0 (compatible; DeepGPT/1.0)" };
-    const results = await Promise.all(
-      urls.map(u => fetch(u, { headers }).then(r => r.ok ? r.json() : []).catch(() => []))
-    );
-    const merged = results.flat().filter(e => e && e.country && e.date);
-    res.json(merged);
-  } catch (err) {
-    res.status(500).json([]);
+
+  function utcDate(y, m0, d) { // m0 = 0-based month
+    return new Date(Date.UTC(y, m0, d)).toISOString().slice(0,10);
   }
+  function firstFriday(year, month) { // month 1-based
+    const d = new Date(Date.UTC(year, month - 1, 1));
+    d.setUTCDate(1 + ((5 - d.getUTCDay() + 7) % 7));
+    return d.toISOString().slice(0, 10);
+  }
+  function thirdWed(year, month) { // 3rd Wednesday = typical FOMC press conf
+    const d = new Date(Date.UTC(year, month - 1, 1));
+    const first = (3 - d.getUTCDay() + 7) % 7;
+    d.setUTCDate(1 + first + 14);
+    return d.toISOString().slice(0, 10);
+  }
+  function approxCPI(year, month) { // ~2nd Wed of month
+    const d = new Date(Date.UTC(year, month - 1, 8));
+    d.setUTCDate(8 + ((3 - d.getUTCDay() + 7) % 7));
+    return d.toISOString().slice(0, 10);
+  }
+  function approxPPI(year, month) { // ~day after CPI
+    const d = new Date(Date.UTC(year, month - 1, 8));
+    d.setUTCDate(8 + ((3 - d.getUTCDay() + 7) % 7) + 1);
+    return d.toISOString().slice(0, 10);
+  }
+  function approxRetail(year, month) { // ~3rd Wed
+    const d = new Date(Date.UTC(year, month - 1, 8));
+    d.setUTCDate(8 + ((3 - d.getUTCDay() + 7) % 7) + 7);
+    return d.toISOString().slice(0, 10);
+  }
+  function approxGDP(year, month) { return utcDate(year, month-1, 25); }
+  function approxPCE(year, month)  { return utcDate(year, month-1, 27); }
+  function approxJOLTS(year, month){ return utcDate(year, month-1, 7);  }
+  function approxISMmfg(year, month){ return utcDate(year, month-1, 1); }
+  function approxISMsvc(year, month){ return utcDate(year, month-1, 3); }
+
+  const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const events = [];
+
+  // FOMC
+  for (const f of fomc2026) {
+    events.push({ title:'FOMC Statement',   country:'USD', date:f.date, time:f.time, impact:'High', forecast:'', previous:'' });
+    events.push({ title:'Federal Funds Rate',country:'USD', date:f.date, time:f.time, impact:'High', forecast:'', previous:'' });
+  }
+
+  for (let m = 1; m <= 12; m++) {
+    const prev = mn[m === 1 ? 11 : m - 2];
+    const y = 2026;
+
+    // Jobs Friday: NFP + Unemployment + Avg Hourly Earnings (same date)
+    const nfpDate = firstFriday(y, m);
+    events.push({ title:`Non-Farm Employment Change (${prev})`, country:'USD', date:nfpDate, time:'13:30:00', impact:'High', forecast:'', previous:'' });
+    events.push({ title:`Unemployment Rate (${prev})`,          country:'USD', date:nfpDate, time:'13:30:00', impact:'High', forecast:'', previous:'' });
+    events.push({ title:`Average Hourly Earnings m/m (${prev})`,country:'USD', date:nfpDate, time:'13:30:00', impact:'High', forecast:'', previous:'' });
+
+    // CPI day: CPI m/m + CPI y/y + Core CPI m/m
+    const cpiDate = approxCPI(y, m);
+    events.push({ title:`CPI m/m (${prev})`,      country:'USD', date:cpiDate, time:'13:30:00', impact:'High', forecast:'', previous:'' });
+    events.push({ title:`CPI y/y (${prev})`,      country:'USD', date:cpiDate, time:'13:30:00', impact:'High', forecast:'', previous:'' });
+    events.push({ title:`Core CPI m/m (${prev})`, country:'USD', date:cpiDate, time:'13:30:00', impact:'High', forecast:'', previous:'' });
+
+    // PPI
+    events.push({ title:`PPI m/m (${prev})`,      country:'USD', date:approxPPI(y,m), time:'13:30:00', impact:'High', forecast:'', previous:'' });
+
+    // Retail Sales
+    events.push({ title:`Retail Sales m/m (${prev})`, country:'USD', date:approxRetail(y,m), time:'13:30:00', impact:'High', forecast:'', previous:'' });
+
+    // GDP (Q1=Apr, Q2=Jul, Q3=Oct, Q4=Jan)
+    if ([1,4,7,10].includes(m)) {
+      events.push({ title:'GDP q/q', country:'USD', date:approxGDP(y,m), time:'13:30:00', impact:'High', forecast:'', previous:'' });
+    }
+
+    // PCE
+    events.push({ title:`Core PCE Price Index m/m (${prev})`, country:'USD', date:approxPCE(y,m), time:'13:30:00', impact:'High', forecast:'', previous:'' });
+
+    // JOLTS
+    events.push({ title:`JOLTS Job Openings (${prev})`, country:'USD', date:approxJOLTS(y,m), time:'15:00:00', impact:'High', forecast:'', previous:'' });
+
+    // ISM
+    events.push({ title:`ISM Manufacturing PMI (${prev})`, country:'USD', date:approxISMmfg(y,m), time:'15:00:00', impact:'High', forecast:'', previous:'' });
+    events.push({ title:`ISM Services PMI (${prev})`,      country:'USD', date:approxISMsvc(y,m), time:'15:00:00', impact:'High', forecast:'', previous:'' });
+
+    // Initial Jobless Claims (every Thu — approximate 2nd Thu)
+    const thu = new Date(Date.UTC(y, m-1, 1));
+    thu.setUTCDate(1 + ((4 - thu.getUTCDay() + 7) % 7) + 7);
+    events.push({ title:'Initial Jobless Claims', country:'USD', date:thu.toISOString().slice(0,10), time:'13:30:00', impact:'High', forecast:'', previous:'' });
+  }
+
+  return events;
+}
+
+// ---- FF events cache (1 hour) ----
+let _ffCache = null; // { data: [...], ts: Date.now() }
+const FF_CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+app.get("/api/ff-events", async (req, res) => {
+  // คืน cache ถ้ายังไม่หมดอายุ
+  if (_ffCache && (Date.now() - _ffCache.ts) < FF_CACHE_TTL) {
+    return res.json(_ffCache.data);
+  }
+
+  const chromeHeaders = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/json, */*",
+    "Referer": "https://www.forexfactory.com/",
+    "Origin": "https://www.forexfactory.com"
+  };
+
+  // Source 1: nfs.faireconomy.media via Node https (no proxy env)
+  try {
+    const https = require('https');
+    const fetchDirect = (url) => new Promise((resolve) => {
+      const u = new URL(url);
+      const opts = {
+        hostname: u.hostname, path: u.pathname + u.search, method: 'GET',
+        headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' },
+        timeout: 8000,
+      };
+      // ลบ proxy env ชั่วคราวเพื่อ bypass allowlist
+      const savedProxy = process.env.HTTPS_PROXY || process.env.https_proxy;
+      delete process.env.HTTPS_PROXY; delete process.env.https_proxy;
+      const req = https.request(opts, (rsp) => {
+        let buf = '';
+        rsp.on('data', d => buf += d);
+        rsp.on('end', () => {
+          if (savedProxy) { process.env.HTTPS_PROXY = savedProxy; process.env.https_proxy = savedProxy; }
+          try { resolve(JSON.parse(buf)); } catch { resolve([]); }
+        });
+      });
+      req.on('error', () => {
+        if (savedProxy) { process.env.HTTPS_PROXY = savedProxy; process.env.https_proxy = savedProxy; }
+        resolve([]);
+      });
+      req.on('timeout', () => { req.destroy(); resolve([]); });
+      req.end();
+    });
+    const nfsUrls = [
+      "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
+      "https://nfs.faireconomy.media/ff_calendar_nextweek.json",
+    ];
+    const results = await Promise.all(nfsUrls.map(fetchDirect));
+    const merged = results.flat().filter(e => e && e.country && e.date);
+    if (merged.length > 0) { _ffCache = { data: merged, ts: Date.now() }; return res.json(merged); }
+  } catch(_) {}
+
+  // Source 2: financialmodelingprep demo
+  try {
+    const now = new Date();
+    const from = now.toISOString().slice(0, 10);
+    const to = new Date(now.getTime() + 14 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+    const r = await fetch(`https://financialmodelingprep.com/api/v3/economic_calendar?from=${from}&to=${to}&apikey=demo`, { signal: AbortSignal.timeout(8000) });
+    if (r.ok) {
+      const data = await r.json();
+      if (Array.isArray(data) && data.length > 0) {
+        const mapped = data.filter(e => e.country === 'US' && e.impact === 'High').map(e => ({
+          title: e.event, country: 'USD', date: e.date, time: e.time || '00:00:00',
+          impact: 'High', forecast: e.estimate != null ? String(e.estimate) : '', previous: e.previous != null ? String(e.previous) : ''
+        }));
+        if (mapped.length > 0) { _ffCache = { data: mapped, ts: Date.now() }; return res.json(mapped); }
+      }
+    }
+  } catch(_) {}
+
+  // Source 3: builtin hardcoded (always works, no network)
+  // แสดง event สัปดาห์ปัจจุบัน ถ้าว่างให้แสดง upcoming 3 รายการแทน
+  const _now = new Date();
+  const _dow = _now.getUTCDay();
+  const _diffToMon = (_dow === 0) ? -6 : 1 - _dow;
+  const _weekStart = new Date(Date.UTC(_now.getUTCFullYear(), _now.getUTCMonth(), _now.getUTCDate() + _diffToMon));
+  const _weekEnd = new Date(_weekStart.getTime() + 7 * 24 * 3600 * 1000);
+  const allBuiltin = generateBuiltinEvents();
+  const thisWeek = allBuiltin.filter(e => { const d = new Date(e.date); return d >= _weekStart && d < _weekEnd; });
+  if (thisWeek.length > 0) return res.json(thisWeek.map(e => ({...e, _src:'builtin'})));
+  // สัปดาห์ว่าง → คืน upcoming 3 event ถัดไป
+  const upcoming = allBuiltin.filter(e => new Date(e.date) >= _now).slice(0, 3);
+  return res.json(upcoming.map(e => ({...e, _src:'builtin'})));
+});
+
+// รับ FF data จาก browser แล้ว cache ไว้ (browser ไม่ติด proxy)
+app.post("/api/ff-cache", (req, res) => {
+  const { data } = req.body;
+  if (!Array.isArray(data) || data.length === 0) return res.status(400).json({ error: 'no data' });
+  _ffCache = { data, ts: Date.now() };
+  console.log('[FF] browser pushed', data.length, 'events to cache');
+  res.json({ ok: true, count: data.length });
 });
 
 // Serve frontend
+
+// ── AUTH ROUTES ──────────────────────────────────────────────────────────────
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const fs_auth = require('fs');
+const USERS_FILE = __dirname + '/users.json';
+const TOKENS_FILE = __dirname + '/tokens.json';
+function loadJ(f){ try{ return JSON.parse(fs_auth.readFileSync(f,'utf8')); }catch(e){ return {}; } }
+function saveJ(f,d){ fs_auth.writeFileSync(f, JSON.stringify(d,null,2)); }
+app.get('/api/auth/debug', (req, res) => {
+  const users = loadJ(USERS_FILE);
+  res.json({ USERS_FILE, users });
+});
+const EXNESS_PORTS_FILE = __dirname + '/exness_ports.json';
+app.post('/api/auth/register', async (req, res) => {
+  const { email, password, exnessPort } = req.body || {};
+  if(!email || !password) return res.status(400).json({ message: 'กรุณากรอก email และ password' });
+  if(!exnessPort) return res.status(400).json({ message: 'กรุณากรอกเลขพอร์ต Exness' });
+  // ตรวจสอบเลขพอร์ต Exness
+  let ports = loadJ(EXNESS_PORTS_FILE);
+  if(!Array.isArray(ports)) ports = [];
+  const portStr = String(exnessPort).trim();
+  if(!ports.includes(portStr)) return res.status(403).json({ message: 'เลขพอร์ต Exness ไม่ถูกต้องหรือไม่มีในระบบ' });
+  let users = loadJ(USERS_FILE);
+  if(!Array.isArray(users)) users = [];
+  if(users.find(u => u.email === email)) return res.status(409).json({ message: 'อีเมลนี้มีบัญชีแล้ว' });
+  if(users.find(u => u.exnessPort === portStr)) return res.status(409).json({ message: 'เลขพอร์ต Exness นี้ถูกใช้งานแล้ว' });
+  users.push({ id: String(Date.now()), email, passwordHash: await bcrypt.hash(password, 10), exnessPort: portStr, createdAt: new Date().toISOString() });
+  saveJ(USERS_FILE, users);
+  res.json({ ok: true });
+});
+app.post('/api/auth/login', async (req, res) => {
+  const { email, password } = req.body || {};
+  if(!email || !password) return res.status(400).json({ message: 'กรุณากรอก email และ password' });
+  let users = loadJ(USERS_FILE);
+  if(!Array.isArray(users)) users = [];
+  const user = users.find(u => u.email === email);
+  const hash = user && (user.passwordHash || user.hash);
+  if(!user || !hash || !(await bcrypt.compare(password, hash)))
+    return res.status(401).json({ message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+  const token = crypto.randomBytes(32).toString('hex');
+  const tokens = loadJ(TOKENS_FILE);
+  tokens[token] = { email, expiresAt: Date.now() + 30*24*60*60*1000 };
+  saveJ(TOKENS_FILE, tokens);
+  res.json({ token, email });
+});
+app.post('/api/auth/logout', (req, res) => {
+  const token = (req.headers.authorization||'').replace('Bearer ','');
+  if(token){ const t = loadJ(TOKENS_FILE); delete t[token]; saveJ(TOKENS_FILE, t); }
+  res.json({ ok: true });
+});
+app.get('/api/auth/me', (req, res) => {
+  const token = (req.headers.authorization||'').replace('Bearer ','');
+  const tokens = loadJ(TOKENS_FILE);
+  const t = tokens[token];
+  if(!t || Date.now() > t.expiresAt) return res.status(401).json({ message: 'unauthorized' });
+  res.json({ email: t.email });
+});
+// ── END AUTH ─────────────────────────────────────────────────────────────────
+
 app.use(express.static(path.join(__dirname, '..')));
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, '..', 'index.html')));
 

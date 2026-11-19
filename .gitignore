@@ -3,3 +3,6 @@ server/users.json
 .env
 *.log
 oo.zip
+
+server/tokens.json
+server/exness_ports.json
