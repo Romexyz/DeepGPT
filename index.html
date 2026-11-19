@@ -2168,8 +2168,7 @@ async function forexAnalyze() {
 }
 /* รูปปก 16:9 — ใช้ padding-top trick เพราะ aspect-ratio ใช้ใน flex column ไม่ได้ */
 .eb-card-cover-wrap{
-  width:100%;position:relative;background:#111;overflow:hidden;
-  padding-top:56.25%; /* 9/16 = 56.25% */
+  display:none;
 }
 .eb-card-cover{
   position:absolute;top:0;left:0;width:100%;height:100%;
