@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepGPT Admin — อัปเดต ForexFactory</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 540px;
+    width: 100%;
+  }
+  h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
+  .sub { font-size: 0.85rem; color: #888; margin-bottom: 28px; }
+  label { font-size: 0.8rem; color: #aaa; display: block; margin-bottom: 6px; }
+  input[type="password"] {
+    width: 100%;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #fff;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    outline: none;
+  }
+  input[type="password"]:focus { border-color: #f59e0b; }
+  .weeks { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .week-btn {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #ccc;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .week-btn:hover { border-color: #f59e0b; color: #f59e0b; }
+  .week-btn.active { background: #f59e0b22; border-color: #f59e0b; color: #f59e0b; }
+  #fetchBtn {
+    width: 100%;
+    background: #f59e0b;
+    color: #000;
+    font-weight: 700;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    margin-bottom: 16px;
+  }
+  #fetchBtn:hover { opacity: 0.9; }
+  #fetchBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+  #log {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 0.8rem;
+    color: #aaa;
+    min-height: 80px;
+    white-space: pre-wrap;
+    font-family: monospace;
+    line-height: 1.6;
+  }
+  .ok { color: #4ade80; }
+  .err { color: #f87171; }
+  .info { color: #60a5fa; }
+  #preview {
+    margin-top: 16px;
+    font-size: 0.78rem;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>🗓 Admin — อัปเดต ForexFactory Events</h1>
+  <p class="sub">ดึงข้อมูลจาก nfs.faireconomy.media แล้ว save ลง MongoDB ทันที</p>
+
+  <label>Admin Secret (ถ้ากำหนด ADMIN_SECRET ใน Netlify)</label>
+  <input type="password" id="secret" placeholder="เว้นว่างถ้าไม่ได้กำหนด secret">
+
+  <label>เลือกสัปดาห์ที่จะดึง</label>
+  <div class="weeks">
+    <button class="week-btn active" data-url="https://nfs.faireconomy.media/ff_calendar_thisweek.json" id="w1">สัปดาห์นี้</button>
+    <button class="week-btn active" data-url="https://nfs.faireconomy.media/ff_calendar_nextweek.json" id="w2">สัปดาห์หน้า</button>
+  </div>
+
+  <button id="fetchBtn" onclick="doUpdate()">⚡ ดึงข้อมูลและ Save ลง MongoDB</button>
+
+  <div id="log">พร้อมใช้งาน — กดปุ่มเพื่ออัปเดต</div>
+  <div id="preview"></div>
+</div>
+
+<script>
+const weekBtns = document.querySelectorAll('.week-btn');
+weekBtns.forEach(btn => {
+  btn.addEventListener('click', () => btn.classList.toggle('active'));
+});
+
+function log(msg, cls) {
+  const el = document.getElementById('log');
+  const line = cls ? `<span class="${cls}">${msg}</span>\n` : msg + '\n';
+  el.innerHTML += line;
+  el.scrollTop = el.scrollHeight;
+}
+
+function clearLog() {
+  document.getElementById('log').innerHTML = '';
+  document.getElementById('preview').innerHTML = '';
+}
+
+async function doUpdate() {
+  clearLog();
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true;
+
+  const secret = document.getElementById('secret').value.trim();
+  const activeWeeks = [...document.querySelectorAll('.week-btn.active')].map(b => b.dataset.url);
+
+  if (activeWeeks.length === 0) {
+    log('⚠ เลือกอย่างน้อย 1 สัปดาห์', 'err');
+    btn.disabled = false;
+    return;
+  }
+
+  log(`📡 กำลังดึง ${activeWeeks.length} สัปดาห์จาก nfs.faireconomy.media...`, 'info');
+
+  let allEvents = [];
+  for (const url of activeWeeks) {
+    try {
+      log(`  → ${url.split('/').pop()}`, '');
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = await r.json();
+      const valid = data.filter(e => e && e.country && e.date);
+      log(`  ✓ ได้ ${valid.length} events`, 'ok');
+      allEvents = allEvents.concat(valid);
+    } catch(e) {
+      log(`  ✗ error: ${e.message}`, 'err');
+    }
+  }
+
+  if (allEvents.length === 0) {
+    log('❌ ไม่ได้ข้อมูลเลย — ตรวจสอบ network', 'err');
+    btn.disabled = false;
+    return;
+  }
+
+  // filter USD only (High/Medium impact) — optional, keep all for now
+  log(`\n📦 รวม ${allEvents.length} events — กำลัง save ลง MongoDB...`, 'info');
+
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (secret) headers['X-Admin-Secret'] = secret;
+
+    const r = await fetch('/api/admin/update-ff', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ events: allEvents })
+    });
+    const data = await r.json();
+    if (r.ok && data.ok) {
+      log(`\n✅ บันทึกสำเร็จ! ${data.saved} events`, 'ok');
+      log(`   อัปเดตเมื่อ: ${new Date(data.updatedAt).toLocaleString('th-TH')}`, 'ok');
+
+      // preview USD high
+      const usdHigh = allEvents
+        .filter(e => e.country === 'USD' && e.impact === 'High')
+        .slice(0, 10)
+        .map(e => `${e.date} — ${e.title}`)
+        .join('\n');
+      if (usdHigh) {
+        document.getElementById('preview').innerHTML =
+          `<br><div style="color:#888;font-family:monospace;font-size:0.75rem">USD High events (preview):\n${usdHigh}</div>`;
+      }
+    } else {
+      log(`\n❌ Save ล้มเหลว: ${data.error || JSON.stringify(data)}`, 'err');
+    }
+  } catch(e) {
+    log(`\n❌ Network error: ${e.message}`, 'err');
+  }
+
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>
