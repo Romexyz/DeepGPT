@@ -103,9 +103,38 @@ async function handleChat(event) {
 }
 
 async function handleFfEvents() {
-  const urls = ['https://nfs.faireconomy.media/ff_calendar_thisweek.json','https://nfs.faireconomy.media/ff_calendar_nextweek.json'];
-  const results = await Promise.all(urls.map(u => fetch(u, { headers: {'User-Agent':'Mozilla/5.0'} }).then(r => r.ok ? r.json() : []).catch(() => [])));
+  const FF_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Referer': 'https://www.forexfactory.com/',
+    'Origin': 'https://www.forexfactory.com',
+  };
+  const urls = [
+    'https://nfs.faireconomy.media/ff_calendar_thisweek.json',
+    'https://nfs.faireconomy.media/ff_calendar_nextweek.json',
+  ];
+  const results = await Promise.all(
+    urls.map(u =>
+      fetch(u, { headers: FF_HEADERS })
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .catch(() => [])
+    )
+  );
   const merged = results.flat().filter(e => e && e.country && e.date);
+  // if both failed, try allorigins proxy as fallback
+  if (merged.length === 0) {
+    try {
+      const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://nfs.faireconomy.media/ff_calendar_thisweek.json');
+      const pr = await fetch(proxyUrl);
+      if (pr.ok) {
+        const pj = await pr.json();
+        if (Array.isArray(pj) && pj.length) {
+          return { statusCode: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(pj.filter(e => e && e.country && e.date)) };
+        }
+      }
+    } catch {}
+  }
   return { statusCode: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(merged) };
 }
 
