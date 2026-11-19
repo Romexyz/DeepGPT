@@ -1,0 +1,8 @@
+{
+  "name": "deepgpt-functions",
+  "version": "1.0.0",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "mongodb": "^6.3.0"
+  }
+}
