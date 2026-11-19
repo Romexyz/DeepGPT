@@ -128,17 +128,17 @@ async function handleFfEvents() {
     merged = results.flat().filter(e => e && e.country && e.date);
   } catch {}
 
-  // fallback: allorigins proxy for thisweek only
+  // fallback: allorigins proxy for both weeks
   if (merged.length === 0) {
     try {
-      const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(urls[0]);
-      const pr = await fetch(proxyUrl);
-      if (pr.ok) {
-        const pj = await pr.json();
-        if (Array.isArray(pj) && pj.length) {
-          merged = pj.filter(e => e && e.country && e.date);
-        }
-      }
+      const proxyResults = await Promise.all(
+        urls.map(u =>
+          fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(u))
+            .then(r => r.ok ? r.json() : [])
+            .catch(() => [])
+        )
+      );
+      merged = proxyResults.flat().filter(e => e && e.country && e.date);
     } catch {}
   }
 
