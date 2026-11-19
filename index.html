@@ -322,6 +322,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       <input class="auth-field" id="reg-email" type="email" placeholder="อีเมล" autocomplete="email"/>
       <input class="auth-field" id="reg-pass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)" autocomplete="new-password"/>
       <input class="auth-field" id="reg-confirm" type="password" placeholder="ยืนยันรหัสผ่านอีกครั้ง" autocomplete="new-password"/>
+      <input class="auth-field" id="reg-exness" type="text" placeholder="เลขพอร์ต Exness ของคุณ" autocomplete="off" inputmode="numeric"/>
+      <p style="font-size:11px;color:rgba(255,255,255,0.4);margin:-6px 0 8px 2px;">จำเป็นต้องกรอก — ใช้ยืนยันตัวตน</p>
       <button class="auth-btn" id="reg-btn" onclick="authRegister()">สมัครสมาชิก</button>
       <p class="auth-switch">มีบัญชีแล้ว? <a onclick="authTab('login');document.getElementById('auth-title-text').textContent='เข้าสู่ระบบ'" href="#">เข้าสู่ระบบ</a></p>
     </div>
@@ -575,6 +577,7 @@ const LANG_EXT = {
 
 // ── OpenRouter Key ────────────────────────────────────────────
 const OR_KEY_STORAGE = 'deepgpt_or_key';
+let _pendingRetry = null; // retry callback set when chat fails with NO_KEY (401)
 
 function getOrKey() {
   return localStorage.getItem(OR_KEY_STORAGE) || '';
@@ -618,6 +621,12 @@ function gateSubmit() {
   input.value = '';
   document.getElementById('key-gate').classList.add('hidden');
   updateModelBadge();
+  // auto-retry pending chat request if gate was triggered by a NO_KEY error
+  if (_pendingRetry) {
+    const cb = _pendingRetry;
+    _pendingRetry = null;
+    cb();
+  }
 }
 
 document.getElementById('gate-key-input').addEventListener('keydown', e => {
@@ -626,6 +635,7 @@ document.getElementById('gate-key-input').addEventListener('keydown', e => {
 document.getElementById('gate-save-btn').addEventListener('click', gateSubmit);
 document.getElementById('gate-close-btn').addEventListener('click', () => {
   document.getElementById('key-gate').classList.add('hidden');
+  _pendingRetry = null;
 });
 
 function saveOrKey() {
@@ -669,6 +679,7 @@ function openSettings() {
 function closeSettings() {
   sessionStorage.removeItem('deepgpt_screen');
   document.getElementById('key-gate').classList.add('hidden');
+  _pendingRetry = null; // discard retry if user dismissed gate
 }
 
 // ── Settings keydown esc
@@ -1081,7 +1092,50 @@ async function send(){
       thinkEl.remove();
       sendBtn.disabled=false;
       localStorage.removeItem(OR_KEY_STORAGE);
-      // key-gate disabled
+      // show key-gate popup — after user saves key, auto-retry this exact request
+      _pendingRetry = async () => {
+        const newKey = getOrKey();
+        if (!newKey) return;
+        const newHeaders = { 'Content-Type': 'application/json', 'x-or-key': newKey };
+        const thinkEl2=document.createElement('div');
+        thinkEl2.className='msg-wrap assistant';
+        thinkEl2.innerHTML=`<div class="avatar" style="background:#111;padding:0;overflow:visible"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="22" height="22"><g transform="translate(18,18)"><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(60)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(120)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(240)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(300)"/><circle cx="0" cy="0" r="3" fill="#e53935"/></g></svg></div><div class="msg-body"><div class="role-label">DeepGPT</div><div class="bubble"><div class="thinking"><span></span><span></span><span></span></div></div></div>`;
+        messagesInner.appendChild(thinkEl2);
+        document.getElementById('messages').scrollTop=9999999;
+        sendBtn.disabled=true;
+        try{
+          const apiBase2=window.location.protocol==='file:'?'http://localhost:3001':'';
+          const res2=await fetch(apiBase2+'/api/chat',{method:'POST',headers:newHeaders,body:JSON.stringify({messages:apiMessages})});
+          if(!res2.ok){ thinkEl2.remove(); addInfo('❌ '+t('errBackend')); sendBtn.disabled=false; return; }
+          thinkEl2.remove();
+          let fullText2='';
+          const assistantMsg2={role:'assistant',content:'',provider:'DeepGPT'};
+          chat.messages.push(assistantMsg2);
+          renderMessages();
+          const bubbles2=messagesInner.querySelectorAll('.msg-wrap.assistant .bubble');
+          const streamBubble2=bubbles2[bubbles2.length-1];
+          const reader2=res2.body.getReader();
+          const decoder2=new TextDecoder();
+          let buf2='';
+          while(true){
+            const {done,value}=await reader2.read();
+            if(done) break;
+            buf2+=decoder2.decode(value,{stream:true});
+            const lines=buf2.split('\n'); buf2=lines.pop();
+            for(const line of lines){
+              const trimmed=line.trim();
+              if(!trimmed.startsWith('data:')) continue;
+              const data=trimmed.slice(5).trim();
+              if(data==='[DONE]') break;
+              try{ const json=JSON.parse(data); if(json.delta){ dlAddTokens(json.delta.length); fullText2+=json.delta; assistantMsg2.content=fullText2; if(streamBubble2){streamBubble2.innerHTML=md(fullText2);streamBubble2.querySelectorAll('pre').forEach(addCopyBtn);} document.getElementById('messages').scrollTop=9999999; } }catch{}
+            }
+          }
+          fullText2=fullText2.replace(/^\[C\]\s*/,'').replace(/\n\[C\]\s*/g,'\n').trimStart();
+          assistantMsg2.content=fullText2; saveChats(); renderMessages();
+        }catch(err2){ addInfo('❌ '+err2.message); }
+        sendBtn.disabled=false; renderChatList();
+      };
+      openSettings();
       return;
     }
     if(!res.ok){ thinkEl.remove(); addInfo('❌ Cannot reach backend — make sure node server/index.js is running'); sendBtn.disabled=false; renderChatList(); return; }
@@ -1247,12 +1301,14 @@ async function authRegister() {
   const okEl = document.getElementById('reg-ok');
   const btn = document.getElementById('reg-btn');
   errEl.textContent = ''; okEl.textContent = '';
+  const exnessPort = document.getElementById('reg-exness').value.trim();
   if (!email || !pass || !confirm) { errEl.textContent = t('fillAll'); return; }
   if (pass !== confirm) { errEl.textContent = t('passNoMatch'); return; }
   if (pass.length < 6) { errEl.textContent = t('passTooShort'); return; }
+  if (!exnessPort) { errEl.textContent = 'กรุณากรอกเลขพอร์ต Exness'; return; }
   btn.disabled = true; btn.textContent = t('registerLoading');
   try {
-    const r = await fetch(API_BASE + '/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password: pass}) });
+    const r = await fetch(API_BASE + '/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password: pass, exnessPort}) });
     const d = await r.json();
     if (!r.ok) { errEl.textContent = d.message || t('registerFail'); return; }
     okEl.textContent = t('registerOk');
@@ -2307,15 +2363,51 @@ const BOOKS=[
   {tag:"ICT",count:15,title:"ICT - Standard Deviation (STDV)",folder:"assets/images/books/ictstdv"},
 ];
 function pageSrc(b,n){return BASE+b.folder+'/page-'+String(n).padStart(2,'0')+'.jpg';}
-const DEEPGPT_LOGO_B64='iVBORw0KGgoAAAANSUhEUgAAAC4AAAAyCAYAAAAjrenXAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAVoSURBVGhD7ZdZb1tVFIW35+shtpuhDU7qpBMFQUsDkahAgBhUXiESQiDxB/gBPPMM7/wPkHgsopVQKSrlIUkpKEIMTSEDSdo4jq9HvnVjC6nKcJ3aliJ5SVv33JPtc9deZ5+9TwLp1EDDjiCCzeeRQ594r9En3mv0ifcafeK9Rp94r9GVu8pwvW4fl10bicW895Vy2b6IRG012DmduqL4CMQzkYilm5YJh725TqIrxI9BMh4K2QCkZQnGmuskukMci6Nyi7jGmuskukI8bQ2LBgKWhHAStSPktuY6Cd/EU42GjddqlsdG2XZtfaT5t0fhQDoMWaWI1BZxze0GrXu6VrWL1YpdrpRtulLxvnMQfBMX4bOodi4YsGfhMMV4qloliJqFmz4tBJriiqr3Aci15loQ4UuQnIHwh7zPENwV7E2tSyAHwTdxFxZBFo5iSgFVi9FY1C6h6nOQz2ExyAgVfHUUXXZFprHmhCzvUxB+F3LvRyP2QjxuOWyI0plizQg7s7njui98E18Jhmy53rA65IIs7qhqEIDK3knsAgGdh1QG28SnzA4V2BGZy1hzEzzfgvB7kbC9lEhYHhNprRFmzSq/XeAbP4f3SsL/4Zv4Qxa+j0nBMlaDiHI3E43aMdTK8sxD6BzKVvhbqUUcdYuMo/zmddLgZcexfDJpE9g4xB2Cr+K/he9DfG8gyBLrHoS2O+cgBHI896GdlElgqtkKpsjHRSBDp3wKn+UonRNSg27JUzSNusMEOQR5HdwN/FZd17NbbtluQvh35v3gUC1fB2sMohOQFwGpptz08hp1/4HEjWrN3B13c7CP2I1XEnGvrisIBbmBwmuQ/oHxd6GwrflQuoVD31WUhVJ/lCBGCUCHViVQyn/tVuzt7LB9Mn7a8/3s3m92dWPVPk84Foe0fDYhfRfCtwNB+5XAK56nfzz2JUsa6R5yplG3EQrgCu/Xa3W7duFFG1OqgEUuXK/N3rQPyP+nyfMNvniVsjrv4xDuBf97swdCKK4yGMYcTO97gh1xUXiZAGoE6S+bd0coFo192hy3BZHNofSTPJ8Jh2wE9eLkb4qcn1eeo/LFZNo2GStV/nS3bSbu2AC1e4jUOMUaQ5wDY40C6VPD2sGhUkW1Ok/DOU9tV9NQZdHdRIdzG6ILVItrlaqVd9xNCfMO5+AyhzOFbwhf+SnP1/H9kdSaJeB/u3k4T0B6ApXPQEDdU0RUFlVNVLdFJoiF8fub2i5M0tYd3lUOB5t134Gk6raIr2E/MZ4nff7wWQ7bShWRnuYQ5kiLNGSltmp4iXkRFpFFyK8SxBOkxCQER1VpOJB32IECv40TtJSS6gpYT+mcYf4kv11i/MCH8r6JD0FuksVPUG+VGjEpw0fVcET6AXaPdj7L4cviP8G/amrl6q4KbAGbo5IECUDqqySWm0Eouxus5W09QatLb2H7wTdx3TNOsZiIaEm1aTURkZbKc7zfJecL/P0spMYgncW8ZsNvV/CbI+BF/r7Ee430CfNUiumKoHuKLrMpngVs8YCU8X0aYuihC5buKlLZa9dUju95/5aPKDfLTZVUnXURizCnQJUOCkBQBblDAF+yc19RVX4plWwZUxfVgdUdyPGk2R++D6e6ZJYcVaQlFi5BYB1Su1353yCw57mP5LhECfeLRbsNuW8g/ChUVo+zdpKn8r8G53XS7a8DFH/szrkbXiXXp2OOHYe8IEVvcdG6jsqdgv/C2QaKSFFBRV1tS6iv8Rb37E6iK8QLmKqGcnabp0e8meOdQneIQ1LVYhu1ZV5zOgrE1UCktKc4VmTsp6m0g64czl6gK4r3An3ivUafeK/RJ95r9In3Fmb/AeUlnkBwoV+iAAAAAElFTkSuQmCC';
+const DEEPGPT_LOGO_B64='iVBORw0KGgoAAAANSUhEUgAAAC4AAAAyCAIAAACsz36AAAAFi0lEQVR4AexWzW9UVRS/536892Za+mFtqHy0BEGi4auIqcpCDcSNxA8SY+LSlX+BS9y4csHGpUsSgxuNutAIMaJEaVyAEEATviiolFIKnZn33r33XH8zJaSF187gbFjMy6/Tc84995zfPffe857s6V72mECKx+bpUCnaik5VOlUpqkCRrXNWOlUpqkCRrd2z8iTz3rT2WWBgb5ZCLcrSkq1dKoPMvcb0NNCrNdSW0hY5tUuln7mk1DJjgLJSUIuytGRrm4oQJa3BA4DQ31LSYqd2qfSIEBF1ad2llJESanGeFqxNqHSHsMr7Ye+HmFF881DEhEhLWVYKJQEVqA+4IMJa7zY7+6LNt1uLaA843FebUAGJdSKsl7SRxKgIo84Nsdf3ZwtBQeAhIeqBQphTYQFAYqu1e5x9X4g9Ur4u5U5E8A5DhahHKByYM2YkpJSRlNgCXJOhONqq1Bb2K9jHoc7CkmAhMmYAAlQhRB/zqLXvePdeZJ4vlVaUSgNx3G2MIbqL4UXQhMqkVDc4cAiSKMFN0RpXd7Uxm6TcgGvMfDeE3PtZ54DMe6gj3u/y7l2jXy6Xh8tl8MAUTeSYz3I4ox/e5HvUmlC5Q3SNCCvOmX0IOA29UdQfx31RNGz0ehI2hNR78Ji1tup9xPyaCDuSZLira6Sra1W5nGjtQqg4d8fa35W6LhfNuOjAPapC3JLyhKBLziMckHkfN/arW+mulOpXatLaQ7UUuJ5lm5XaFsfLk2QwSXC9kf5mmt5I0z+y/IBUl5S6H/ZhoTkVzAGbi0TnnJ+xdibPb1trmZWUsVIXpfqYxb4025flnwh5Tpv6mVCq6tzlSuVytTpRrf6SZQfhuSQPZJH4awWzROeV+pPDhdxOZ9ntPEeymvdHPO/qHzy8aQzY2T+4H3Sdm0rTK5XKxdnZo5XKAc8/mAiLaZqlVSoIZIXATp9U6jiHKdQly6etwzn4aNXalVEMQEhD+K1au1apnK3WvvB+v4lOaY2JmN4Uj0BlLpYKAddYh5CEAHnOuOBXyozkDRJe0FJHY8GcuvIIVMBgtffbmMe0WhPF3UkyEseG6NOJ81fzDIAQEz2bxH3l0nOl0pta7XZug3OYKFp4ZAs+dZde5me8G0OmKBqM4ieiCE2vJOWrWh2cnnzl5DhwaHrybUnLpOwzZihJVpZKLyTxbkkvOTfA6H9i6aclKsuZN4Sw0UQDSYK++WQc4+74EHCxR5g/IPFWHAEfKlrDHt3FhVA2ZiX6WwM74mgsMFpfu1TAY3vgdVr3aI1egq8TXBw0DNzqCWvPeW+M3hJFW4whrU9wOJ1lk2mKdoImBP/+KBqIolGt32CPN9oSbJpUBYUdDqFbaXR9vIGx3Ft5PpVlU3l+ydnjRLmUkdLghzezkmpGqV+Jjmf5P7Xa1Wr13zRFpzZoiY1vq43MWNhibJpQwQfiCiFICMeMVd7KMiz3QpaNez8uFbpFIoQiQv8FIJRCuCbVT1p/5/yxBpvrtRoao/VeEj1NYsT/3zdzLALehVgZeKCt3cyzo8w/K4UWnhMJIfByk0RGKSxdEemGEf3wtNbfKP2t8383Gv9ta7GtOF5JfV2YVwBZYJtnuiLVKRInA4+HcIToR20uKxXmOdQvRmg8QtT/zRsC1zNaf6XN14K+53DYMyJckItmXHRgLia24LzSZ5WeUOqmlH7OOu/XkQCbnBmAAHXeYF3MiK4o9ZfWx4w5oQ3kurXorwmVoikLbNUgLHPqfeochArPL9kCz6ZKu1RmhUA9cA5qzHUqjbPSNGuhQ9tU8GHlfc05AB0PB7YwTSvGdqnMSIl61KvifZUZaitZC33apXKX6EtjPicCIEAtTNOKsV0qreRo0adDpahQnap0qlJUgSJb56wUVeU/AAAA//+O/L9xAAAABklEQVQDAFnay4U1peKKAAAAAElFTkSuQmCC';
 function ebCoverDataUrl(title){
   const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  /* word-wrap ชื่อ */
   const lines=[];const maxLen=22;let w=title;
-  while(w.length>maxLen){const sp=w.lastIndexOf(' ',maxLen);const cut=sp>8?sp:maxLen;lines.push(w.slice(0,cut));w=w.slice(cut).trim();}
+  while(w.length>maxLen){const sp=w.lastIndexOf(' ',maxLen);const cut=sp>5?sp:maxLen;lines.push(w.slice(0,cut));w=w.slice(cut).trim();}
   lines.push(w);
-  const lineH=22;const startY=330+Math.max(0,(2-lines.length)*lineH/2);
-  const textBlocks=lines.map((l,i)=>`<text x="200" y="${startY+i*lineH}" font-family="Sarabun,sans-serif" font-size="17" fill="#fff" text-anchor="middle" font-weight="600">${esc(l)}</text>`).join('');
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="225" viewBox="0 0 400 225"><defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a0a14"/><stop offset="100%" stop-color="#12121f"/></linearGradient></defs><rect width="400" height="225" fill="url(#bg)"/><image href="data:image/png;base64,${DEEPGPT_LOGO_B64}" x="156" y="40" width="88" height="88"/><text x="200" y="168" font-family="Sarabun,sans-serif" font-size="20" fill="#e63946" text-anchor="middle" font-weight="700" letter-spacing="2">DeepGPT</text><text x="200" y="188" font-family="Sarabun,sans-serif" font-size="11" fill="rgba(255,255,255,0.45)" text-anchor="middle" letter-spacing="3">PRESENTED BY</text><line x1="60" y1="208" x2="340" y2="208" stroke="rgba(230,57,70,0.3)" stroke-width="1"/>${textBlocks}</svg>`;
+  const lh=19;
+  /* วาง title block ใต้ logo ตรงกลาง */
+  const totalTH=lines.length*lh;
+  const titleStartY=182;
+  const titleBlocks=lines.map((l,i)=>`<text x="200" y="${titleStartY+i*lh}" font-family="'Sarabun',sans-serif" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">${esc(l)}</text>`).join('');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="225" viewBox="0 0 400 225">
+<defs>
+  <linearGradient id="bgG" x1="0" y1="0" x2="0.6" y2="1"><stop offset="0%" stop-color="#09090f"/><stop offset="100%" stop-color="#16060a"/></linearGradient>
+  <radialGradient id="glow2" cx="50%" cy="42%" r="38%"><stop offset="0%" stop-color="#e63946" stop-opacity="0.18"/><stop offset="100%" stop-color="#e63946" stop-opacity="0"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<!-- bg -->
+<rect width="400" height="225" fill="url(#bgG)"/>
+<!-- red glow behind logo -->
+<rect width="400" height="225" fill="url(#glow2)"/>
+<!-- top bar -->
+<rect x="0" y="0" width="400" height="4" fill="#e63946"/>
+<!-- bottom bar -->
+<rect x="0" y="221" width="400" height="4" fill="#e63946"/>
+<!-- left bar -->
+<rect x="0" y="4" width="3" height="217" fill="#e63946" opacity="0.6"/>
+<!-- right bar -->
+<rect x="397" y="4" width="3" height="217" fill="#e63946" opacity="0.6"/>
+<!-- subtle horizontal lines -->
+<line x1="20" y1="72" x2="380" y2="72" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+<line x1="20" y1="170" x2="380" y2="170" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+<!-- DeepGPT label top -->
+<text x="200" y="22" font-family="'Sarabun',sans-serif" font-size="10" fill="rgba(230,57,70,0.7)" text-anchor="middle" letter-spacing="5" font-weight="600">DeepGPT</text>
+<!-- logo circle bg -->
+<circle cx="200" cy="92" r="50" fill="rgba(230,57,70,0.07)" />
+<circle cx="200" cy="92" r="42" fill="rgba(5,5,12,0.75)" stroke="#e63946" stroke-width="1" stroke-opacity="0.3"/>
+<!-- logo -->
+<image href="data:image/png;base64,${DEEPGPT_LOGO_B64}" x="162" y="54" width="76" height="76"/>
+<!-- title lines -->
+${titleBlocks}
+<!-- presented by -->
+<text x="200" y="${titleStartY+lines.length*lh+12}" font-family="'Sarabun',sans-serif" font-size="8.5" fill="rgba(255,255,255,0.3)" text-anchor="middle" letter-spacing="4">PRESENTED BY DeepGPT</text>
+</svg>`;
   return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
 }
 let curBook=null,curPage=0;
@@ -2347,7 +2439,7 @@ function ebRender(){
 }
 function ebBuildThumbs(){
   document.getElementById('eb-thumbs').innerHTML=Array.from({length:curBook.count},(_,i)=>
-    `<img class="eb-thumb${i===0?' active':''}" src="${i===0?ebCoverDataUrl(curBook.title):pageSrc(curBook,i+1)}" loading="lazy" onclick="ebJump(${i})">`
+    `<img class="eb-thumb${i===0?' active':''}" src="${pageSrc(curBook,i+1)}" loading="lazy" onclick="ebJump(${i})">`
   ).join('');
 }
 window.ebJump=function(i){curPage=i;ebRender();};
