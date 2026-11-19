@@ -209,13 +209,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .forex-analyze-btn{width:100%;margin-top:20px;padding:14px;border-radius:12px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:.15s;display:none}
 .forex-analyze-btn:hover{background:#c62a37}
 .forex-analyze-btn:disabled{opacity:.5;cursor:not-allowed}
-.forex-progress-wrap{width:100%;margin-top:12px;display:none;flex-direction:column;gap:6px;align-items:center}
-.forex-progress-bar-bg{width:100%;height:8px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
-.forex-progress-bar-fill{height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .3s ease}
-.forex-progress-pct{font-size:13px;font-weight:700;color:var(--accent)}
-.forex-extra-prompt{width:100%;margin-top:14px;padding:12px 14px;border-radius:12px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;resize:vertical;min-height:70px;outline:none;font-family:inherit;box-sizing:border-box;transition:.15s}
-.forex-extra-prompt:focus{border-color:var(--accent)}
-.forex-extra-prompt::placeholder{color:var(--muted2)}
 .forex-result{margin-top:20px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:20px;display:none;white-space:pre-wrap;font-size:13px;line-height:1.7;color:var(--text)}
 .forex-result.show{display:block}
 /* ── User Avatar in topbar ── */
@@ -275,15 +268,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .lang-btn{padding:4px 10px;font-size:11px;font-weight:600;border:none;background:transparent;color:var(--muted2);cursor:pointer;transition:.15s;letter-spacing:.3px}
 .lang-btn:hover{color:var(--text)}
 .lang-btn.active{background:var(--accent);color:#fff}
-
-#daily-limit-wrap{display:flex;align-items:center;justify-content:center;cursor:pointer;margin-right:4px}
-#daily-limit-svg{transform:rotate(-90deg)}
-.dl-bg{stroke:var(--border2,rgba(255,255,255,.15))}
-.dl-fg{stroke:#22c55e;transition:stroke-dasharray .4s ease,stroke .3s}
-.dl-fg.warn{stroke:#f59e0b}
-.dl-fg.danger{stroke:#ef4444}
-.dl-label{font-size:9px;fill:var(--text);font-family:inherit;font-weight:600;transform:rotate(90deg);transform-origin:18px 18px}
-
 </style>
 </head>
 <body>
@@ -308,7 +292,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       <span style="font-size:22px;font-weight:800;color:#fff">Deep<span style="font-weight:300">GPT</span></span>
     </div>
     <div class="auth-title" id="auth-title-text">เข้าสู่ระบบ</div>
-    <div class="auth-sub">AI Assistant · Powered by DeepGPT · <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj48cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHJ4PSI0IiBmaWxsPSIjRkZENzAwIi8+PHRleHQgeD0iMTAiIHk9IjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMwYTBlMWEiIGxldHRlci1zcGFjaW5nPSItMC41Ij5leDwvdGV4dD48L3N2Zz4=" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;margin:0 4px 1px 0"/>Exness</div>
+    <div class="auth-sub">AI Assistant · Powered by OpenRouter · <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj48cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHJ4PSI0IiBmaWxsPSIjRkZENzAwIi8+PHRleHQgeD0iMTAiIHk9IjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMwYTBlMWEiIGxldHRlci1zcGFjaW5nPSItMC41Ij5leDwvdGV4dD48L3N2Zz4=" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;margin:0 4px 1px 0"/>Exness</div>
     <div class="auth-panel active" id="panel-login">
       <div class="auth-err-msg" id="login-err"></div>
       <input class="auth-field" id="login-email" type="email" placeholder="อีเมล" autocomplete="email"/>
@@ -351,7 +335,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       </svg>
       <span style="font-size:18px;font-weight:800;color:#fff">Deep<span style="font-weight:300">GPT</span></span>
     </div>
-    <div class="gate-title">ใส่ DeepGPT API Key</div>
+    <div class="gate-title">ใส่ OpenRouter API Key</div>
     <div class="gate-sub">DeepGPT ใช้ OpenRouter เพื่อเรียก AI model — สมัครฟรี ไม่มีค่าใช้จ่าย key จะเก็บไว้ในเบราว์เซอร์ของคุณเท่านั้น</div>
     <div class="gate-steps">
       1. ไปที่ <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
@@ -388,7 +372,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       </svg>
       <span style="font-size:18px;font-weight:800;color:#fff">Deep<span style="font-weight:300">GPT</span></span>
     </div>
-    <div class="gate-title">ใส่ DeepGPT API Key</div>
+    <div class="gate-title">ใส่ OpenRouter API Key</div>
     <div class="gate-sub">DeepGPT ใช้ OpenRouter เพื่อเรียก AI model — สมัครฟรี ไม่มีค่าใช้จ่าย key จะเก็บไว้ในเบราว์เซอร์ของคุณเท่านั้น</div>
     <div class="gate-steps">
       1. ไปที่ <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
@@ -436,18 +420,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       </svg>
       Signal Forex
     </button>
-    <button class="drawer-nav-btn" onclick="openNewsSignal();setTimeout(closeDrawer,150)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
-      </svg>
-      Signal News
-    </button>
-    <button class="drawer-nav-btn" onclick="openEbook();setTimeout(closeDrawer,150)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-      </svg>
-      E-Book
-    </button>
   </div>
 </div>
 <div id="app">
@@ -457,7 +429,22 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="2" rx="1" fill="currentColor" stroke="none"/><rect x="3" y="11" width="14" height="2" rx="1" fill="currentColor" stroke="none"/><rect x="3" y="17" width="11" height="2" rx="1" fill="currentColor" stroke="none"/></svg>
       </button>
     </div>
-
+    <div class="topbar-logo" onclick="newChat()">
+      <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="rg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff2a2a"/><stop offset="100%" stop-color="#8b0000"/></radialGradient></defs>
+        <g fill="url(#rg2)">
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(0 50 50)" opacity="0.95"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(60 50 50)" opacity="0.85"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(120 50 50)" opacity="0.75"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(180 50 50)" opacity="0.65"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(240 50 50)" opacity="0.55"/>
+          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(300 50 50)" opacity="0.45"/>
+        </g>
+        <circle cx="50" cy="50" r="12" fill="#0a0608"/>
+        <circle cx="50" cy="50" r="7" fill="#e63946"/>
+      </svg>
+      <span style="font-size:14px;font-weight:700;color:#fff;letter-spacing:.4px">Deep<span style="font-weight:300">GPT</span></span>
+    </div>
     <div class="top-right">
       <div id="lang-toggle">
         <button class="lang-btn active" id="lang-btn-th" onclick="setLang('th')">TH</button>
@@ -531,13 +518,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
             <button class="plus-btn" onclick="document.getElementById('file-input').click()" title="แนบไฟล์">+</button>
           </div>
           <div class="input-right">
-            <div id="daily-limit-wrap" title="คลิกดู Usage" onclick="dlTogglePopup()">
-              <svg id="daily-limit-svg" viewBox="0 0 36 36" width="34" height="34">
-                <circle class="dl-bg" cx="18" cy="18" r="15.9" fill="none" stroke-width="3"/>
-                <circle id="dl-circle" class="dl-fg" cx="18" cy="18" r="15.9" fill="none" stroke-width="3"
-                  stroke-dasharray="0 100" stroke-linecap="round"/>
-              </svg>
-            </div>
             <button id="send-btn">
               <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -575,7 +555,6 @@ const LANG_EXT = {
 
 // ── OpenRouter Key ────────────────────────────────────────────
 const OR_KEY_STORAGE = 'deepgpt_or_key';
-let _pendingRetry = null; // retry callback set when chat fails with NO_KEY (401)
 
 function getOrKey() {
   return localStorage.getItem(OR_KEY_STORAGE) || '';
@@ -619,12 +598,6 @@ function gateSubmit() {
   input.value = '';
   document.getElementById('key-gate').classList.add('hidden');
   updateModelBadge();
-  // auto-retry pending chat request if gate was triggered by a NO_KEY error
-  if (_pendingRetry) {
-    const cb = _pendingRetry;
-    _pendingRetry = null;
-    cb();
-  }
 }
 
 document.getElementById('gate-key-input').addEventListener('keydown', e => {
@@ -633,7 +606,6 @@ document.getElementById('gate-key-input').addEventListener('keydown', e => {
 document.getElementById('gate-save-btn').addEventListener('click', gateSubmit);
 document.getElementById('gate-close-btn').addEventListener('click', () => {
   document.getElementById('key-gate').classList.add('hidden');
-  _pendingRetry = null;
 });
 
 function saveOrKey() {
@@ -661,7 +633,6 @@ function saveOrKey() {
 }
 
 function openSettings() {
-  sessionStorage.setItem('deepgpt_screen', 'settings');
   // เปิด key-gate full-screen เหมือนตอนส่งแล้วไม่มี key
   const gate = document.getElementById('key-gate');
   const input = document.getElementById('gate-key-input');
@@ -675,9 +646,7 @@ function openSettings() {
 }
 
 function closeSettings() {
-  sessionStorage.removeItem('deepgpt_screen');
   document.getElementById('key-gate').classList.add('hidden');
-  _pendingRetry = null;
 }
 
 // ── Settings keydown esc
@@ -773,127 +742,6 @@ let pendingFiles = [];
 
 const messagesInner = document.getElementById('messages-inner');
 const userInput = document.getElementById('user-input');
-
-// ── Daily Limit Tracker (OpenRouter real usage) ──────────────────────
-let dlPopupOpen = false;
-let dlUsageCache = null; // { pct, limitPct, label }
-
-// session token counter — persisted per-day in localStorage
-let dlOrRaw = null;
-const dlCapChars = 200000;
-const _dlKey = 'dl_sess_' + new Date().toISOString().slice(0,10);
-let dlSessionTokens = parseInt(localStorage.getItem(_dlKey) || '0', 10);
-
-function dlAddTokens(n){
-  dlSessionTokens += n;
-  localStorage.setItem(_dlKey, dlSessionTokens);
-  const pct = Math.min(dlSessionTokens / dlCapChars * 100, 100);
-  dlRenderCircle(pct);
-  if(dlPopupOpen) dlRenderPopup(dlBuildCache());
-}
-
-function dlBuildCache(){
-  const sessPct = Math.min(dlSessionTokens / dlCapChars * 100, 100);
-  if(dlOrRaw){
-    const used = parseFloat(dlOrRaw.usage || 0);
-    const limit = parseFloat(dlOrRaw.limit || 0);
-    const limitPct = limit > 0 ? Math.min(used/limit*100, 100) : 0;
-    const creditLabel = limit > 0
-      ? `$${used.toFixed(4)} / $${limit.toFixed(2)} used`
-      : `Free tier · $${used.toFixed(4)} used`;
-    return { pct: sessPct, limitPct, label: creditLabel, used, limit, sessTokens: dlSessionTokens };
-  }
-  return { pct: sessPct, limitPct: 0, label: 'Session only', used: 0, limit: 0, sessTokens: dlSessionTokens };
-}
-
-async function dlFetchUsage(){
-  const key = getOrKey();
-  if(!key) return null;
-  try {
-    const r = await fetch('/api/or-usage', { headers: { 'x-or-key': key } });
-    if(!r.ok) return null;
-    const d = await r.json();
-    const raw = d.data || d;
-    dlOrRaw = raw; // เก็บ OR raw ใน global แยก
-    return dlBuildCache();
-  } catch(e){ return null; }
-}
-
-function dlRenderCircle(pct){
-  const circ = document.getElementById('dl-circle');
-  if(!circ) return;
-  const dash = Math.max(Math.min(pct, 100), 2); // min 2% ให้เห็นเสมอ
-  circ.setAttribute('stroke-dasharray', dash + ' ' + (100 - dash));
-  circ.className = 'dl-fg' + (pct>=90?' danger':pct>=70?' warn':'');
-}
-
-function dlRenderPopup(info){
-  const bar  = document.getElementById('dl-popup-bar');
-  const pctEl= document.getElementById('dl-popup-pct');
-  const sub  = document.getElementById('dl-popup-sub');
-  const bar2 = document.getElementById('dl-popup-bar2');
-  const pct2 = document.getElementById('dl-popup-pct2');
-  if(!info){
-    if(pctEl) pctEl.textContent = '—';
-    if(sub)   sub.textContent = 'No API key set';
-    return;
-  }
-  const p = info.pct.toFixed(1);
-  const sessK = ((info.sessTokens||0)/1000).toFixed(1);
-  if(bar)  { bar.style.width = info.pct + '%'; bar.style.background = info.pct>=90?'#ef4444':info.pct>=70?'#f59e0b':'#22c55e'; }
-  if(pctEl) pctEl.textContent = p + '% used';
-  if(sub)  sub.textContent = `${sessK}k tokens in flight this session`;
-  if(bar2) { bar2.style.width = info.limitPct + '%'; bar2.style.background = '#3b82f6'; }
-  if(pct2) pct2.textContent = info.limit > 0 ? info.limitPct.toFixed(1)+'%' : '∞';
-}
-
-async function dlRefresh(){
-  await dlFetchUsage(); // updates dlOrRaw
-  const cache = dlBuildCache();
-  dlUsageCache = cache;
-  dlRenderCircle(cache.pct);
-  if(dlPopupOpen) dlRenderPopup(cache);
-}
-
-function dlTogglePopup(){
-  const pop = document.getElementById('dl-popup');
-  if(!pop) return;
-  dlPopupOpen = !dlPopupOpen;
-  if(dlPopupOpen){
-    pop.style.display = 'block';
-    const wrap = document.getElementById('daily-limit-wrap');
-    if(wrap){
-      const rect = wrap.getBoundingClientRect();
-      pop.style.bottom = 'auto';
-      pop.style.top = (rect.top - pop.offsetHeight - 8) + 'px';
-      pop.style.right = (window.innerWidth - rect.right) + 'px';
-      requestAnimationFrame(()=>{
-        pop.style.top = (rect.top - pop.offsetHeight - 8) + 'px';
-      });
-    }
-    dlRenderPopup(dlUsageCache);
-    dlRefresh();
-  } else {
-    pop.style.display = 'none';
-  }
-}
-
-// close popup when clicking outside
-document.addEventListener('click', e => {
-  if(!dlPopupOpen) return;
-  const wrap = document.getElementById('daily-limit-wrap');
-  const pop  = document.getElementById('dl-popup');
-  if(wrap && !wrap.contains(e.target) && pop && !pop.contains(e.target)){
-    dlPopupOpen = false;
-    pop.style.display = 'none';
-  }
-});
-
-function dlIncrement(){ dlRefresh(); } // refresh after each send
-
-document.addEventListener('DOMContentLoaded', () => { setTimeout(dlRefresh, 500); });
-// ─────────────────────────────────────────────────────────────────────────
-
 const sendBtn = document.getElementById('send-btn');
 const chatList = document.getElementById('chat-list');
 const filePreviewStrip = document.getElementById('file-preview-strip');
@@ -909,7 +757,7 @@ function newChat() {
   chats.unshift({ id, title: 'New conversation', messages: [], created: Date.now() });
   saveChats(); activateChat(id);
 }
-function activateChat(id){ activeChatId=id; sessionStorage.setItem('deepgpt_chat', id); sessionStorage.removeItem('deepgpt_screen'); renderChatList(); renderMessages(); }
+function activateChat(id){ activeChatId=id; renderChatList(); renderMessages(); }
 function saveChats(){}
 function getActiveChat(){ return chats.find(c=>c.id===activeChatId); }
 
@@ -984,8 +832,8 @@ function renderBubble(m){
   const saves = extractSaveables(raw);
   const contentHtml = formatContent(raw);
   const saveRow = buildSaveRow(saves);
-  const providerLabel = m.provider || 'DeepGPT';
-  return `<div class="msg-wrap assistant"><div class="avatar" style="background:#111;padding:0;overflow:visible"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="22" height="22"><g transform="translate(18,18)"><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(60)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(120)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(240)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(300)"/><circle cx="0" cy="0" r="3" fill="#e53935"/></g></svg></div><div class="msg-body"><div class="role-label">${esc(providerLabel)}</div><div class="bubble">${contentHtml}</div>${saveRow}</div></div>`;
+  const providerLabel = m.provider || 'Rome';
+  return `<div class="msg-wrap assistant"><div class="avatar">AI</div><div class="msg-body"><div class="role-label">${esc(providerLabel)}</div><div class="bubble">${contentHtml}</div>${saveRow}</div></div>`;
 }
 
 function formatContent(text){
@@ -1045,7 +893,6 @@ async function send(){
   const text=userInput.value.trim();
   if((!text&&pendingFiles.length===0)||sendBtn.disabled) return;
   if(!activeChatId) newChat();
-  dlIncrement();
   const chat=getActiveChat();
   userInput.value=''; autoResize();
   const files=[...pendingFiles]; pendingFiles=[]; renderPreviewStrip();
@@ -1071,7 +918,7 @@ async function send(){
 
   const thinkEl=document.createElement('div');
   thinkEl.className='msg-wrap assistant';
-  thinkEl.innerHTML=`<div class="avatar" style="background:#111;padding:0;overflow:visible"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="22" height="22"><g transform="translate(18,18)"><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(60)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(120)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(240)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(300)"/><circle cx="0" cy="0" r="3" fill="#e53935"/></g></svg></div><div class="msg-body"><div class="role-label">DeepGPT</div><div class="bubble"><div class="thinking"><span></span><span></span><span></span></div></div></div>`;
+  thinkEl.innerHTML=`<div class="avatar">AI</div><div class="msg-body"><div class="role-label">Rome</div><div class="bubble"><div class="thinking"><span></span><span></span><span></span></div></div></div>`;
   messagesInner.appendChild(thinkEl);
   document.getElementById('messages').scrollTop=9999999;
   sendBtn.disabled=true;
@@ -1090,57 +937,14 @@ async function send(){
       thinkEl.remove();
       sendBtn.disabled=false;
       localStorage.removeItem(OR_KEY_STORAGE);
-      // show key-gate popup so user can enter their OR key, then auto-retry
-      _pendingRetry = async () => {
-        const newKey = getOrKey();
-        if (!newKey) return;
-        const newHeaders = { 'Content-Type': 'application/json', 'x-or-key': newKey };
-        const thinkEl2=document.createElement('div');
-        thinkEl2.className='msg-wrap assistant';
-        thinkEl2.innerHTML=`<div class="avatar" style="background:#111;padding:0;overflow:visible"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="22" height="22"><g transform="translate(18,18)"><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(60)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(120)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(240)"/><ellipse cx="0" cy="-7" rx="3.2" ry="6" fill="#e53935" transform="rotate(300)"/><circle cx="0" cy="0" r="3" fill="#e53935"/></g></svg></div><div class="msg-body"><div class="role-label">DeepGPT</div><div class="bubble"><div class="thinking"><span></span><span></span><span></span></div></div></div>`;
-        messagesInner.appendChild(thinkEl2);
-        document.getElementById('messages').scrollTop=9999999;
-        sendBtn.disabled=true;
-        try{
-          const apiBase2=window.location.protocol==='file:'?'http://localhost:3001':'';
-          const res2=await fetch(apiBase2+'/api/chat',{method:'POST',headers:newHeaders,body:JSON.stringify({messages:apiMessages})});
-          if(!res2.ok){ thinkEl2.remove(); addInfo('❌ Cannot reach backend'); sendBtn.disabled=false; renderChatList(); return; }
-          thinkEl2.remove();
-          let fullText2='';
-          const assistantMsg2={role:'assistant',content:'',provider:'DeepGPT'};
-          chat.messages.push(assistantMsg2);
-          renderMessages();
-          const bubbles2=messagesInner.querySelectorAll('.msg-wrap.assistant .bubble');
-          const streamBubble2=bubbles2[bubbles2.length-1];
-          const reader2=res2.body.getReader();
-          const decoder2=new TextDecoder();
-          let buf2='';
-          while(true){
-            const {done,value}=await reader2.read();
-            if(done) break;
-            buf2+=decoder2.decode(value,{stream:true});
-            const lines=buf2.split('\n'); buf2=lines.pop();
-            for(const line of lines){
-              const trimmed=line.trim();
-              if(!trimmed.startsWith('data:')) continue;
-              const data=trimmed.slice(5).trim();
-              if(data==='[DONE]') break;
-              try{ const json=JSON.parse(data); if(json.delta){ dlAddTokens(json.delta.length); fullText2+=json.delta; assistantMsg2.content=fullText2; if(streamBubble2){streamBubble2.innerHTML=md(fullText2);streamBubble2.querySelectorAll('pre').forEach(addCopyBtn);} document.getElementById('messages').scrollTop=9999999; } }catch{}
-            }
-          }
-          fullText2=fullText2.replace(/^\[C\]\s*/,'').replace(/\n\[C\]\s*/g,'\n').trimStart();
-          assistantMsg2.content=fullText2; saveChats(); renderMessages();
-        }catch(err2){ addInfo('❌ '+err2.message); }
-        sendBtn.disabled=false; renderChatList();
-      };
-      openSettings();
+      // key-gate disabled
       return;
     }
     if(!res.ok){ thinkEl.remove(); addInfo('❌ Cannot reach backend — make sure node server/index.js is running'); sendBtn.disabled=false; renderChatList(); return; }
 
     thinkEl.remove();
     let fullText='';
-    const assistantMsg={role:'assistant',content:'',provider:'DeepGPT'};
+    const assistantMsg={role:'assistant',content:'',provider:'OpenRouter'};
     chat.messages.push(assistantMsg);
 
     renderMessages();
@@ -1164,7 +968,6 @@ async function send(){
         try{
           const json=JSON.parse(data);
           if(json.delta){
-            dlAddTokens(json.delta.length);
             fullText+=json.delta;
             assistantMsg.content=fullText;
             if(streamBubble){
@@ -1176,7 +979,6 @@ async function send(){
         }catch{}
       }
     }
-    fullText = fullText.replace(/^\[C\]\s*/,'').replace(/\n\[C\]\s*/g,'\n').trimStart();
     assistantMsg.content=fullText;
     saveChats(); renderMessages();
   } catch(err){
@@ -1280,8 +1082,8 @@ async function authLogin() {
     const r = await fetch(API_BASE + '/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password: pass}) });
     const d = await r.json();
     if (!r.ok) { errEl.textContent = d.message || t('loginFail'); return; }
-    localStorage.setItem('deepgpt_user', JSON.stringify({email: d.email, token: d.token}));
-    currentUser = {email: d.email, token: d.token};
+    localStorage.setItem('deepgpt_user', JSON.stringify(d.user));
+    currentUser = d.user;
     document.getElementById('auth-screen').classList.add('hidden');
     updateUserUI(currentUser);
     const greetName = document.getElementById('greeting-name');
@@ -1369,15 +1171,10 @@ function updateUserUI(user) {
       }
       checkGate();
       renderChatList();
-      const savedChatId = sessionStorage.getItem('deepgpt_chat');
-      if (savedChatId && chats[savedChatId]) { activeChatId = savedChatId; renderMessages(); } else { showEmpty(); }
-      const scr = sessionStorage.getItem('deepgpt_screen');
-      if (scr === 'forex') openForexSignal();
-      else if (scr === 'settings') openSettings();
+      showEmpty();
     } catch(e) {
-      console.error('[initAuth error]', e);
-      // ไม่ logout เมื่อ error — แค่ show empty
-      try { showEmpty(); } catch(_) {}
+      localStorage.removeItem('deepgpt_user');
+      authScreen.classList.remove('hidden');
     }
   } else {
     currentUser = null;
@@ -1412,7 +1209,7 @@ const I18N = {
     serverError: 'เชื่อมต่อ server ไม่ได้',
     registerOk: 'สมัครสำเร็จ! กรุณาเข้าสู่ระบบ',
     // Key gate
-    gateTitle: 'ใส่ DeepGPT API Key',
+    gateTitle: 'ใส่ OpenRouter API Key',
     gateSub: 'DeepGPT ใช้ OpenRouter เพื่อเรียก AI model — สมัครฟรี ไม่มีค่าใช้จ่าย key จะเก็บไว้ในเบราว์เซอร์ของคุณเท่านั้น',
     gateStep1: 'ไปที่',
     gateStep2: 'คลิก',
@@ -1433,7 +1230,8 @@ const I18N = {
     settingsTitle: 'คลิกเพื่อเปลี่ยน key',
     // Drawer nav
     signalForex: 'Signal Forex',
-    signalNews: 'Signal News',
+        signalNews: 'Signal News',
+        signalNews: 'Signal News',
     // Input area
     inputPlaceholder: 'พิมพ์ข้อความ… (Ctrl+V วางรูป, + แนบไฟล์)',
     hint: 'DeepGPT · ไม่มีข้อจำกัด · ไม่มีตัวกรอง · ไม่มีคำขอโทษ',
@@ -1467,11 +1265,10 @@ const I18N = {
     forexAnalyzing: '⏳ กำลังวิเคราะห์...',
     forexNoKey: 'กรุณาใส่ OpenRouter API key ก่อน',
     forexNoResult: 'ไม่ได้รับผลลัพธ์',
-    forexPrompt: 'IMPORTANT: You MUST reply in Thai language only. Do NOT use English at all.\n\nวิเคราะห์ chart {n} รูปนี้ ถ้า setup ไม่มี RR อย่างน้อย 1:1 ให้ตอบว่า "❌ Setup นี้ไม่เข้าเงื่อนไข RR ต่ำกว่า 1:1" และหยุดทันที\n\nถ้า RR ≥ 1:1 ให้ตอบในรูปแบบนี้เท่านั้น (ภาษาไทยทั้งหมด):\n\n📍 จุดเข้า: [ราคา] ([Long/Short])\n🛑 Stop Loss: [ราคา] (เหตุผล: [1 ประโยค])\n🎯 Take Profit: TP1 [ราคา] / TP2 [ราคา]\n⚖️ RR: 1:[X]\n\n💬 สรุป: [2-3 ประโยค อธิบายง่ายๆ]\n\nห้ามตอบภาษาอังกฤษ ตอบไทยเท่านั้น',
-    forexExtraPlaceholder: 'เพิ่มเทคนิคหรือเงื่อนไขพิเศษ... (ไม่บังคับ)',
+    forexPrompt: 'วิเคราะห์ chart {n} รูปนี้แบบ Scalp Trading: ระบุ trend, support/resistance, entry point, stop loss, take profit และ signal ซื้อหรือขาย พร้อม reasoning สั้นๆ ตอบเป็นภาษาไทย',
     // Role labels
     roleYou: 'คุณ',
-    roleAI: 'DeepGPT',
+    roleAI: 'Rome',
   },
   en: {
     loginTitle: 'Sign In',
@@ -1495,7 +1292,7 @@ const I18N = {
     registerFail: 'Registration failed',
     serverError: 'Cannot connect to server',
     registerOk: 'Account created! Please sign in.',
-    gateTitle: 'Enter DeepGPT API Key',
+    gateTitle: 'Enter OpenRouter API Key',
     gateSub: 'DeepGPT uses OpenRouter to call AI models — free to sign up, no cost. Your key is stored only in your browser.',
     gateStep1: 'Go to',
     gateStep2: 'Click',
@@ -1514,7 +1311,7 @@ const I18N = {
     logoutTitle: 'Sign out',
     settingsTitle: 'Click to change key',
     signalForex: 'Signal Forex',
-    signalNews: 'Signal News',
+        signalNews: 'Signal News',
     inputPlaceholder: 'Type a message… (Ctrl+V to paste image, + to attach file)',
     hint: 'DeepGPT · No limits · No filters · No apologies',
     attachTitle: 'Attach file',
@@ -1544,10 +1341,9 @@ const I18N = {
     forexAnalyzing: '⏳ Analyzing...',
     forexNoKey: 'Please enter your OpenRouter API key first',
     forexNoResult: 'No result received',
-    forexPrompt: 'Analyze these {n} chart(s). If the setup has RR below 1:1, reply ONLY: "❌ Setup rejected — RR below 1:1" and stop.\n\nIf RR ≥ 1:1, reply ONLY in this format:\n\n📍 Entry: [price] ([Long/Short])\n🛑 Stop Loss: [price] (because [1 sentence reason])\n🎯 Take Profit: TP1 [price] / TP2 [price]\n⚖️ RR: 1:[X]\n\n💬 Summary: [2-3 simple sentences explaining why this trade setup makes sense]\n\nKeep it short and clear.',
-    forexExtraPlaceholder: 'Add extra technique or conditions... (optional)',
+    forexPrompt: 'Analyze these {n} trading chart(s) for Scalp Trading: identify trend, support/resistance, entry point, stop loss, take profit and buy/sell signal with brief reasoning.',
     roleYou: 'You',
-    roleAI: 'DeepGPT',
+    roleAI: 'Rome',
   }
 };
 
@@ -1568,8 +1364,8 @@ function setLang(lang) {
   // sync forex topbar
   const ftb = document.getElementById('forex-lang-btn-th');
   const feb = document.getElementById('forex-lang-btn-en');
-  if (ftb) ftb.classList.toggle('active', lang === 'th');
-  if (feb) feb.classList.toggle('active', lang === 'en');
+  if (ftb) { ftb.classList.toggle('active', lang === 'th'); ftb.style.background = lang === 'th' ? 'var(--accent)' : 'transparent'; ftb.style.color = lang === 'th' ? '#fff' : 'var(--muted2)'; }
+  if (feb) { feb.classList.toggle('active', lang === 'en'); feb.style.background = lang === 'en' ? 'var(--accent)' : 'transparent'; feb.style.color = lang === 'en' ? '#fff' : 'var(--muted2)'; }
   applyLang();
 }
 
@@ -1673,8 +1469,6 @@ function applyLang() {
     fsb.textContent = t('forexSelectBtn');
     if (svgEl2) fsb.prepend(svgEl2);
   }
-  const fep = document.getElementById('forex-extra-prompt');
-  if (fep) fep.placeholder = t('forexExtraPlaceholder');
   const fab = document.getElementById('forex-analyze-btn');
   if (fab && !fab.disabled) fab.textContent = t('forexAnalyzeBtn');
 
@@ -1715,11 +1509,11 @@ function applyLang() {
   const _eb = document.getElementById('lang-btn-en');
   if (_tb) _tb.classList.toggle('active', currentLang === 'th');
   if (_eb) _eb.classList.toggle('active', currentLang === 'en');
-  // forex buttons sync
+  // forex buttons — may not exist yet, setLang will sync when forex opens
   const _ftb = document.getElementById('forex-lang-btn-th');
   const _feb = document.getElementById('forex-lang-btn-en');
-  if (_ftb) _ftb.classList.toggle('active', currentLang === 'th');
-  if (_feb) _feb.classList.toggle('active', currentLang === 'en');
+  if (_ftb) { _ftb.style.background = currentLang === 'th' ? 'var(--accent)' : 'transparent'; _ftb.style.color = currentLang === 'th' ? '#fff' : 'var(--muted2)'; }
+  if (_feb) { _feb.style.background = currentLang === 'en' ? 'var(--accent)' : 'transparent'; _feb.style.color = currentLang === 'en' ? '#fff' : 'var(--muted2)'; }
   applyLang();
 })();
 
@@ -1867,16 +1661,8 @@ function applyLang() {
 // ── Forex Signal ──────────────────────────────────────────────
 let forexImages = []; // [{mime, b64, url}]
 
-function openEbook() {
-  document.getElementById('ebook-screen').classList.remove('hidden');
-  /* ไม่ set sessionStorage — ไม่ต้องการ restore หน้านี้ตอน reload */
-}
-function closeEbook() {
-  document.getElementById('ebook-screen').classList.add('hidden');
-}
 function openForexSignal() {
   document.getElementById('forex-screen').classList.remove('hidden');
-  sessionStorage.setItem('deepgpt_screen', 'forex');
   const ftb = document.getElementById('forex-lang-btn-th');
   const feb = document.getElementById('forex-lang-btn-en');
   if (ftb) ftb.classList.toggle('active', currentLang === 'th');
@@ -1885,7 +1671,6 @@ function openForexSignal() {
 }
 function closeForexSignal() {
   document.getElementById('forex-screen').classList.add('hidden');
-  sessionStorage.removeItem('deepgpt_screen');
 }
 function forexHandleDropMulti(e) {
   e.preventDefault();
@@ -1903,23 +1688,6 @@ function forexHandleFiles(files) {
     reader.readAsDataURL(file);
   });
 }
-// Ctrl+V paste support for forex screen
-document.addEventListener('paste', function(e) {
-  if (document.getElementById('forex-screen').classList.contains('hidden')) return;
-  const items = e.clipboardData && e.clipboardData.items;
-  if (!items) return;
-  const imageFiles = [];
-  for (const item of items) {
-    if (item.kind === 'file' && item.type.startsWith('image/')) {
-      imageFiles.push(item.getAsFile());
-    }
-  }
-  if (imageFiles.length) {
-    e.preventDefault();
-    forexHandleFiles(imageFiles);
-  }
-});
-
 function forexRenderGrid() {
   const grid = document.getElementById('forex-preview-grid');
   grid.innerHTML = '';
@@ -1933,7 +1701,7 @@ function forexRenderGrid() {
   grid.style.display = forexImages.length ? 'grid' : 'none';
   document.getElementById('forex-analyze-btn').style.display = forexImages.length ? 'block' : 'none';
   document.getElementById('forex-result').classList.remove('show');
-  document.getElementById('forex-result').innerHTML = '';
+  document.getElementById('forex-result').textContent = '';
 }
 function forexRemoveImg(i) {
   forexImages.splice(i, 1);
@@ -1946,38 +1714,16 @@ async function forexAnalyze() {
   const resultEl = document.getElementById('forex-result');
   btn.disabled = true;
   btn.textContent = t('forexAnalyzing');
-  resultEl.innerHTML = '';
+  resultEl.textContent = '';
   resultEl.classList.remove('show');
-
-  // start progress bar
-  const wrap = document.getElementById('forex-progress-wrap');
-  const fill = document.getElementById('forex-progress-fill');
-  const pct  = document.getElementById('forex-progress-pct');
-  wrap.style.display = 'flex';
-  fill.style.width = '0%';
-  pct.textContent = '0%';
-  let progress = 0;
-  const interval = setInterval(() => {
-    // slow approach: fast to 85, then creep
-    const step = progress < 60 ? 2.5 : progress < 85 ? 0.8 : 0.1;
-    progress = Math.min(progress + step, 95);
-    fill.style.width = progress.toFixed(1) + '%';
-    pct.textContent = Math.round(progress) + '%';
-  }, 150);
   const orKey = getOrKey();
   if (!orKey) { alert(t('forexNoKey')); btn.disabled = false; btn.textContent = t('forexAnalyzeBtn'); return; }
   try {
     const content = forexImages.map(img => ({ type: 'image_url', image_url: { url: 'data:' + img.mime + ';base64,' + img.b64 } }));
-    const extraText = document.getElementById('forex-extra-prompt')?.value.trim();
-    const basePrompt = t('forexPrompt').replace('{n}', forexImages.length);
-    const finalPrompt = extraText ? basePrompt + ' Additional technique/conditions: ' + extraText : basePrompt;
-    content.push({ type: 'text', text: finalPrompt });
-    const forexSystem = currentLang === 'th'
-      ? 'คุณเป็น trader ผู้เชี่ยวชาญด้าน scalping ตอบเป็นภาษาไทยเท่านั้น ห้ามตอบภาษาอังกฤษ กฎสำคัญ: ต้องตรวจสอบ RR (Risk:Reward) ทุกครั้ง ถ้า RR ต่ำกว่า 1:1 ห้ามแนะนำให้เข้าออเดอร์เด็ดขาด'
-      : 'You are an expert scalp trader. Reply in English only. Critical rule: always calculate RR (Risk:Reward). If RR is below 1:1, do NOT recommend the trade under any circumstances.';
+    content.push({ type: 'text', text: t('forexPrompt').replace('{n}', forexImages.length) });
     const body = {
-      model: 'nvidia/nemotron-3.5-super-vl:free',
-      messages: [{ role: 'system', content: forexSystem }, { role: 'user', content }]
+      model: 'google/gemini-2.0-flash-exp:free',
+      messages: [{ role: 'user', content }]
     };
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -1986,25 +1732,12 @@ async function forexAnalyze() {
     });
     const d = await res.json();
     const text = d.choices?.[0]?.message?.content || d.error?.message || t('forexNoResult');
-    const lines = text.split('\n').filter(l => l.trim());
-    resultEl.innerHTML = '';
-    lines.forEach(line => {
-      const p = document.createElement('p');
-      p.textContent = line;
-      resultEl.appendChild(p);
-    });
+    resultEl.textContent = text;
     resultEl.classList.add('show');
   } catch(e) {
-    resultEl.innerHTML = '<p>Error: ' + e.message + '</p>';
+    resultEl.textContent = 'Error: ' + e.message;
     resultEl.classList.add('show');
   }
-  // finish progress
-  clearInterval(interval);
-  fill.style.transition = 'width .4s ease';
-  fill.style.width = '100%';
-  pct.textContent = '100%';
-  setTimeout(() => { wrap.style.display = 'none'; fill.style.width = '0%'; }, 600);
-
   btn.disabled = false;
   btn.textContent = t('forexAnalyzeBtn');
 }
@@ -2043,1563 +1776,501 @@ async function forexAnalyze() {
     </div>
     <input type="file" id="forex-file-input" accept="image/*" multiple style="display:none" onchange="forexHandleFiles(this.files)"/>
     <div id="forex-preview-grid" style="display:none;margin-top:16px;display:none"></div>
-    <textarea id="forex-extra-prompt" class="forex-extra-prompt" placeholder="Add extra technique or conditions... (optional)"></textarea>
     <button class="forex-analyze-btn" id="forex-analyze-btn" onclick="forexAnalyze()">🔍 Analyze Chart</button>
-<div class="forex-progress-wrap" id="forex-progress-wrap">
-  <div class="forex-progress-bar-bg"><div class="forex-progress-bar-fill" id="forex-progress-fill"></div></div>
-  <div class="forex-progress-pct" id="forex-progress-pct">0%</div>
-</div>
-    <div class="forex-result" id="forex-result" translate="yes"></div>
+    <div class="forex-result" id="forex-result"></div>
   </div>
-</div>
-
-
-<!-- ── E-Book Screen ── -->
-<div id="ebook-screen" class="hidden">
-<style>
-#ebook-screen {
-  position:fixed;inset:0;z-index:9000;background:#0a0a0f;display:flex;flex-direction:column;overflow:hidden;
-}
-#ebook-screen.hidden{display:none!important;}
-
-/* ── topbar ── */
-#ebook-topbar {
-  display:flex;align-items:center;gap:12px;padding:14px 20px;
-  background:rgba(10,10,15,.85);backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;
-  position:relative;z-index:2;
-}
-#ebook-back-btn {
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  color:#fff;cursor:pointer;padding:6px 10px;border-radius:10px;
-  display:flex;align-items:center;transition:background .15s;
-}
-#ebook-back-btn:hover{background:rgba(255,255,255,.12)}
-.eb-topbar-title {
-  font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px;
-  background:linear-gradient(135deg,#fff 40%,#e11d48);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.eb-topbar-sub {
-  margin-left:auto;font-size:11px;color:rgba(255,255,255,.35);
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
-  padding:3px 10px;border-radius:20px;white-space:nowrap;
-}
-
-/* ── hero banner ── */
-#ebook-hero {
-  flex-shrink:0;padding:28px 24px 20px;
-  background:linear-gradient(160deg,rgba(225,29,72,.12) 0%,rgba(10,10,15,0) 60%);
-  border-bottom:1px solid rgba(255,255,255,.05);position:relative;overflow:hidden;
-}
-#ebook-hero::before {
-  content:'';position:absolute;top:-40px;right:-20px;width:280px;height:280px;
-  background:radial-gradient(circle,rgba(225,29,72,.15) 0%,transparent 70%);
-  pointer-events:none;
-}
-.eb-hero-label {
-  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
-  color:#e11d48;margin-bottom:6px;
-}
-.eb-hero-heading {
-  font-size:26px;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-.5px;margin-bottom:6px;
-}
-.eb-hero-heading span{color:#e11d48;}
-.eb-hero-desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.5;}
-
-/* ── filter ── */
-#ebook-filter-bar {
-  display:flex;gap:7px;padding:14px 20px;overflow-x:auto;flex-shrink:0;
-  scrollbar-width:none;background:rgba(10,10,15,.6);backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-#ebook-filter-bar::-webkit-scrollbar{display:none}
-.eb-filter-btn {
-  flex-shrink:0;padding:6px 16px;border-radius:30px;
-  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);
-  color:rgba(255,255,255,.45);font-size:12px;font-weight:600;cursor:pointer;
-  transition:all .2s;white-space:nowrap;font-family:inherit;letter-spacing:.2px;
-}
-.eb-filter-btn:hover{background:rgba(225,29,72,.1);border-color:rgba(225,29,72,.3);color:rgba(255,255,255,.8);}
-.eb-filter-btn.active{
-  background:linear-gradient(135deg,#e11d48,#be123c);border-color:transparent;
-  color:#fff;box-shadow:0 4px 15px rgba(225,29,72,.35);
-}
-
-/* ── grid ── */
-#ebook-grid {
-  flex:1;overflow-y:auto;padding:12px 14px;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent;
-  align-content:start;
-}
-@media(min-width:600px){
-  #ebook-grid{grid-template-columns:repeat(3,1fr);gap:12px;padding:14px 16px;}
-}
-@media(min-width:900px){
-  #ebook-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:18px 20px;}
-}
-#ebook-grid::-webkit-scrollbar{width:3px}
-#ebook-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
-
-/* ── card ── */
-.eb-card {
-  border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
-  background:#0f0f14;border:1px solid rgba(255,255,255,.08);
-  transition:transform .22s cubic-bezier(.34,1.4,.64,1),box-shadow .22s,border-color .22s;
-  display:flex;flex-direction:column;
-}
-.eb-card:active{
-  transform:scale(.97);
-  border-color:rgba(225,29,72,.35);
-}
-@media(min-width:900px){
-  .eb-card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 20px 44px rgba(0,0,0,.7),0 0 0 1px rgba(225,29,72,.45);
-    border-color:rgba(225,29,72,.35);
-  }
-}
-/* รูปปก 16:9 — ใช้ padding-top trick เพราะ aspect-ratio ใช้ใน flex column ไม่ได้ */
-.eb-card-cover-wrap{
-  width:100%;position:relative;background:#111;overflow:hidden;
-  padding-top:56.25%; /* 9/16 = 56.25% */
-}
-.eb-card-cover{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  object-fit:cover;object-position:center center;display:block;
-  transition:transform .3s;
-}
-.eb-card:hover .eb-card-cover{transform:scale(1.04);}
-
-/* badge อ่านเลย — desktop hover เท่านั้น */
-.eb-card-read {
-  position:absolute;top:6px;right:6px;z-index:2;
-  background:rgba(225,29,72,.92);color:#fff;
-  font-size:8px;font-weight:700;padding:3px 8px;border-radius:7px;
-  opacity:0;transform:scale(.8);transition:all .16s;letter-spacing:.5px;text-transform:uppercase;
-}
-@media(min-width:900px){
-  .eb-card:hover .eb-card-read{opacity:1;transform:scale(1);}
-}
-
-/* info ด้านล่างรูป */
-.eb-card-overlay{display:none;}
-.eb-card-info{
-  padding:7px 9px 9px;border-top:1px solid rgba(255,255,255,.05);
-}
-.eb-card-tag{
-  display:inline-flex;align-items:center;
-  font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;
-  letter-spacing:.4px;text-transform:uppercase;
-  background:rgba(225,29,72,.2);color:#fb7185;
-  border:1px solid rgba(225,29,72,.25);margin-bottom:5px;
-}
-.eb-card-title{
-  font-size:11px;font-weight:700;color:#fff;line-height:1.35;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
-.eb-card-pages{
-  font-size:9px;color:rgba(255,255,255,.3);margin-top:4px;
-}
-@media(min-width:600px){
-  .eb-card-tag{font-size:9px;}
-  .eb-card-title{font-size:12px;}
-  .eb-card-info{padding:9px 11px 11px;}
-}
-
-/* ── viewer ── */
-#eb-viewer {
-  display:none;position:fixed;inset:0;z-index:10000;
-  background:rgba(0,0,0,.97);backdrop-filter:blur(30px);
-  flex-direction:column;align-items:center;justify-content:center;
-}
-#eb-viewer.open{display:flex}
-#eb-viewer-top {
-  position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;
-  padding:14px 20px;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);z-index:1;
-}
-#eb-viewer-title{color:#fff;font-size:14px;font-weight:700;letter-spacing:-.2px;}
-#eb-viewer-badge{
-  color:rgba(255,255,255,.4);font-size:11px;margin-left:10px;
-  background:rgba(255,255,255,.08);padding:2px 10px;border-radius:20px;
-}
-#eb-viewer-close{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);
-  color:#fff;font-size:14px;cursor:pointer;padding:6px 12px;border-radius:10px;
-  transition:background .15s;
-}
-#eb-viewer-close:hover{background:rgba(225,29,72,.4);}
-#eb-main-img{
-  max-width:calc(100vw - 80px);max-height:calc(100vh - 120px);
-  object-fit:contain;user-select:none;-webkit-user-drag:none;
-  border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.8);
-  margin-top:50px;
-}
-@media(max-width:600px){
-  #eb-main-img{max-width:100vw;max-height:calc(100vh - 100px);margin-top:44px;border-radius:0;}
-}
-.eb-nav{
-  position:absolute;top:50%;transform:translateY(-50%);
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
-  color:#fff;font-size:20px;width:36px;height:60px;border-radius:10px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all .15s;
-}
-.eb-nav:hover{background:rgba(225,29,72,.5);border-color:rgba(225,29,72,.6);}
-#eb-prev{left:6px}#eb-next{right:6px}
-#eb-thumbs{
-  position:absolute;bottom:0;left:0;right:0;display:flex;gap:5px;padding:8px 12px 12px;
-  overflow-x:auto;background:linear-gradient(to top,rgba(0,0,0,.95),transparent);
-  scrollbar-width:none;
-}
-#eb-thumbs::-webkit-scrollbar{display:none}
-.eb-thumb{
-  flex-shrink:0;width:44px;height:30px;object-fit:cover;border-radius:5px;
-  border:2px solid transparent;cursor:pointer;opacity:.4;transition:all .15s;
-}
-.eb-thumb:hover{opacity:.7;}
-.eb-thumb.active{border-color:#e11d48;opacity:1;box-shadow:0 0 10px rgba(225,29,72,.5);}
-</style>
-
-<div id="ebook-topbar">
-  <button id="ebook-back-btn" onclick="closeEbook()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-  </button>
-  <span class="eb-topbar-title">E-Book Library</span>
-  <span class="eb-topbar-sub">📚 52 เล่ม · ฟรี</span>
-</div>
-
-<div id="ebook-hero">
-  <div class="eb-hero-label">Free Trading Education</div>
-  <div class="eb-hero-heading">เรียนรู้ <span>Forex</span><br>จากศูนย์สู่โปร</div>
-  <div class="eb-hero-desc">รวม E-Book 52 เล่ม ครอบคลุมทุก concept — ICT, SMC, MSNR, Liquidity และอื่นๆ</div>
-</div>
-
-<div id="ebook-filter-bar">
-  <button class="eb-filter-btn active" onclick="ebFilter('all',this)">✦ ทั้งหมด</button>
-  <button class="eb-filter-btn" onclick="ebFilter('พื้นฐาน',this)">พื้นฐาน</button>
-  <button class="eb-filter-btn" onclick="ebFilter('ICT',this)">ICT</button>
-  <button class="eb-filter-btn" onclick="ebFilter('MSNR',this)">MSNR</button>
-  <button class="eb-filter-btn" onclick="ebFilter('SMC',this)">SMC</button>
-  <button class="eb-filter-btn" onclick="ebFilter('Liquidity',this)">Liquidity</button>
-  <button class="eb-filter-btn" onclick="ebFilter('Indicator',this)">Indicator</button>
-  <button class="eb-filter-btn" onclick="ebFilter('Chart Pattern',this)">Chart Pattern</button>
-  <button class="eb-filter-btn" onclick="ebFilter('Fibonacci',this)">Fibonacci</button>
-  <button class="eb-filter-btn" onclick="ebFilter('Zone Trading',this)">Zone Trading</button>
-</div>
-<div id="ebook-grid"></div>
-<div id="eb-viewer">
-  <div id="eb-viewer-top">
-    <div><span id="eb-viewer-title"></span><span id="eb-viewer-badge"></span></div>
-    <button id="eb-viewer-close" onclick="ebCloseViewer()">✕</button>
-  </div>
-  <button class="eb-nav" id="eb-prev" onclick="ebNav(-1)">‹</button>
-  <img id="eb-main-img" src="" alt="" oncontextmenu="return false" draggable="false">
-  <button class="eb-nav" id="eb-next" onclick="ebNav(1)">›</button>
-  <div id="eb-thumbs"></div>
-</div>
-<script>
-(function(){
-const BASE='https://tradewaen-ebook.netlify.app/';
-const BOOKS=[
-  {tag:"พื้นฐาน",count:16,title:"Price Action",folder:"assets/images/books/priceaction"},
-  {tag:"พื้นฐาน",count:13,title:"Basic Support & Resistance",folder:"assets/images/books/sr"},
-  {tag:"Chart Pattern",count:13,title:"Chart Pattern",folder:"assets/images/books/chartpattern"},
-  {tag:"พื้นฐาน",count:12,title:"Basic Market Structure",folder:"assets/images/books/basicms"},
-  {tag:"ขั้นสูง",count:13,title:"Advance Market Structure",folder:"assets/images/books/advms"},
-  {tag:"Liquidity",count:18,title:"Basic Liquidity Part 1",folder:"assets/images/books/liq1"},
-  {tag:"Liquidity",count:15,title:"Basic Liquidity Part 2",folder:"assets/images/books/liq2"},
-  {tag:"Zone Trading",count:17,title:"Demand & Supply Zone",folder:"assets/images/books/demandsupply"},
-  {tag:"Fibonacci",count:12,title:"Premium & Discount Zone",folder:"assets/images/books/fibo"},
-  {tag:"Fibonacci ขั้นสูง",count:11,title:"ADV Fibo Premium & Discount Zone",folder:"assets/images/books/advfibo"},
-  {tag:"SMC",count:14,title:"SMC All Concept",folder:"assets/images/books/smc"},
-  {tag:"Indicator",count:17,title:"RSI",folder:"assets/images/books/rsi"},
-  {tag:"Indicator",count:15,title:"MACD",folder:"assets/images/books/macd"},
-  {tag:"Indicator",count:13,title:"EMA",folder:"assets/images/books/ema"},
-  {tag:"พื้นฐาน",count:13,title:"Basic Trend Line",folder:"assets/images/books/trendline"},
-  {tag:"MSNR",count:14,title:"MSNR - Support & Resistance",folder:"assets/images/books/msnrsr"},
-  {tag:"MSNR",count:13,title:"MSNR - Open Close Level",folder:"assets/images/books/ocl"},
-  {tag:"MSNR",count:15,title:"Quasimodo Level (QML)",folder:"assets/images/books/qml"},
-  {tag:"MSNR",count:14,title:"Advance QML Part 1",folder:"assets/images/books/advqml1"},
-  {tag:"MSNR",count:13,title:"Advance QML Part 2",folder:"assets/images/books/advqml2"},
-  {tag:"Indicator",count:13,title:"VWAP",folder:"assets/images/books/vwap"},
-  {tag:"Indicator",count:15,title:"Fixed Range Volume Profile",folder:"assets/images/books/frvp"},
-  {tag:"Indicator ขั้นสูง",count:13,title:"Advance VWAP Ultimate Setup",folder:"assets/images/books/advvwap"},
-  {tag:"Indicator",count:14,title:"Bollinger Band",folder:"assets/images/books/bb"},
-  {tag:"Indicator",count:17,title:"Stochastic Oscillator",folder:"assets/images/books/stoch"},
-  {tag:"MSNR",count:13,title:"MSNR - Killzone",folder:"assets/images/books/killzone"},
-  {tag:"MSNR",count:14,title:"MSNR - Trendline",folder:"assets/images/books/msnrtrendline"},
-  {tag:"MSNR",count:13,title:"MSNR - Killzone Part 2",folder:"assets/images/books/killzonelondon"},
-  {tag:"MSNR",count:13,title:"MSNR - Killzone Part 3",folder:"assets/images/books/killzonenewyork"},
-  {tag:"MSNR",count:14,title:"MSNR - Fibonacci",folder:"assets/images/books/fibomsnr"},
-  {tag:"MSNR",count:13,title:"MSNR - Fibonacci Circle",folder:"assets/images/books/fibocircle"},
-  {tag:"MSNR",count:13,title:"MSNR - Complete Edition",folder:"assets/images/books/msnrcomplete"},
-  {tag:"ICT",count:14,title:"ICT - IPDA",folder:"assets/images/books/ictipda"},
-  {tag:"ICT",count:13,title:"ICT - Turtle Soup",folder:"assets/images/books/ictturtlesoup"},
-  {tag:"ICT",count:14,title:"ICT - PD Array Part 1",folder:"assets/images/books/ictpdarray1"},
-  {tag:"ICT",count:14,title:"ICT - PD Array Part 2",folder:"assets/images/books/ictpdarray2"},
-  {tag:"ICT",count:16,title:"ICT - Premium & Discount",folder:"assets/images/books/ictpremiumdiscount"},
-  {tag:"ICT",count:14,title:"ICT - ERL & IRL",folder:"assets/images/books/icterlirl"},
-  {tag:"ICT",count:15,title:"ICT - Killzone",folder:"assets/images/books/ictkillzone"},
-  {tag:"ICT",count:14,title:"ICT - Daily Profile",folder:"assets/images/books/ictdailyprofile"},
-  {tag:"ICT",count:14,title:"ICT - SMT Divergence",folder:"assets/images/books/ictsmt"},
-  {tag:"ICT",count:14,title:"ICT - Silver Bullet",folder:"assets/images/books/ictsilverbullet"},
-  {tag:"ICT",count:15,title:"ICT - MMBM MMSM",folder:"assets/images/books/ictmmxm"},
-  {tag:"พื้นฐาน",count:13,title:"Basic Forex 101",folder:"assets/images/books/basicforex"},
-  {tag:"พื้นฐาน",count:17,title:"Trading Terms 101",folder:"assets/images/books/tradingterms101"},
-  {tag:"ICT",count:13,title:"ICT - Optimal Trade Entry",folder:"assets/images/books/ictote"},
-  {tag:"ICT",count:18,title:"ICT - Killzones Toolkit (LuxAlgo)",folder:"assets/images/books/ictkilltoolkits"},
-  {tag:"ICT",count:15,title:"ICT - Weekly Profile",folder:"assets/images/books/ictweeklyprofile"},
-  {tag:"ICT",count:14,title:"ICT - รวมเล่ม Trade Setup",folder:"assets/images/books/ictcompilation"},
-  {tag:"พื้นฐาน",count:16,title:"Basic Forex - ข่าวเศรษฐกิจสำคัญ",folder:"assets/images/books/ictnews"},
-  {tag:"ICT",count:14,title:"ICT - MTF Breaks (Makuchaku)",folder:"assets/images/books/ictdayweekbreak"},
-  {tag:"ICT",count:15,title:"ICT - Standard Deviation (STDV)",folder:"assets/images/books/ictstdv"},
-];
-function pageSrc(b,n){return BASE+b.folder+'/page-'+String(n).padStart(2,'0')+'.jpg';}
-const DEEPGPT_LOGO_B64='iVBORw0KGgoAAAANSUhEUgAAAC4AAAAyCAYAAAAjrenXAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAVoSURBVGhD7ZdZb1tVFIW35+shtpuhDU7qpBMFQUsDkahAgBhUXiESQiDxB/gBPPMM7/wPkHgsopVQKSrlIUkpKEIMTSEDSdo4jq9HvnVjC6nKcJ3aliJ5SVv33JPtc9deZ5+9TwLp1EDDjiCCzeeRQ594r9En3mv0ifcafeK9Rp94r9GVu8pwvW4fl10bicW895Vy2b6IRG012DmduqL4CMQzkYilm5YJh725TqIrxI9BMh4K2QCkZQnGmuskukMci6Nyi7jGmuskukI8bQ2LBgKWhHAStSPktuY6Cd/EU42GjddqlsdG2XZtfaT5t0fhQDoMWaWI1BZxze0GrXu6VrWL1YpdrpRtulLxvnMQfBMX4bOodi4YsGfhMMV4qloliJqFmz4tBJriiqr3Aci15loQ4UuQnIHwh7zPENwV7E2tSyAHwTdxFxZBFo5iSgFVi9FY1C6h6nOQz2ExyAgVfHUUXXZFprHmhCzvUxB+F3LvRyP2QjxuOWyI0plizQg7s7njui98E18Jhmy53rA65IIs7qhqEIDK3knsAgGdh1QG28SnzA4V2BGZy1hzEzzfgvB7kbC9lEhYHhNprRFmzSq/XeAbP4f3SsL/4Zv4Qxa+j0nBMlaDiHI3E43aMdTK8sxD6BzKVvhbqUUcdYuMo/zmddLgZcexfDJpE9g4xB2Cr+K/he9DfG8gyBLrHoS2O+cgBHI896GdlElgqtkKpsjHRSBDp3wKn+UonRNSg27JUzSNusMEOQR5HdwN/FZd17NbbtluQvh35v3gUC1fB2sMohOQFwGpptz08hp1/4HEjWrN3B13c7CP2I1XEnGvrisIBbmBwmuQ/oHxd6GwrflQuoVD31WUhVJ/lCBGCUCHViVQyn/tVuzt7LB9Mn7a8/3s3m92dWPVPk84Foe0fDYhfRfCtwNB+5XAK56nfzz2JUsa6R5yplG3EQrgCu/Xa3W7duFFG1OqgEUuXK/N3rQPyP+nyfMNvniVsjrv4xDuBf97swdCKK4yGMYcTO97gh1xUXiZAGoE6S+bd0coFo192hy3BZHNofSTPJ8Jh2wE9eLkb4qcn1eeo/LFZNo2GStV/nS3bSbu2AC1e4jUOMUaQ5wDY40C6VPD2sGhUkW1Ok/DOU9tV9NQZdHdRIdzG6ILVItrlaqVd9xNCfMO5+AyhzOFbwhf+SnP1/H9kdSaJeB/u3k4T0B6ApXPQEDdU0RUFlVNVLdFJoiF8fub2i5M0tYd3lUOB5t134Gk6raIr2E/MZ4nff7wWQ7bShWRnuYQ5kiLNGSltmp4iXkRFpFFyK8SxBOkxCQER1VpOJB32IECv40TtJSS6gpYT+mcYf4kv11i/MCH8r6JD0FuksVPUG+VGjEpw0fVcET6AXaPdj7L4cviP8G/amrl6q4KbAGbo5IECUDqqySWm0Eouxus5W09QatLb2H7wTdx3TNOsZiIaEm1aTURkZbKc7zfJecL/P0spMYgncW8ZsNvV/CbI+BF/r7Ee430CfNUiumKoHuKLrMpngVs8YCU8X0aYuihC5buKlLZa9dUju95/5aPKDfLTZVUnXURizCnQJUOCkBQBblDAF+yc19RVX4plWwZUxfVgdUdyPGk2R++D6e6ZJYcVaQlFi5BYB1Su1353yCw57mP5LhECfeLRbsNuW8g/ChUVo+zdpKn8r8G53XS7a8DFH/szrkbXiXXp2OOHYe8IEVvcdG6jsqdgv/C2QaKSFFBRV1tS6iv8Rb37E6iK8QLmKqGcnabp0e8meOdQneIQ1LVYhu1ZV5zOgrE1UCktKc4VmTsp6m0g64czl6gK4r3An3ivUafeK/RJ95r9In3Fmb/AeUlnkBwoV+iAAAAAElFTkSuQmCC';
-function ebCoverDataUrl(title){
-  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const lines=[];const maxLen=22;let w=title;
-  while(w.length>maxLen){const sp=w.lastIndexOf(' ',maxLen);const cut=sp>8?sp:maxLen;lines.push(w.slice(0,cut));w=w.slice(cut).trim();}
-  lines.push(w);
-  const lineH=22;const startY=330+Math.max(0,(2-lines.length)*lineH/2);
-  const textBlocks=lines.map((l,i)=>`<text x="200" y="${startY+i*lineH}" font-family="Sarabun,sans-serif" font-size="17" fill="#fff" text-anchor="middle" font-weight="600">${esc(l)}</text>`).join('');
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="225" viewBox="0 0 400 225"><defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a0a14"/><stop offset="100%" stop-color="#12121f"/></linearGradient></defs><rect width="400" height="225" fill="url(#bg)"/><image href="data:image/png;base64,${DEEPGPT_LOGO_B64}" x="156" y="40" width="88" height="88"/><text x="200" y="168" font-family="Sarabun,sans-serif" font-size="20" fill="#e63946" text-anchor="middle" font-weight="700" letter-spacing="2">DeepGPT</text><text x="200" y="188" font-family="Sarabun,sans-serif" font-size="11" fill="rgba(255,255,255,0.45)" text-anchor="middle" letter-spacing="3">PRESENTED BY</text><line x1="60" y1="208" x2="340" y2="208" stroke="rgba(230,57,70,0.3)" stroke-width="1"/>${textBlocks}</svg>`;
-  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
-}
-let curBook=null,curPage=0;
-function renderGrid(filter){
-  const grid=document.getElementById('ebook-grid');
-  const list=filter==='all'?BOOKS:BOOKS.filter(b=>b.tag.includes(filter));
-  grid.innerHTML=list.map((b)=>{
-    const idx=BOOKS.indexOf(b);
-    return `<div class="eb-card" onclick="ebOpenBook(${idx})"><span class="eb-card-read">อ่านเลย</span><div class="eb-card-cover-wrap"><img class="eb-card-cover" src="${ebCoverDataUrl(b.title)}" loading="lazy" alt="${b.title}"></div><div class="eb-card-info"><span class="eb-card-tag">${b.tag}</span><div class="eb-card-title">${b.title}</div><div class="eb-card-pages">${b.count} หน้า</div></div></div>`;
-  }).join('');
-}
-window.ebFilter=function(f,btn){
-  document.querySelectorAll('.eb-filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');renderGrid(f);
-};
-window.ebOpenBook=function(idx){
-  curBook=BOOKS[idx];curPage=0;
-  document.getElementById('eb-viewer-title').textContent=curBook.title;
-  ebRender();ebBuildThumbs();
-  document.getElementById('eb-viewer').classList.add('open');
-};
-function ebRender(){
-  document.getElementById('eb-main-img').src=curPage===0?ebCoverDataUrl(curBook.title):pageSrc(curBook,curPage+1);
-  document.getElementById('eb-viewer-badge').textContent=' '+(curPage+1)+' / '+curBook.count;
-  document.querySelectorAll('.eb-thumb').forEach((t,i)=>{
-    t.classList.toggle('active',i===curPage);
-    if(i===curPage)t.scrollIntoView({inline:'center',behavior:'smooth'});
-  });
-}
-function ebBuildThumbs(){
-  document.getElementById('eb-thumbs').innerHTML=Array.from({length:curBook.count},(_,i)=>
-    `<img class="eb-thumb${i===0?' active':''}" src="${i===0?ebCoverDataUrl(curBook.title):pageSrc(curBook,i+1)}" loading="lazy" onclick="ebJump(${i})">`
-  ).join('');
-}
-window.ebJump=function(i){curPage=i;ebRender();};
-window.ebNav=function(d){curPage=Math.max(0,Math.min(curBook.count-1,curPage+d));ebRender();};
-window.ebCloseViewer=function(){document.getElementById('eb-viewer').classList.remove('open');};
-document.addEventListener('keydown',function(e){
-  if(!document.getElementById('eb-viewer').classList.contains('open'))return;
-  if(e.key==='ArrowRight'||e.key==='ArrowDown')ebNav(1);
-  else if(e.key==='ArrowLeft'||e.key==='ArrowUp')ebNav(-1);
-  else if(e.key==='Escape')ebCloseViewer();
-});
-renderGrid('all');
-})();
-</script>
 </div>
 
 <!-- ── Gold News Signal Screen (embedded) ── -->
 <div id="news-screen" class="hidden">
+  <div id="forex-topbar">
+    <button class="back-btn" onclick="closeNewsSignal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div style="flex:1">
+      <h1>⚡ Gold News Signal</h1>
+      <p>สัญญาณข่าวเศรษฐกิจ · NFP · CPI · FOMC · XAUUSD</p>
+    </div>
+  </div>
+
+  <div id="gns-wrap" style="height:calc(100vh - 60px);overflow-y:auto">
+  <div class="gns-container">
+
+    <!-- Header price ticker -->
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px">
+        <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#f0b90b,#b45309);display:grid;place-items:center;font-size:16px;box-shadow:0 0 14px rgba(240,185,11,.35)">⚡</div>
+        <div>Gold News Signal<small style="display:block;font-size:10px;font-weight:400;color:#5c6478;letter-spacing:.5px">สัญญาณเทรดข่าว XAUUSD · NFP · CPI · FOMC</small></div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px;background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);padding:7px 14px;border-radius:12px">
+        <span style="font-size:11px;color:#5c6478;text-transform:uppercase;letter-spacing:.6px">XAUUSD</span>
+        <span style="font-size:16px;font-weight:700;color:#ffd75e;font-variant-numeric:tabular-nums" id="gns-tickPrice">…</span>
+        <span id="gns-tickChange" style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:8px;color:#8b93a7;background:rgba(255,255,255,.05)">สด</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#5c6478">
+        <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;flex-shrink:0" id="gns-srcDot"></span>
+        <span id="gns-srcLabel">เชื่อมต่อ…</span>
+      </div>
+      <button onclick="gnsRefresh()" style="border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#e6eaf2;padding:7px 13px;border-radius:9px;font-family:inherit;font-size:12px;cursor:pointer">⟳ รีเฟรช</button>
+    </div>
+
+    <!-- Hero countdown -->
+    <div style="padding:16px 18px 0">
+      <div id="gns-heroCard" style="background:linear-gradient(135deg,rgba(240,185,11,.10),rgba(255,255,255,.02)),#121a2b;border:1px solid rgba(240,185,11,.35);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:11px;letter-spacing:.8px;color:#ffd75e;text-transform:uppercase" id="gns-heroLabel">เลือกอีเวนต์</div>
+          <h2 style="font-size:20px;margin-top:2px;font-weight:700" id="gns-heroEvTitle">…</h2>
+          <div style="color:#8b93a7;font-size:12px;margin-top:4px" id="gns-heroEvMeta">…</div>
+        </div>
+        <div style="text-align:center;padding:4px 10px">
+          <div style="font-size:11px;color:#5c6478;text-transform:uppercase;letter-spacing:1px" id="gns-countLabel">เวลานับถอยหลัง</div>
+          <div style="font-size:36px;font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;color:#ffd75e;text-shadow:0 0 24px rgba(240,185,11,.35);line-height:1.15" id="gns-countdownTime">--:--:--</div>
+        </div>
+      </div>
+      <div id="gns-warnBar" style="margin-top:10px;padding:10px 14px;border-radius:11px;font-size:12px;display:none;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.4)"></div>
+    </div>
+
+    <!-- Main grid -->
+    <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:16px;padding:16px 18px;align-items:start" id="gns-grid">
+
+      <!-- Event list -->
+      <div style="background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600;font-size:13px">
+          📅 ปฏิทินข่าวสำคัญ USD
+          <span style="margin-left:auto;font-size:11px;color:#5c6478;font-weight:400" id="gns-evCount"></span>
+        </div>
+        <div style="max-height:580px;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:7px" id="gns-evList">
+          <div style="color:#5c6478;font-size:13px;text-align:center;padding:24px">กำลังโหลด…</div>
+        </div>
+      </div>
+
+      <!-- Score panel -->
+      <div style="background:rgba(17,23,38,.72);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden" id="gns-scorePanel">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600;font-size:13px">
+          🎯 Signal Score
+          <span style="margin-left:auto;font-size:11px;color:#5c6478;font-weight:400">ซ้าย=ซื้อ · ขวา=ขาย</span>
+        </div>
+        <div style="padding:15px" id="gns-scorePanelBody">
+          <div style="font-size:14px;font-weight:700" id="gns-scoreName">เลือกอีเวนต์</div>
+          <div style="font-size:11px;color:#8b93a7;margin-top:2px" id="gns-scoreTime">…</div>
+          <div style="text-align:center;padding:8px 0 4px" id="gns-scoreGauge"></div>
+          <div class="gns-verdict neutral" id="gns-verdictBox">
+            <div style="font-size:24px;font-weight:800;letter-spacing:1px" id="gns-verdictBig">—</div>
+            <div style="font-size:11px;color:#8b93a7;margin-top:3px" id="gns-verdictSub">…</div>
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px" id="gns-brkBox"></div>
+          <div style="margin-top:12px;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font-size:12px;color:#8b93a7;line-height:1.65" id="gns-reasonBox"></div>
+
+          <!-- tabs -->
+          <div style="display:flex;gap:5px;padding:8px 0 0;border-bottom:1px solid rgba(255,255,255,.08);margin-top:14px">
+            <button class="gns-tab gns-tab-active" data-tab="playbook" onclick="gnsTab(this)">📖 Playbook</button>
+            <button class="gns-tab" data-tab="risk" onclick="gnsTab(this)">🛡 Risk</button>
+            <button class="gns-tab" data-tab="stats" onclick="gnsTab(this)">📊 สถิติ</button>
+          </div>
+
+          <div id="gns-tab-playbook" class="gns-tab-content" style="display:block;padding:13px 0 0">
+            <div style="font-size:11px;color:#5c6478;margin-bottom:4px">เปรียบ Actual กับคาดการณ์ หลังข่าวออก:</div>
+            <table style="width:100%;border-collapse:collapse;font-size:12px" id="gns-scenRows"></table>
+            <div style="font-size:11px;color:#5c6478;margin-top:12px">กลยุทธ์ก่อน/หลังข่าว:</div>
+            <div id="gns-stratRows"></div>
+          </div>
+
+          <div id="gns-tab-risk" class="gns-tab-content" style="display:none;padding:13px 0 0">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">ยอดเงิน (USD)</label><input type="number" id="gns-inBal" min="0" step="50" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
+              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">ความเสี่ยง (%)</label><input type="number" id="gns-inRisk" min="0.1" max="10" step="0.1" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
+              <div><label style="display:block;font-size:10px;color:#5c6478;margin-bottom:3px;text-transform:uppercase">SL (USD)</label><input type="number" id="gns-inSL" min="1" step="1" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:13px"></div>
+              <div style="display:flex;align-items:flex-end"><button onclick="gnsCalcRisk()" style="width:100%;background:linear-gradient(135deg,#f0b90b,#d97706);color:#1a1204;font-weight:700;border:none;border-radius:9px;padding:9px;font-family:inherit;font-size:12px;cursor:pointer">คำนวณ Lot</button></div>
+            </div>
+            <div style="margin-top:12px;padding:12px;border-radius:11px;background:rgba(240,185,11,.06);border:1px solid rgba(240,185,11,.35);font-size:12px" id="gns-riskResult">
+              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>ความเสี่ยง (USD)</span><b style="color:#ffd75e" id="gns-riskUSD">—</b></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Lot แนะนำ</span><b style="color:#ffd75e" id="gns-lotOut">—</b></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>SL</span><b style="color:#ffd75e" id="gns-slOut">—</b></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0"><span>TP (1.5×SL)</span><b style="color:#ffd75e" id="gns-tpOut">—</b></div>
+            </div>
+          </div>
+
+          <div id="gns-tab-stats" class="gns-tab-content" style="display:none;padding:13px 0 0">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#22c55e" id="gns-stWin">0</div><div style="font-size:10px;color:#5c6478;margin-top:1px">ชนะ</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#ef4444" id="gns-stLoss">0</div><div style="font-size:10px;color:#5c6478;margin-top:1px">แพ้</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800;color:#ffd75e" id="gns-stRate">—</div><div style="font-size:10px;color:#5c6478;margin-top:1px">Win rate</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)"><div style="font-size:20px;font-weight:800" id="gns-stDev">—</div><div style="font-size:10px;color:#5c6478;margin-top:1px">dev เฉลี่ย</div></div>
+            </div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px" id="gns-histList"></div>
+            <button onclick="gnsClearResults()" style="margin-top:10px;border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#8b93a7;padding:6px 12px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">🗑 ล้างประวัติ</button>
+          </div>
+
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)" id="gns-trackerBox"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- disclaimer -->
+    <div style="margin:0 18px 20px;padding:11px 15px;border-radius:11px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.3);font-size:11px;color:#8b93a7;line-height:1.6">
+      <b style="color:#f59e0b">⚠️ คำเตือน:</b> เครื่องมือนี้เป็นโมเดลกลยุทธ์ ไม่ใช่คำทำนาย — ใช้ SL เสมอ ทดลองในบัญชีเดโม่ก่อน
+    </div>
+  </div>
+  </div>
+</div>
+<!-- end Gold News Signal Screen -->
+
 <style>
-/* ══════════════════════════════════════════
-   GNS Premium — DeepGPT Dark Theme
-   ══════════════════════════════════════════ */
-#news-screen {
-  position: fixed; inset: 0; z-index: 9000;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  --bg:       #0a0608;
-  --s1:       #121010;
-  --s2:       #181416;
-  --s3:       #1f1b1d;
-  --b1:       #2a2028;
-  --b2:       #352e33;
-  --b3:       #42383e;
-  --txt:      #f0eaec;
-  --txt2:     #b0a8ac;
-  --txt3:     #6b6070;
-  --accent:   #e63946;
-  --accentL:  rgba(230,57,70,.14);
-  --accentG:  linear-gradient(135deg,#e63946,#b02230);
-  --gold:     #f0b90b;
-  --goldS:    #ffd75e;
-  --green:    #22c55e;
-  --red:      #ef4444;
-  --amber:    #f59e0b;
-  --r:        12px;
-  --shadow:   0 20px 60px rgba(0,0,0,.7);
-  color: var(--txt);
-  background: var(--bg);
-  overflow-y: auto; overflow-x: hidden;
-}
-#news-screen.hidden { display: none !important; }
-#news-screen * { margin:0; padding:0; box-sizing:border-box; line-height:1.6; }
-#news-screen ::selection { background: var(--accentL); }
-#news-screen .gc { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
-/* ── Back button ── */
-#news-screen .gns-back-btn {
-  position: fixed; top: 12px; left: 16px; z-index: 9100;
-  width: 36px; height: 36px; border-radius: 9px;
-  border: 1px solid transparent; background: transparent;
-  color: var(--txt3); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .2s; font-size: 18px;
-}
-#news-screen .gns-back-btn:hover {
-  background: var(--s2); border-color: var(--b1); color: var(--txt);
-}
-
-/* ── Topbar ── */
-#news-screen .gns-topbar {
-  position: sticky; top: 0; z-index: 50;
-  height: 56px;
-  background: rgba(10,6,8,.92);
-  backdrop-filter: blur(20px) saturate(1.4);
-  border-bottom: 1px solid var(--b1);
-  display: flex; align-items: center;
-}
-#news-screen .gns-topbar-inner {
-  display: flex; align-items: center; gap: 14px;
-  padding: 0 16px 0 60px; width: 100%;
-}
-#news-screen .gns-brand {
-  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
-}
-#news-screen .gns-brand-text {
-  font-size: 15px; font-weight: 700; letter-spacing: .3px; line-height: 1.2;
-}
-#news-screen .gns-brand-text small {
-  display: block; font-size: 10px; font-weight: 400; color: var(--txt3); letter-spacing: .4px;
-}
-#news-screen .gns-topbar-right {
-  margin-left: auto; display: flex; align-items: center; gap: 10px;
-}
-#news-screen .gns-price-pill {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--s2); border: 1px solid var(--b2);
-  padding: 6px 12px; border-radius: 999px;
-}
-#news-screen .gns-price-pill .lbl { font-size: 10px; color: var(--txt3); text-transform: uppercase; letter-spacing: .6px; }
-#news-screen .gns-price-pill .val { font-size: 14px; font-weight: 700; color: var(--goldS); font-variant-numeric: tabular-nums; }
-#news-screen .gns-price-pill .chg { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 999px; }
-#news-screen .gns-price-pill .chg.up   { color: var(--green); background: rgba(34,197,94,.12); }
-#news-screen .gns-price-pill .chg.down { color: var(--red);   background: rgba(239,68,68,.12); }
-#news-screen .gns-price-pill .chg.flat { color: var(--txt3);  background: rgba(255,255,255,.05); }
-#news-screen .gns-src-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--txt3); flex-shrink: 0; }
-#news-screen .gns-src-dot.ok   { background: var(--green); box-shadow: 0 0 8px rgba(34,197,94,.5); }
-#news-screen .gns-src-dot.warn { background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,.5); }
-#news-screen .gns-src-dot.err  { background: var(--red);   box-shadow: 0 0 8px rgba(239,68,68,.5); }
-#news-screen .gns-src-label { font-size: 11px; color: var(--txt3); }
-#news-screen .gns-refresh-btn {
-  width: 32px; height: 32px; border-radius: 8px;
-  border: 1px solid var(--b1); background: transparent;
-  color: var(--txt3); cursor: pointer; font-size: 15px;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .15s;
-}
-#news-screen .gns-refresh-btn:hover { background: var(--s2); color: var(--txt); border-color: var(--b2); }
-
-/* ── Hero countdown ── */
-#news-screen .gns-hero {
-  padding: 24px 0 20px; position: relative;
-}
-#news-screen .gns-hero-card {
-  background: var(--s1);
-  border: 1px solid var(--b2);
-  border-radius: 16px;
-  padding: 22px 24px;
-  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
-  position: relative; overflow: hidden;
-}
-#news-screen .gns-hero-card::before {
-  content: '';
-  position: absolute; inset: 0; border-radius: 16px;
-  background: radial-gradient(ellipse 60% 80% at 90% 50%, rgba(230,57,70,.06) 0%, transparent 70%);
-  pointer-events: none;
-}
-#news-screen .gns-hero-card.urgent {
-  border-color: rgba(230,57,70,.4);
-  animation: gns-pulse 2s infinite;
-}
-@keyframes gns-pulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(230,57,70,.2); }
-  50%      { box-shadow: 0 0 0 12px rgba(230,57,70,0); }
-}
-#news-screen .gns-hero-left { flex: 1; min-width: 200px; }
-#news-screen .gns-hero-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 10px; font-weight: 700; letter-spacing: 1px;
-  color: var(--accent); text-transform: uppercase;
-  margin-bottom: 6px;
-}
-#news-screen .gns-hero-badge::before {
-  content: ''; width: 5px; height: 5px; border-radius: 50%;
-  background: var(--accent); flex-shrink: 0;
-}
-#news-screen .gns-hero-title {
-  font-size: 22px; font-weight: 700; line-height: 1.25; color: var(--txt);
-}
-#news-screen .gns-hero-meta {
-  color: var(--txt3); font-size: 12.5px; margin-top: 6px;
-}
-#news-screen .gns-countdown {
-  text-align: center; min-width: 160px; padding: 4px 16px;
-  border-left: 1px solid var(--b1);
-}
-#news-screen .gns-countdown .lbl {
-  font-size: 10px; color: var(--txt3); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px;
-}
-#news-screen .gns-countdown .time {
-  font-size: 36px; font-weight: 700; letter-spacing: 3px;
-  font-variant-numeric: tabular-nums; color: var(--txt);
-  line-height: 1.1;
-}
-#news-screen .gns-countdown.urgent .time { color: var(--red); }
-#news-screen .gns-warn-bar {
-  margin-top: 10px; padding: 10px 14px; border-radius: 10px;
-  background: rgba(107,96,112,.12); border: 1px solid var(--b2);
-  font-size: 12px; color: var(--txt2); display: none;
-}
-#news-screen .gns-warn-bar.show   { display: block; }
-#news-screen .gns-warn-bar.urgent { background: rgba(230,57,70,.08); border-color: rgba(230,57,70,.35); color: var(--txt); }
-
-/* ── Main layout ── */
-#news-screen .gns-layout {
-  display: grid; grid-template-columns: 380px 1fr;
-  gap: 16px; align-items: start; padding-bottom: 32px;
-}
-@media (max-width: 960px) { #news-screen .gns-layout { grid-template-columns: 1fr; } }
-
-/* ── Card shell ── */
-#news-screen .gns-card {
-  background: var(--s1); border: 1px solid var(--b1);
-  border-radius: var(--r); overflow: hidden;
-}
-#news-screen .gns-card-head {
-  display: flex; align-items: center; gap: 8px;
-  padding: 13px 16px; border-bottom: 1px solid var(--b1);
-  font-size: 12.5px; font-weight: 600; color: var(--txt2);
-  letter-spacing: .2px;
-}
-#news-screen .gns-card-head .gns-head-icon {
-  width: 22px; height: 22px; border-radius: 6px;
-  background: var(--accentL); display: grid; place-items: center;
-  font-size: 12px; flex-shrink: 0;
-}
-#news-screen .gns-card-head .gns-head-sub {
-  margin-left: auto; font-size: 10.5px; color: var(--txt3); font-weight: 400;
-}
-#news-screen .gns-card-body { padding: 14px 16px; }
-
-/* ── Event list ── */
-#news-screen .gns-ev-list {
-  max-height: 580px; overflow-y: auto;
-  padding: 10px; display: flex; flex-direction: column; gap: 6px;
-}
-#news-screen .gns-ev-list::-webkit-scrollbar { width: 4px; }
-#news-screen .gns-ev-list::-webkit-scrollbar-track { background: transparent; }
-#news-screen .gns-ev-list::-webkit-scrollbar-thumb { background: var(--b2); border-radius: 4px; }
-#news-screen .ev-card {
-  border: 1px solid var(--b1); border-radius: 10px; padding: 11px 13px;
-  cursor: pointer; background: var(--s2);
-  transition: border-color .15s, background .15s, transform .15s;
-}
-#news-screen .ev-card:hover  { border-color: var(--b3); background: var(--s3); transform: translateX(3px); }
-#news-screen .ev-card.active { border-color: var(--accent); background: var(--accentL); }
-#news-screen .ev-card.urgent { border-color: rgba(230,57,70,.5); animation: gns-pulse 2s infinite; }
-#news-screen .ev-top  { display: flex; align-items: center; gap: 7px; }
-#news-screen .ev-title { font-size: 13px; font-weight: 600; color: var(--txt); }
-#news-screen .ev-imp  { font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 999px; letter-spacing: .3px; }
-#news-screen .ev-imp.High   { background: rgba(230,57,70,.15);  color: #ef4444; }
-#news-screen .ev-imp.Medium { background: rgba(245,158,11,.15); color: #f59e0b; }
-#news-screen .ev-imp.Low    { background: rgba(107,96,112,.15); color: var(--txt3); }
-#news-screen .ev-meta { display: flex; gap: 10px; margin-top: 6px; font-size: 11px; color: var(--txt3); flex-wrap: wrap; }
-#news-screen .ev-meta b { color: var(--txt2); font-weight: 600; }
-#news-screen .ev-count { margin-left: auto; font-size: 10.5px; color: var(--txt3); font-variant-numeric: tabular-nums; white-space: nowrap; }
-#news-screen .ev-card.urgent .ev-count { color: var(--red); font-weight: 700; }
-
-/* ── Signal score panel ── */
-#news-screen .gns-score-name {
-  font-size: 15px; font-weight: 700; color: var(--txt);
-}
-#news-screen .gns-score-time {
-  font-size: 11.5px; color: var(--txt3); margin-top: 2px;
-}
-
-/* ── Gauge ── */
-#news-screen .gauge-wrap { padding: 14px 0 10px; }
-#news-screen .gauge-track {
-  position: relative; height: 10px; border-radius: 999px; overflow: hidden;
-  background: linear-gradient(90deg, #22c55e 0%, #22c55e 30%, #f59e0b 50%, #ef4444 70%, #ef4444 100%);
-  opacity: .85;
-}
-#news-screen .gauge-needle {
-  position: absolute; top: -4px; bottom: -4px; width: 3px;
-  background: #fff; border-radius: 3px;
-  box-shadow: 0 0 8px rgba(0,0,0,.8), 0 0 0 2px rgba(255,255,255,.2);
-}
-#news-screen .gauge-labels {
-  display: flex; justify-content: space-between;
-  font-size: 9.5px; color: var(--txt3); margin-top: 5px; letter-spacing: .3px;
-}
-
-/* ── Verdict ── */
-#news-screen .verdict {
-  margin-top: 12px; padding: 16px; border-radius: var(--r);
-  text-align: center; border: 1px solid var(--b1); background: var(--s2);
-  position: relative; overflow: hidden;
-}
-#news-screen .verdict::before {
-  content: ''; position: absolute; inset: 0; border-radius: var(--r);
-  opacity: .06; pointer-events: none;
-}
-#news-screen .verdict.buy    { border-color: rgba(34,197,94,.3); }
-#news-screen .verdict.buy::before    { background: var(--green); }
-#news-screen .verdict.sell   { border-color: rgba(230,57,70,.3); }
-#news-screen .verdict.sell::before   { background: var(--red); }
-#news-screen .verdict.neutral { border-color: rgba(245,158,11,.3); }
-#news-screen .verdict.neutral::before { background: var(--amber); }
-#news-screen .verdict .big {
-  font-size: 22px; font-weight: 800; letter-spacing: 2px; position: relative;
-}
-#news-screen .verdict.buy .big     { color: var(--green); }
-#news-screen .verdict.sell .big    { color: var(--red); }
-#news-screen .verdict.neutral .big { color: var(--amber); }
-#news-screen .verdict .sub { font-size: 11.5px; color: var(--txt3); margin-top: 4px; position: relative; }
-
-/* ── Breakdown bars ── */
-#news-screen .breakdown { margin-top: 14px; display: flex; flex-direction: column; gap: 9px; }
-#news-screen .brk-row { display: grid; grid-template-columns: 140px 1fr 38px; align-items: center; gap: 9px; font-size: 11.5px; }
-#news-screen .brk-row .name { color: var(--txt3); }
-#news-screen .brk-row .val  { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--txt2); }
-#news-screen .brk-bar { height: 5px; border-radius: 999px; background: var(--b1); overflow: hidden; }
-#news-screen .brk-fill { height: 100%; border-radius: 999px; transition: width .7s ease; }
-#news-screen .brk-fill.buy     { background: linear-gradient(90deg, #22c55e, #16a34a); }
-#news-screen .brk-fill.sell    { background: linear-gradient(90deg, #ef4444, #b91c1c); }
-#news-screen .brk-fill.neutral { background: linear-gradient(90deg, #f59e0b, #d97706); }
-
-/* ── Reason box ── */
-#news-screen .reason-box {
-  margin-top: 12px; padding: 12px 14px; border-radius: 10px;
-  background: var(--s3); border: 1px solid var(--b1);
-  font-size: 12px; color: var(--txt3); line-height: 1.65;
-}
-#news-screen .reason-box b { color: var(--txt2); }
-#news-screen .reason-box ul { margin: 5px 0 0 14px; }
-#news-screen .reason-box li { margin-bottom: 3px; }
-
-/* ── Tabs ── */
-#news-screen .tabs {
-  display: flex; gap: 2px;
-  margin-top: 16px; padding: 4px;
-  background: var(--s3); border: 1px solid var(--b1);
-  border-radius: 10px;
-}
-#news-screen .tab {
-  flex: 1; padding: 7px 10px; font-size: 12px; border-radius: 7px;
-  cursor: pointer; border: none; background: transparent;
-  color: var(--txt3); font-family: inherit; font-weight: 500;
-  transition: all .15s; text-align: center;
-}
-#news-screen .tab.active {
-  background: var(--s1); color: var(--txt);
-  box-shadow: 0 1px 4px rgba(0,0,0,.4);
-}
-#news-screen .tab:hover:not(.active) { color: var(--txt2); background: var(--b1); }
-#news-screen .tab-content { display: none; padding: 14px 0 2px; }
-#news-screen .tab-content.active { display: block; animation: gns-fade .2s ease; }
-@keyframes gns-fade { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
-
-/* ── Scenario table ── */
-#news-screen .scenario-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
-#news-screen .scenario-table th {
-  text-align: left; color: var(--txt3); font-weight: 500; font-size: 10px;
-  padding: 6px 8px; border-bottom: 1px solid var(--b1); text-transform: uppercase; letter-spacing: .6px;
-}
-#news-screen .scenario-table td { padding: 8px; border-bottom: 1px solid rgba(42,32,40,.5); vertical-align: top; }
-#news-screen .scenario-table tr:last-child td { border-bottom: none; }
-#news-screen .scenario-table .sc-when { font-weight: 700; white-space: nowrap; }
-#news-screen .sc-when.strong-buy,
-#news-screen .sc-when.buy    { color: var(--green); }
-#news-screen .sc-when.neutral { color: var(--amber); }
-#news-screen .sc-when.sell,
-#news-screen .sc-when.strong-sell { color: var(--red); }
-
-/* ── Strategy cards ── */
-#news-screen .strat {
-  margin-top: 10px; border: 1px solid var(--b1); border-radius: 10px;
-  padding: 12px 14px; background: var(--s2); font-size: 12px; color: var(--txt3);
-}
-#news-screen .strat h4 {
-  font-size: 12.5px; margin-bottom: 5px;
-  display: flex; align-items: center; gap: 7px; color: var(--txt);
-}
-#news-screen .strat h4 .n {
-  width: 19px; height: 19px; border-radius: 5px;
-  display: grid; place-items: center;
-  background: var(--accentG); font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0;
-}
-#news-screen .strat p { color: var(--txt3); line-height: 1.6; }
-#news-screen .strat .params { margin-top: 7px; display: flex; gap: 6px; flex-wrap: wrap; }
-#news-screen .chip {
-  font-size: 10.5px; padding: 3px 8px; border-radius: 999px;
-  background: var(--s3); border: 1px solid var(--b1); color: var(--txt3);
-}
-#news-screen .chip b { color: var(--txt2); }
-
-/* ── Risk calc ── */
-#news-screen .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-@media (max-width: 560px) { #news-screen .calc-grid { grid-template-columns: 1fr; } }
-#news-screen .field label {
-  display: block; font-size: 10px; color: var(--txt3); margin-bottom: 5px;
-  text-transform: uppercase; letter-spacing: .6px;
-}
-#news-screen .field input {
-  width: 100%; background: var(--s3); border: 1px solid var(--b2);
-  color: var(--txt); padding: 8px 11px; border-radius: 8px;
-  font-family: inherit; font-size: 13px; font-variant-numeric: tabular-nums;
-  transition: border-color .15s;
-}
-#news-screen .field input:focus { outline: none; border-color: var(--accent); }
-#news-screen .result-box {
-  margin-top: 12px; padding: 13px; border-radius: 10px;
-  background: var(--s3); border: 1px solid var(--b1); font-size: 12.5px;
-}
-#news-screen .result-box .row {
-  display: flex; justify-content: space-between; padding: 4px 0;
-  border-bottom: 1px solid rgba(42,32,40,.4); color: var(--txt3);
-}
-#news-screen .result-box .row:last-child { border-bottom: none; }
-#news-screen .result-box .row b { color: var(--goldS); font-size: 14px; }
-#news-screen .btn {
-  border: 1px solid var(--b2); background: var(--s3);
-  color: var(--txt2); padding: 8px 14px; border-radius: 8px;
-  font-family: inherit; font-size: 12.5px; cursor: pointer;
-  transition: all .15s;
-}
-#news-screen .btn:hover { background: var(--s2); color: var(--txt); border-color: var(--b3); }
-#news-screen .btn-gold {
-  background: var(--accentG); color: #fff;
-  font-weight: 700; border: none;
-  box-shadow: 0 4px 16px rgba(230,57,70,.25);
-}
-#news-screen .btn-gold:hover { filter: brightness(1.1); }
-
-/* ── Stats ── */
-#news-screen .stat-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
-@media (max-width: 560px) { #news-screen .stat-cards { grid-template-columns: repeat(2,1fr); } }
-#news-screen .stat-card {
-  text-align: center; padding: 12px 7px; border-radius: 10px;
-  background: var(--s3); border: 1px solid var(--b1);
-}
-#news-screen .stat-card .num { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
-#news-screen .stat-card .lbl { font-size: 9.5px; color: var(--txt3); margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
-#news-screen .stat-card.green .num { color: var(--green); }
-#news-screen .stat-card.red   .num { color: var(--red); }
-#news-screen .stat-card.gold  .num { color: var(--goldS); }
-#news-screen .history { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
-#news-screen .hist-item {
-  display: flex; align-items: center; gap: 8px; font-size: 11.5px;
-  padding: 7px 10px; border-radius: 8px;
-  background: var(--s3); border: 1px solid var(--b1);
-}
-#news-screen .hist-item .tag { font-size: 9.5px; padding: 2px 7px; border-radius: 999px; font-weight: 700; white-space: nowrap; }
-#news-screen .hist-item .tag.win  { background: rgba(34,197,94,.12);  color: var(--green); }
-#news-screen .hist-item .tag.loss { background: rgba(239,68,68,.12);  color: var(--red); }
-#news-screen .hist-item .tag.skip { background: rgba(107,96,112,.12); color: var(--txt3); }
-#news-screen .hist-item .ev  { flex: 1; color: var(--txt3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-#news-screen .hist-item .dev { color: var(--txt3); font-variant-numeric: tabular-nums; font-size: 11px; }
-
-/* ── Status toast ── */
-#news-screen .status-bar {
-  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-  background: var(--s2); border: 1px solid var(--b2);
-  padding: 9px 16px; border-radius: 999px; font-size: 12px; color: var(--txt2);
-  display: flex; align-items: center; gap: 8px; z-index: 9200;
-  opacity: 0; pointer-events: none; transition: opacity .2s; max-width: 92vw;
-  box-shadow: 0 8px 32px rgba(0,0,0,.6);
-}
-#news-screen .status-bar.show { opacity: 1; }
-
-/* ── Footer ── */
-#news-screen footer {
-  margin: 32px 0 20px; padding-top: 18px;
-  border-top: 1px solid var(--b1);
-}
-#news-screen .disclaimer {
-  background: rgba(245,158,11,.05); border: 1px solid rgba(245,158,11,.2);
-  border-radius: var(--r); padding: 12px 15px;
-  font-size: 11.5px; color: var(--txt3); line-height: 1.65;
-}
-#news-screen .disclaimer b { color: var(--amber); }
-#news-screen .footer-note { text-align: center; color: var(--txt3); font-size: 10.5px; margin-top: 12px; }
-
-/* ── Misc ── */
-#news-screen .empty { color: var(--txt3); font-size: 12px; text-align: center; padding: 28px 10px; }
-#news-screen .pill {
-  font-size: 10px; padding: 2px 8px; border-radius: 999px;
-  border: 1px solid var(--b1); color: var(--txt3);
-  display: inline-flex; align-items: center; gap: 4px;
-}
-#news-screen .pill.gold { color: var(--goldS); border-color: rgba(240,185,11,.25); }
-#news-screen .pill.tv   { color: #38bdf8; border-color: rgba(56,189,248,.25); }
-#news-screen .pill.ff   { color: #a78bfa; border-color: rgba(167,139,250,.25); }
-#news-screen .mt { margin-top: 16px; }
-
-/* ── Warn bar (old class alias) ── */
-#news-screen .warn-bar {
-  padding: 10px 14px; border-radius: 10px; font-size: 12px; line-height: 1.6;
-  background: rgba(107,96,112,.12); border: 1px solid var(--b2); color: var(--txt2); display: none;
-}
-#news-screen .warn-bar.show   { display: block; }
-#news-screen .warn-bar.urgent { background: rgba(230,57,70,.08); border-color: rgba(230,57,70,.35); color: var(--txt); }
-
-/* ── Old class aliases for JS compatibility ── */
-#news-screen .panel      { background: var(--s1); border: 1px solid var(--b1); border-radius: var(--r); overflow: hidden; }
-#news-screen .panel-head { display:flex; align-items:center; gap:8px; padding:13px 16px; border-bottom:1px solid var(--b1); font-size:12.5px; font-weight:600; color:var(--txt2); }
-#news-screen .panel-head .sub { margin-left:auto; font-size:10.5px; color:var(--txt3); font-weight:400; }
-#news-screen .panel-body { padding:14px 16px; }
-#news-screen .hero       { margin:0; }
-#news-screen .hero-card  { background:var(--s1); border:1px solid var(--b2); border-radius:16px; padding:22px 24px; display:flex; align-items:center; gap:24px; flex-wrap:wrap; position:relative; overflow:hidden; }
-#news-screen .hero-card::before { content:''; position:absolute; inset:0; border-radius:16px; background:radial-gradient(ellipse 60% 80% at 90% 50%,rgba(230,57,70,.06),transparent 70%); pointer-events:none; }
-#news-screen .hero-card.urgent { border-color:rgba(230,57,70,.4); animation:gns-pulse 2s infinite; }
-#news-screen .hero-event { flex:1; min-width:200px; }
-#news-screen .hero-event .badge { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--accent); text-transform:uppercase; margin-bottom:6px; display:block; }
-#news-screen .hero-event h1 { font-size:22px; font-weight:700; line-height:1.25; }
-#news-screen .hero-event .meta { color:var(--txt3); font-size:12.5px; margin-top:6px; }
-#news-screen .countdown { text-align:center; min-width:160px; padding:4px 16px; border-left:1px solid var(--b1); }
-#news-screen .countdown .label { font-size:10px; color:var(--txt3); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:4px; }
-#news-screen .countdown .time { font-size:36px; font-weight:700; letter-spacing:3px; font-variant-numeric:tabular-nums; color:var(--txt); line-height:1.1; }
-#news-screen .countdown.urgent .time { color:var(--red); }
-#news-screen .grid { display:grid; grid-template-columns:380px 1fr; gap:16px; align-items:start; padding-bottom:32px; }
-@media (max-width:960px) { #news-screen .grid { grid-template-columns:1fr; } }
-#news-screen .ev-list { max-height:580px; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:6px; }
-#news-screen .ev-list::-webkit-scrollbar { width:4px; }
-#news-screen .ev-list::-webkit-scrollbar-thumb { background:var(--b2); border-radius:4px; }
-#news-screen .gns-container { max-width:1200px; margin:0 auto; padding:0 20px; }
+.gns-container { font-family: "Prompt", system-ui, sans-serif; }
+.gns-verdict { margin-top:12px;padding:12px;border-radius:11px;text-align:center;border:1px solid rgba(255,255,255,.08) }
+.gns-verdict.buy { background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.35) }
+.gns-verdict.buy div:first-child { color:#22c55e }
+.gns-verdict.sell { background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.35) }
+.gns-verdict.sell div:first-child { color:#ef4444 }
+.gns-verdict.neutral { background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.35) }
+.gns-verdict.neutral div:first-child { color:#f59e0b }
+.gns-tab { padding:7px 13px;font-size:12px;border-radius:9px 9px 0 0;cursor:pointer;border:1px solid transparent;border-bottom:none;color:#8b93a7;transition:.15s;font-family:inherit;background:transparent }
+.gns-tab-active { background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.08);color:#e6eaf2 }
+.gns-ev-card { border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px 12px;cursor:pointer;transition:.15s ease;background:rgba(255,255,255,.015) }
+.gns-ev-card:hover { border-color:rgba(240,185,11,.35);transform:translateX(2px) }
+.gns-ev-card.gns-active { border-color:#f0b90b;background:rgba(240,185,11,.07) }
+.gns-ev-card.gns-urgent { border-color:rgba(239,68,68,.55) }
+@media(max-width:860px){ #gns-grid{grid-template-columns:1fr} }
 </style>
 
-<!-- back button -->
-<button class="gns-back-btn" onclick="window.closeNewsSignal()" title="ย้อนกลับ" aria-label="ย้อนกลับ">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-</button>
-
-<!-- ===== Topbar ===== -->
-<header class="gns-topbar">
-  <div class="gns-topbar-inner">
-    <div class="gns-brand">
-      <svg width="26" height="26" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-        <defs><radialGradient id="gns-rg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff2a2a"/><stop offset="100%" stop-color="#e63946"/></radialGradient></defs>
-        <g fill="url(#gns-rg)">
-          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(0 50 50)" opacity="0.95"/>
-          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(60 50 50)" opacity="0.85"/>
-          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(120 50 50)" opacity="0.75"/>
-          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(180 50 50)" opacity="0.65"/>
-          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(240 50 50)" opacity="0.55"/>
-          <ellipse cx="50" cy="22" rx="10" ry="28" transform="rotate(300 50 50)" opacity="0.45"/>
-        </g>
-        <circle cx="50" cy="50" r="12" fill="#0a0608"/>
-        <circle cx="50" cy="50" r="7" fill="#e63946"/>
-      </svg>
-      <div class="gns-brand-text">
-        Deep<span style="font-weight:300">GPT</span>
-        <span style="font-weight:400;color:var(--txt3)"> · Gold News Signal</span>
-      </div>
-    </div>
-
-    <div class="gns-topbar-right">
-      <div class="gns-price-pill">
-        <span class="lbl">XAUUSD</span>
-        <span class="val" id="tickPrice">…</span>
-        <span class="chg flat" id="tickChange">สด</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <span class="gns-src-dot err" id="srcDot"></span>
-        <span class="gns-src-label" id="srcLabel">เชื่อมต่อ…</span>
-      </div>
-      <button class="gns-refresh-btn" id="refreshBtn" title="รีเฟรช">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-      </button>
-    </div>
-  </div>
-</header>
-
-<main class="gc">
-
-  <!-- ===== Hero / Countdown ===== -->
-  <section class="hero">
-    <div class="hero-card" id="heroCard">
-      <div class="hero-event">
-        <div class="badge" id="heroLabel">เลือกอีเวนต์</div>
-        <h1 id="heroEvTitle">…</h1>
-        <div class="meta" id="heroEvMeta">…</div>
-      </div>
-      <div class="countdown" id="countdownWrap">
-        <div class="label" id="countLabel">เวลานับถอยหลัง</div>
-        <div class="time" id="countdownTime">--:--:--</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Main grid ===== -->
-  <div class="grid">
-    <section class="panel">
-      <div class="panel-head">
-        📅 ปฏิทินข่าวสำคัญ USD (สัปดาห์นี้)
-        <span class="sub" id="evCount"></span>
-      </div>
-      <div class="ev-list" id="evList">
-        <div class="empty">กำลังโหลดปฏิทิน…</div>
-      </div>
-    </section>
-
-    <section class="panel" id="scorePanel">
-      <div class="panel-head">
-        🎯 Signal Score <span class="sub">คะแนน 0–100 (ซ้าย=ซื้อ · ขวา=ขาย)</span>
-      </div>
-      <div class="panel-body">
-        <div id="scoreName" style="font-size:15px;font-weight:700">เลือกอีเวนต์</div>
-        <div id="scoreTime" style="font-size:12px;color:var(--txt-dim);margin-top:2px">…</div>
-        <div class="gauge-wrap" id="scoreGauge"></div>
-        <div class="verdict neutral" id="verdictBox">
-          <div class="big" id="verdictBig">—</div>
-          <div class="sub" id="verdictSub">…</div>
-        </div>
-        <div class="breakdown" id="brkBox"></div>
-        <div class="reason-box" id="reasonBox"></div>
-
-        <div id="tab-risk" style="display:none"><input type="number" id="inBal"><input type="number" id="inRisk"><input type="number" id="inSL"><span id="riskUSD"></span><span id="lotOut"></span><span id="slOut"></span><span id="tpOut"></span><span id="riskWarn"></span></div>
-        <div id="tab-stats" style="display:none"><span id="stWin"></span><span id="stLoss"></span><span id="stRate"></span><span id="stDev"></span><div id="histList"></div></div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ===== Footer ===== -->
-  <footer>
-    <div class="disclaimer">
-      <b>⚠️ คำเตือนความเสี่ยง:</b> เครื่องมือนี้ใช้ <b>โมเดลกลยุทธ์</b> (ไม่ใช่คำทำนายหรือคำแนะนำการลงทุน) — ตลาดข่าวมีความไม่แน่นอนสูง สเปรดกว้าง 5–20 เท่าในนาทีแรกหลังข่าว, มีความเสี่ยงขาดทุนถึงเงินต้นทั้งหมด
-    </div>
-    <div class="footer-note">⚡ Gold News Signal · ข้อมูลข่าว: ForexFactory / TradingView · ราคาทอง: gold-api.com</div>
-  </footer>
-</main>
-
-<div class="status-bar" id="gns-statusBar" role="status" aria-live="polite"></div>
-
 <script>
-(function () {
-  'use strict';
+(function(){
+'use strict';
+const GNS_FF='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+const GNS_GOLD='https://api.gold-api.com/price/XAU';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp=(v,lo,hi)=>Math.min(hi,Math.max(lo,v));
+const THAI_M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const LS=k=>{try{return localStorage.getItem(k)}catch{return null}};
+const SS=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
 
-  /* ---------- state ---------- */
-  const state = {
-    inited: false,
-    events: [], selected: null, gold: null, goldFirstToday: null,
-    ticks: [], src: 'loading', urgentShown: {}, releasedShown: {}, atr: 30,
-  };
+const GS={events:[],selected:null,gold:null,goldFirst:null,ticks:[],atr:30,inited:false};
 
-  /* ---------- helpers ---------- */
-  const $g = (id) => document.getElementById(id);
-  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const evId = (ev) => ev.title + '|' + ev.date;
+function fmtNum(v,d){
+  if(v==null||isNaN(v))return '—';
+  const a=Math.abs(v);
+  if(a>=1e9)return(v/1e9).toFixed(2)+'B';
+  if(a>=1e6)return(v/1e6).toFixed(2)+'M';
+  if(a>=1e3&&d==null)return(v/1e3).toFixed(1)+'K';
+  return Number(v).toLocaleString('en-US',{maximumFractionDigits:d??2});
+}
 
-  const store = {
-    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
-    del(k) { try { localStorage.removeItem(k); } catch {} },
-  };
+function thaiTime(iso){
+  try{
+    const d=new Date(iso);
+    const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);
+    const g=t=>p.find(x=>x.type===t).value;
+    return `${g('day')} ${THAI_M[+g('month')-1]} ${g('year')} ${g('hour')}:${g('minute')} น.`;
+  }catch{return '—'}
+}
 
-  /* ---------- consts ---------- */
-  const FF_URL = '/api/ff-events';
-  const GOLD_URL = 'https://api.gold-api.com/price/XAU';
-  const THAI_MONTHS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  const LS_RESULTS = 'gns_results';
-  const LS_TICKS = 'gns_ticks';
-  const LS_DAY = 'gns_day';
+function countdownText(ms){
+  if(ms<=0)return 'ออกแล้ว';
+  const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60),ss=s%60;
+  if(d>0)return `${d}วัน ${h}ชม`;
+  const p=n=>String(n).padStart(2,'0');
+  return `${p(h)}:${p(m)}:${p(ss)}`;
+}
 
-  const TEMPLATES = [
-    { re: /non.?farm|payrolls|\bnfp\b/i, label: 'Non-Farm Payrolls (NFP)', hawkWhenHigh: true, scale: 150e3 },
-    { re: /unemployment/i, label: 'อัตราการว่างงาน', hawkWhenHigh: false, scale: 0.4 },
-    { re: /average hourly earnings/i, label: 'ค่าแรงเฉลี่ยรายชั่วโมง', hawkWhenHigh: true, scale: 0.3 },
-    { re: /\bcpi\b|consumer price/i, label: 'CPI (เงินเฟ้อผู้บริโภค)', hawkWhenHigh: true, scale: 0.5 },
-    { re: /\bppi\b|producer price/i, label: 'PPI (เงินเฟ้อผู้ผลิต)', hawkWhenHigh: true, scale: 0.5 },
-    { re: /fomc|interest rate|fed fund|rate decision|rate statement/i, label: 'FOMC / อัตราดอกเบี้ย', hawkWhenHigh: true, scale: 0.5 },
-    { re: /\bgdp\b/i, label: 'GDP', hawkWhenHigh: true, scale: 1.0 },
-    { re: /retail sales/i, label: 'ยอดค้าปลีก', hawkWhenHigh: true, scale: 1.0 },
-    { re: /ism (manufacturing|services)/i, label: 'ISM ดัชนีภาคธุรกิจ', hawkWhenHigh: true, scale: 8 },
-    { re: /jolts/i, label: 'JOLTS ตำแหน่งงานว่าง', hawkWhenHigh: true, scale: 500e3 },
-    { re: /jobless claims/i, label: 'ผู้ขอสวัสดิการว่างงาน', hawkWhenHigh: false, scale: 80e3 },
-    { re: /\badp\b/i, label: 'ADP จ้างงานเอกชน', hawkWhenHigh: true, scale: 150e3 },
-    { re: /durable goods/i, label: 'คำสั่งซื้อสินค้าคงทน', hawkWhenHigh: true, scale: 2.0 },
-    { re: /housing starts|building permits/i, label: 'Housing Starts / Permits', hawkWhenHigh: true, scale: 150e3 },
-    { re: /consumer confidence/i, label: 'ความเชื่อมั่นผู้บริโภค', hawkWhenHigh: true, scale: 10 },
-    { re: /trade balance/i, label: 'ดุลการค้า', hawkWhenHigh: false, scale: 10e9 },
-  ];
+async function gnsFetch(url,ms=8000){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+  try{const r=await fetch(url,{signal:c.signal,cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(t)}
+}
 
-  /* ---------- utils ---------- */
-  function fmtNum(v, digits) {
-    if (v == null || isNaN(v)) return '—';
-    const a = Math.abs(v);
-    if (a >= 1e12) return (v/1e12).toFixed(2)+'T';
-    if (a >= 1e9) return (v/1e9).toFixed(2)+'B';
-    if (a >= 1e6) return (v/1e6).toFixed(2)+'M';
-    if (a >= 1e3 && digits == null) return (v/1e3).toFixed(1)+'K';
-    return Number(v).toLocaleString('en-US',{maximumFractionDigits: digits ?? 2});
-  }
+async function gnsLoadGold(){
+  try{
+    const j=await gnsFetch(GNS_GOLD,6000);
+    const p=Number(j.price);if(!p)throw 0;
+    const today=new Date().toISOString().slice(0,10);
+    if(LS('gns_day')!==today){SS('gns_day',today);GS.goldFirst=p;SS('gns_first',String(p));}
+    else if(!GS.goldFirst){GS.goldFirst=Number(LS('gns_first'))||p;}
+    GS.goldFirst=GS.goldFirst||p;GS.gold=p;
+    GS.ticks.push({t:Date.now(),p});if(GS.ticks.length>600)GS.ticks=GS.ticks.slice(-600);
+    gnsRenderTicker();
+  }catch{if(!GS.gold&&$('gns-tickPrice'))$('gns-tickPrice').textContent='—';}
+}
 
-  function thaiTime(iso) {
-    try {
-      const d = new Date(iso);
-      const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);
-      const get = (t) => parts.find((p) => p.type===t).value;
-      return `${get('day')} ${THAI_MONTHS[+get('month')-1]} ${get('year')} ${get('hour')}:${get('minute')} น.`;
-    } catch { return '—'; }
-  }
+function gnsRenderTicker(){
+  const p=GS.gold;if(!p)return;
+  if($('gns-tickPrice'))$('gns-tickPrice').textContent='$'+fmtNum(p,2);
+  const ch=GS.goldFirst?((p-GS.goldFirst)/GS.goldFirst)*100:0;
+  const el=$('gns-tickChange');if(!el)return;
+  el.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%';
+  el.style.color=ch>0.01?'#22c55e':ch<-0.01?'#ef4444':'#8b93a7';
+}
 
-  function countdownText(ms) {
-    if (ms <= 0) return 'ออกแล้ว';
-    const s = Math.floor(ms/1000);
-    const d = Math.floor(s/86400), h = Math.floor((s%86400)/3600), m = Math.floor((s%3600)/60), ss = s%60;
-    if (d > 0) return `${d}วัน ${h}ชม`;
-    const p = (n) => String(n).padStart(2,'0');
-    return `${p(h)}:${p(m)}:${p(ss)}`;
-  }
+function gnsSrc(cls,label){
+  const dot=$('gns-srcDot'),lbl=$('gns-srcLabel');
+  if(dot)dot.style.background=cls==='live'?'#22c55e':cls==='warn'?'#f59e0b':'#ef4444';
+  if(lbl)lbl.textContent=label||'';
+}
 
-  function matchTemplate(title) { return TEMPLATES.find((t) => t.re.test(title)) || null; }
+const TMPLS=[
+  {re:/non.?farm|payrolls|\bnfp\b/i,hawk:true,scale:150e3},
+  {re:/unemployment/i,hawk:false,scale:0.4},
+  {re:/average hourly earnings/i,hawk:true,scale:0.3},
+  {re:/\bcpi\b|consumer price/i,hawk:true,scale:0.5},
+  {re:/\bppi\b|producer price/i,hawk:true,scale:0.5},
+  {re:/fomc|interest rate|fed fund|rate decision/i,hawk:true,scale:0.5},
+  {re:/\bgdp\b/i,hawk:true,scale:1.0},
+  {re:/retail sales/i,hawk:true,scale:1.0},
+  {re:/ism/i,hawk:true,scale:8},
+  {re:/jolts/i,hawk:true,scale:500e3},
+  {re:/jobless claims/i,hawk:false,scale:80e3},
+  {re:/\badp\b/i,hawk:true,scale:150e3},
+];
 
-  function parseNum(str) {
-    if (str == null) return null;
-    const s = String(str).replace(/,/g,'').trim();
-    if (!s) return null;
-    const m = s.match(/(-?\d+(?:\.\d+)?)\s*(K|M|B|T|k|m|b|t|%)?/);
-    if (!m) return null;
-    let v = parseFloat(m[1]);
-    const u = (m[2]||'').toUpperCase();
-    if (u==='K') v*=1e3; if (u==='M') v*=1e6; if (u==='B') v*=1e9; if (u==='T') v*=1e12;
-    return v;
-  }
+function matchTpl(title){return TMPLS.find(t=>t.re.test(title))||null}
 
-  /* ---------- fetch ---------- */
-  async function fetchJSON(url, ms=8000) {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), ms);
-    try {
-      const r = await fetch(url, {signal:ctrl.signal, cache:'no-store'});
-      if (!r.ok) throw new Error('HTTP '+r.status);
-      return await r.json();
-    } finally { clearTimeout(t); }
-  }
+function parseNum(str){
+  if(str==null)return null;
+  const s=String(str).replace(/,/g,'').trim();if(!s)return null;
+  const m=s.match(/(-?\d+(?:\.\d+)?)\s*(K|M|B|T)?/i);if(!m)return null;
+  let v=parseFloat(m[1]);const u=(m[2]||'').toUpperCase();
+  if(u==='K')v*=1e3;if(u==='M')v*=1e6;if(u==='B')v*=1e9;if(u==='T')v*=1e12;
+  return v;
+}
 
-  /* ---------- gold ---------- */
-  async function loadGold() {
-    try {
-      const j = await fetchJSON(GOLD_URL, 6000);
-      const p = Number(j.price);
-      if (!p) throw new Error('bad price');
-      const today = new Date().toISOString().slice(0,10);
-      if (store.get(LS_DAY) !== today) { store.set(LS_DAY, today); state.goldFirstToday = p; }
-      else if (state.goldFirstToday == null) { state.goldFirstToday = Number(store.get('gns_first')) || p; }
-      state.goldFirstToday = state.goldFirstToday || p;
-      store.set('gns_first', String(state.goldFirstToday));
-      state.gold = p;
-      pushTick(p);
-      renderTicker();
-    } catch {
-      if (!state.gold) { const el=$g('tickPrice'); if(el) el.textContent='ไม่สามารถโหลดราคาได้'; }
+function computeScore(ev){
+  const tpl=matchTpl(ev.title);
+  let bias=50,mag=50,hasNum=false;const notes=[];
+  if(tpl){
+    const f=parseNum(ev.forecast),p=parseNum(ev.previous);
+    if(f!=null&&p!=null){
+      hasNum=true;const gap=f-p,dir=tpl.hawk?1:-1,raw=dir*gap;
+      bias=clamp(50+(raw/tpl.scale)*50,5,95);
+      mag=clamp((Math.abs(raw)/tpl.scale)*100,10,100);
+      const dw=raw>0?'กดทอง (ลง)':raw<0?'หนุนทอง (ขึ้น)':'กลาง';
+      notes.push(`คาด <b>${esc(ev.forecast||'—')}</b> vs เดิม <b>${esc(ev.previous||'—')}</b> → ${dw}`);
+    }else{notes.push('ไม่มีตัวเลขคาดการณ์ — รอข่าวออกก่อน')}
+  }else{notes.push('ข่าวนอกเทมเพลต — รอสไปก์แรก 2-3 นาที')}
+  const mom=GS.ticks.length>=5&&GS.gold?(()=>{
+    const pp=GS.ticks.map(x=>x.p),mn=Math.min(...pp),mx=Math.max(...pp);
+    return mx-mn<1e-9?null:clamp(((GS.gold-mn)/(mx-mn))*100,0,100);
+  })():null;
+  if(mom!=null)notes.push(mom>60?`ทองสูงในกรอบวัน (${mom.toFixed(0)}%) → แรงขายทำกำไร`:`ทองต่ำในกรอบ (${mom.toFixed(0)}%) → แรงซื้อหนุน`);
+  const impact=ev.impact==='High'?100:ev.impact==='Medium'?55:25;
+  const D=clamp(0.75*bias+0.25*(mom!=null?mom:50),0,100);
+  const dataConf=hasNum?80:40;
+  const C=clamp(0.40*impact+0.35*mag+0.25*dataConf,0,100);
+  return{D,C,bias,mag,impact,mom,notes,hasNum,tpl};
+}
+
+function verdict(D){
+  if(D<=32)return{cls:'buy',big:'BUY แรง — ซื้อทอง',sub:'โมเดลโน้มทองขึ้น — ใช้ SL เสมอ'};
+  if(D<=44)return{cls:'buy',big:'BUY — ซื้อทอง',sub:'โมเดลโน้มทองขึ้น'};
+  if(D<=56)return{cls:'neutral',big:'NEUTRAL — รอข่าว',sub:'ทิศทางไม่ชัด รอ second-wave'};
+  if(D<=68)return{cls:'sell',big:'SELL — ขายทอง',sub:'โมเดลโน้มทองลง'};
+  return{cls:'sell',big:'SELL แรง — ขายทอง',sub:'โมเดลโน้มทองลง — ใช้ SL เสมอ'};
+}
+
+function gnsResults(){try{return JSON.parse(LS('gns_results'))||[]}catch{return[]}}
+function gnsSaveResults(r){SS('gns_results',JSON.stringify(r))}
+function gnsFindResult(ev){return gnsResults().find(r=>r.title===ev.title&&r.date===ev.date)||null}
+
+function gnsRenderEvents(){
+  const list=$('gns-evList');if(!list)return;
+  if(!GS.events.length){list.innerHTML='<div style="color:#5c6478;font-size:13px;text-align:center;padding:24px">ไม่มีอีเวนต์</div>';return}
+  const now=Date.now();list.innerHTML='';
+  GS.events.forEach((ev,i)=>{
+    const ms=ev.ts-now,isU=ms>0&&ms<=15*60e3;
+    const cls=['gns-ev-card',GS.selected===ev?'gns-active':'',isU?'gns-urgent':''].filter(Boolean).join(' ');
+    const dv=[];
+    if(ev.forecast)dv.push(`คาด <b>${esc(ev.forecast)}</b>`);
+    if(ev.previous)dv.push(`เดิม <b>${esc(ev.previous)}</b>`);
+    if(ev.actual)dv.push(`จริง <b style="color:#ffd75e">${esc(ev.actual)}</b>`);
+    list.insertAdjacentHTML('beforeend',`<div class="${cls}" data-idx="${i}" role="button" tabindex="0"><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;font-weight:600;flex:1">${esc(ev.title)}</span><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(239,68,68,.15);color:#ef4444">${esc(ev.impact)}</span><span style="font-size:10px;color:#5c6478;white-space:nowrap">${countdownText(ms)}</span></div>${dv.length?`<div style="display:flex;gap:12px;margin-top:5px;font-size:11px;color:#8b93a7;flex-wrap:wrap"><span>⏰ ${thaiTime(ev.date)}</span><span>${dv.join(' · ')}</span></div>`:'<div style="font-size:11px;color:#5c6478;margin-top:4px">⏰ '+thaiTime(ev.date)+'</div>'}</div>`);
+  });
+  $('gns-evCount').textContent=GS.events.length+' อีเวนต์';
+  list.querySelectorAll('.gns-ev-card').forEach(card=>{
+    card.addEventListener('click',()=>{GS.selected=GS.events[+card.dataset.idx];gnsRenderEvents();gnsRenderScore()});
+  });
+}
+
+function gnsRenderScore(){
+  const ev=GS.selected;if(!ev)return;
+  const sc=computeScore(ev),v=verdict(sc.D);
+  const now=Date.now(),ms=ev.ts-now,isPast=ms<=0,isU=ms>0&&ms<=15*60e3;
+  const rec=gnsFindResult(ev);
+  if($('gns-heroEvTitle'))$('gns-heroEvTitle').textContent=ev.title+(ev.demo?' (สำรอง)':'');
+  if($('gns-heroEvMeta'))$('gns-heroEvMeta').textContent=`${ev.impact} · ${thaiTime(ev.date)} · คาด ${ev.forecast||'—'} / เดิม ${ev.previous||'—'}`;
+  if($('gns-heroLabel'))$('gns-heroLabel').textContent=ms>0?(isU?'ใกล้ปล่อยข่าว!':'เหลือเวลา'):'ข่าวออกแล้ว';
+  if($('gns-scoreName'))$('gns-scoreName').textContent=ev.title;
+  if($('gns-scoreTime'))$('gns-scoreTime').innerHTML=`⏰ ${thaiTime(ev.date)} · <b style="color:${isU?'#ef4444':'#8b93a7'}">${countdownText(ms)}</b>`;
+  if($('gns-scoreGauge'))$('gns-scoreGauge').innerHTML=`<div style="position:relative;height:16px;border-radius:20px;overflow:hidden;background:linear-gradient(90deg,rgba(34,197,94,.85) 0%,rgba(34,197,94,.35) 30%,rgba(255,255,255,.06) 50%,rgba(239,68,68,.35) 70%,rgba(239,68,68,.9) 100%);border:1px solid rgba(255,255,255,.08)"><div style="position:absolute;top:-3px;bottom:-3px;width:3px;background:#fff;border-radius:3px;box-shadow:0 0 10px rgba(255,255,255,.9);transition:left .8s cubic-bezier(.22,1,.36,1);left:${sc.D}%"></div></div><div style="display:flex;justify-content:space-between;font-size:10px;color:#5c6478;margin-top:5px"><span>ซื้อทอง</span><span>กลาง</span><span>ขายทอง</span></div>`;
+  const vb=$('gns-verdictBox');if(vb)vb.className='gns-verdict '+v.cls;
+  if($('gns-verdictBig'))$('gns-verdictBig').textContent=isPast&&rec?'จบแล้ว — ดูผล':v.big;
+  if($('gns-verdictSub'))$('gns-verdictSub').textContent=isPast&&rec?`ผล: ${rec.outcome==='win'?'ชนะ':rec.outcome==='loss'?'แพ้':'ไม่เทรด'}`:v.sub;
+  const brk=[['ทิศทางข่าว',sc.bias,sc.hasNum?'#ef4444':'#f59e0b'],['ขนาด deviation',sc.mag,'#f59e0b'],['น้ำหนักข่าว',sc.impact,sc.impact>55?'#ef4444':'#f59e0b'],['โมเมนตัมทอง',sc.mom!=null?sc.mom:50,sc.mom!=null&&sc.mom>60?'#ef4444':'#22c55e']];
+  if($('gns-brkBox'))$('gns-brkBox').innerHTML=brk.map(([n,val,c])=>`<div style="display:grid;grid-template-columns:120px 1fr 36px;align-items:center;gap:8px;font-size:11px"><span style="color:#8b93a7">${n}</span><div style="height:6px;border-radius:8px;background:rgba(255,255,255,.06);overflow:hidden"><div style="height:100%;border-radius:8px;background:${c};width:${val}%;transition:width .7s"></div></div><span style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">${val.toFixed(0)}</span></div>`).join('');
+  if($('gns-reasonBox'))$('gns-reasonBox').innerHTML='<b>เหตุผล:</b><ul style="margin:5px 0 0 16px">'+sc.notes.map(n=>`<li>${n}</li>`).join('')+'</ul>';
+
+  // playbook
+  const tpl=sc.tpl,atr=GS.atr,price=GS.gold||3400;
+  let scenHtml='<tr><th style="text-align:left;color:#5c6478;font-size:10px;padding:5px 7px;border-bottom:1px solid rgba(255,255,255,.08)">กรณี</th><th style="text-align:left;color:#5c6478;font-size:10px;padding:5px 7px;border-bottom:1px solid rgba(255,255,255,.08)">แนวทาง</th></tr>';
+  if(tpl){
+    if(tpl.hawk){
+      scenHtml+=`<tr><td style="padding:7px;color:#ef4444;font-weight:700;white-space:nowrap">Actual >> คาด</td><td style="padding:7px;font-size:11px">ร้อนแรงกว่าคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b> → Sell second-wave</td></tr>`;
+      scenHtml+=`<tr><td style="padding:7px;color:#f59e0b;font-weight:700">Actual ≈ คาด</td><td style="padding:7px;font-size:11px">ตรงคาด → ไร้ทิศทาง รอ 10-15 นาที</td></tr>`;
+      scenHtml+=`<tr><td style="padding:7px;color:#22c55e;font-weight:700">Actual << คาด</td><td style="padding:7px;font-size:11px">อ่อนกว่าคาด → ดอลลาร์อ่อน → <b>ทองขึ้น</b> → Buy หลัง pullback</td></tr>`;
+    }else{
+      scenHtml+=`<tr><td style="padding:7px;color:#22c55e;font-weight:700;white-space:nowrap">Actual >> คาด</td><td style="padding:7px;font-size:11px">แย่กว่าคาด → ดอลลาร์อ่อน → <b>ทองขึ้น</b></td></tr>`;
+      scenHtml+=`<tr><td style="padding:7px;color:#f59e0b;font-weight:700">Actual ≈ คาด</td><td style="padding:7px;font-size:11px">ตรงคาด → ไร้ทิศทาง</td></tr>`;
+      scenHtml+=`<tr><td style="padding:7px;color:#ef4444;font-weight:700">Actual << คาด</td><td style="padding:7px;font-size:11px">ดีกว่าคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b></td></tr>`;
     }
+  }else{scenHtml+=`<tr><td colspan="2" style="padding:7px;font-size:11px;color:#8b93a7">ข่าวนอกเทมเพลต — รอสไปก์แรก 2-3 นาที แล้วเทรดตามเทรนด์ตลาด</td></tr>`}
+  if($('gns-scenRows'))$('gns-scenRows').innerHTML=scenHtml;
+
+  const h=0.55*atr;
+  const strats=[{n:1,name:'Straddle',params:[['Buy Stop','$'+fmtNum(price+h,2)],['Sell Stop','$'+fmtNum(price-h,2)],['SL','$'+fmtNum(atr*.8,2)],['TP','$'+fmtNum(atr*1.5,2)]]},{n:2,name:'Second-wave',params:[['เข้า','หลัง pullback'],['SL','$'+fmtNum(atr*.8,2)],['TP','$'+fmtNum(atr*2,2)]]}];
+  if($('gns-stratRows'))$('gns-stratRows').innerHTML=strats.map(s=>`<div style="margin-top:10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:11px 13px;font-size:12px"><div style="font-weight:700;margin-bottom:4px">${s.n}. ${s.name}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${s.params.map(([k,val])=>`<span style="font-size:10px;padding:2px 8px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#8b93a7">${k}: <b style="color:#e6eaf2">${val}</b></span>`).join('')}</div></div>`).join('');
+
+  const tr=$('gns-trackerBox');if(!tr)return;
+  if(isPast){
+    const actual=ev.actual||(rec?rec.actual:'');
+    tr.innerHTML=`<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center"><input id="gns-inActual" placeholder="Actual จริง" value="${esc(actual)}" style="flex:1;min-width:140px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e6eaf2;padding:8px 10px;border-radius:9px;font-family:inherit;font-size:12px"><button onclick="gnsSubmitActual()" style="border:1px solid rgba(255,255,255,.08);background:rgba(17,23,38,.72);color:#e6eaf2;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">บันทึก</button><button onclick="gnsSetOutcome('win')" style="border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);color:#22c55e;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">🏆 ชนะ</button><button onclick="gnsSetOutcome('loss')" style="border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.08);color:#ef4444;padding:7px 11px;border-radius:9px;font-family:inherit;font-size:11px;cursor:pointer">💸 แพ้</button></div>`;
+  }else{
+    tr.innerHTML=`<div style="color:#5c6478;font-size:12px;text-align:center;padding:12px">⏳ หลังข่าวออกจะให้กรอก actual + บันทึกผล</div>`;
   }
+}
 
-  function pushTick(p) {
-    const now = Date.now();
-    state.ticks.push({t:now,p});
-    if (state.ticks.length>600) state.ticks=state.ticks.slice(-600);
-    store.set(LS_TICKS, JSON.stringify(state.ticks));
-  }
+function gnsRenderStats(){
+  const rs=gnsResults(),judged=rs.filter(r=>r.outcome==='win'||r.outcome==='loss');
+  const wins=judged.filter(r=>r.outcome==='win').length,wr=judged.length?((wins/judged.length)*100).toFixed(0)+'%':'—';
+  if($('gns-stWin'))$('gns-stWin').textContent=wins;
+  if($('gns-stLoss'))$('gns-stLoss').textContent=judged.length-wins;
+  if($('gns-stRate'))$('gns-stRate').textContent=wr;
+  const devs=rs.map(r=>r.deviation).filter(v=>v!=null);
+  const avg=devs.length?devs.reduce((a,b)=>a+b,0)/devs.length:null;
+  if($('gns-stDev'))$('gns-stDev').textContent=avg!=null?(avg>0?'+':'')+fmtNum(avg):'—';
+  const hl=$('gns-histList');if(!hl)return;hl.innerHTML='';
+  if(!rs.length){hl.innerHTML='<div style="color:#5c6478;font-size:12px;text-align:center;padding:16px">ยังไม่มีประวัติ</div>';return}
+  rs.slice().reverse().forEach(r=>{
+    const tag=r.outcome==='win'?'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(34,197,94,.15);color:#22c55e">ชนะ</span>':r.outcome==='loss'?'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(239,68,68,.15);color:#ef4444">แพ้</span>':'<span style="font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;background:rgba(139,147,167,.15);color:#8b93a7">ไม่เทรด</span>';
+    hl.insertAdjacentHTML('beforeend',`<div style="display:flex;align-items:center;gap:8px;font-size:11px;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)">${tag}<span style="flex:1;color:#8b93a7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.title)}</span></div>`);
+  });
+}
 
-  function loadTicks() {
-    const raw = store.get(LS_TICKS);
-    if (raw) {
-      try {
-        const arr = JSON.parse(raw);
-        const todayStart = new Date(); todayStart.setHours(0,0,0,0);
-        state.ticks = arr.filter((x) => x.t >= todayStart.getTime());
-      } catch { state.ticks = []; }
-    }
-  }
+window.gnsCalcRisk=function(){
+  const bal=parseFloat($('gns-inBal').value)||0,rp=parseFloat($('gns-inRisk').value)||1,sl=parseFloat($('gns-inSL').value)||30;
+  const ru=bal*(rp/100),lots=ru/(sl*100),tp=sl*1.5;
+  if($('gns-riskUSD'))$('gns-riskUSD').textContent='$'+fmtNum(ru,2);
+  if($('gns-lotOut'))$('gns-lotOut').textContent=lots>0?lots.toFixed(2):'0.00';
+  if($('gns-slOut'))$('gns-slOut').textContent='$'+fmtNum(sl,2);
+  if($('gns-tpOut'))$('gns-tpOut').textContent='$'+fmtNum(tp,2);
+  SS('gns_bal',$('gns-inBal').value);SS('gns_risk',$('gns-inRisk').value);SS('gns_sl',$('gns-inSL').value);
+  GS.atr=sl||30;
+};
 
-  /* ---------- events ---------- */
-  function parseFFEvents(j) {
-    if (!Array.isArray(j)) return null;
-    return j.filter((e) => e.country==='USD').map((e) => ({...e, _src:'ff'}));
-  }
+window.gnsSubmitActual=function(){
+  const ev=GS.selected;if(!ev)return;
+  const val=$('gns-inActual').value.trim();if(!val)return;
+  ev.actual=val;
+  const rs=gnsResults(),rec=gnsFindResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now()};
+  rec.actual=val;
+  const f=parseNum(ev.forecast),a=parseNum(val);if(f!=null&&a!=null)rec.deviation=a-f;
+  const idx=rs.findIndex(r=>r.title===ev.title&&r.date===ev.date);
+  if(idx>=0)rs[idx]=rec;else rs.push(rec);
+  gnsSaveResults(rs);gnsRenderScore();gnsRenderStats();
+};
 
-  function normalizeKey(title, date) {
-    const t = (title||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-    const d = (date||'').slice(0,16);
-    return t+'|'+d;
-  }
+window.gnsSetOutcome=function(o){
+  const ev=GS.selected;if(!ev)return;
+  const rs=gnsResults(),rec=gnsFindResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now(),actual:ev.actual||''};
+  rec.outcome=o;
+  const idx=rs.findIndex(r=>r.title===ev.title&&r.date===ev.date);
+  if(idx>=0)rs[idx]=rec;else rs.push(rec);
+  gnsSaveResults(rs);gnsRenderScore();gnsRenderStats();
+};
 
-  function mergeEvents(tvEvents, ffEvents) {
-    const map = new Map();
-    for (const e of (ffEvents||[])) map.set(normalizeKey(e.title,e.date),e);
-    for (const e of (tvEvents||[])) {
-      const k = normalizeKey(e.title,e.date);
-      const existing = map.get(k);
-      if (existing) {
-        const merged = {...existing,...e,_src:'tv+ff'};
-        if (!e.actual && existing.actual) merged.actual = existing.actual;
-        map.set(k,merged);
-      } else { map.set(k,e); }
-    }
-    return Array.from(map.values());
-  }
+window.gnsClearResults=function(){try{localStorage.removeItem('gns_results')}catch{}gnsRenderStats();};
 
-  async function loadEvents() {
-    setSrc('loading','กำลังโหลดปฏิทิน…');
-    const endpoints = ['/api/calendar','/.netlify/functions/calendar',FF_URL];
-    for (const url of endpoints) {
-      try {
-        const j = await fetchJSON(url, 10000);
-        if (j && Array.isArray(j.events) && j.events.length) {
-          const src = j._sources||{};
-          const parts = [];
-          if (src.tv==='fulfilled') parts.push('TradingView');
-          if (src.ff==='fulfilled') parts.push('ForexFactory');
-          state.events = j.events;
-          setSrc('live',`${parts.join(' + ')||'API'} (${j.events.length} อีเวนต์)`);
-          afterEvents(); return;
-        }
-        if (Array.isArray(j) && j.length) {
-          const parsed = parseFFEvents(j);
-          if (parsed && parsed.length) {
-            state.events = parsed;
-            setSrc('live',`ForexFactory (${parsed.length} อีเวนต์)`);
-            afterEvents(); return;
-          }
-        }
-      } catch {}
-    }
-    state.events = demoEvents();
-    setSrc('warn','ข้อมูลสำรอง (ไม่สามารถเชื่อมต่อได้)');
-    afterEvents();
-  }
+window.gnsTab=function(btn){
+  document.querySelectorAll('.gns-tab').forEach(t=>t.classList.remove('gns-tab-active'));
+  document.querySelectorAll('.gns-tab-content').forEach(c=>{c.style.display='none'});
+  btn.classList.add('gns-tab-active');
+  const c=$('gns-tab-'+btn.dataset.tab);if(c)c.style.display='block';
+  if(btn.dataset.tab==='stats')gnsRenderStats();
+};
 
-  function afterEvents() {
-    const now = Date.now();
-    const selId = state.selected ? evId(state.selected) : null;
-    const relevant = state.events
-      .filter((e) => (e.country==='USD'||e.country==='US') && e.impact==='High')
-      .map((e) => ({...e, ts:new Date(e.date).getTime()}))
-      .filter((e) => !isNaN(e.ts))
-      .sort((a,b) => a.ts-b.ts);
-    state.events = relevant;
-    let next = state.selected ? relevant.find((e) => evId(e)===selId) : null;
-    if (!next || next.ts < now) next = relevant.find((e) => e.ts >= now-3600e3) || relevant[relevant.length-1] || null;
-    state.selected = next;
-    renderEvents();
-    renderScore();
-  }
+window.gnsRefresh=async function(){await gnsLoadEvents();await gnsLoadGold();};
 
-  function demoEvents() {
-    const out = [], now = new Date();
-    // คำนวณช่วงสัปดาห์ปัจจุบัน จันทร์–อาทิตย์
-    const day = now.getDay();
-    const diffToMon = (day === 0 ? -6 : 1 - day);
-    const weekStart = new Date(now); weekStart.setHours(0,0,0,0); weekStart.setDate(now.getDate() + diffToMon);
-    const weekEnd   = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6); weekEnd.setHours(23,59,59,999);
-
-    function firstFriUTC(year, month) {
-      let fri = 1;
-      while (new Date(year, month, fri).getDay() !== 5) fri++;
-      return new Date(Date.UTC(year, month, fri, 12, 30));
-    }
-    function cpiDateUTC(year, month) {
-      return new Date(Date.UTC(year, month, 10, 12, 30));
-    }
-
-    // candidates 4 เดือน
-    const candidates = [];
-    for (let i = 0; i <= 3; i++) {
-      const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-      const y = d.getFullYear(), m = d.getMonth();
-      candidates.push({title:'Non-Farm Payrolls (NFP)', date: firstFriUTC(y,m), forecast:'160K', previous:'175K'});
-      candidates.push({title:'CPI y/y', date: cpiDateUTC(y,m), forecast:'3.0%', previous:'2.9%'});
-    }
-    candidates.sort((a,b) => a.date - b.date);
-
-    // 1) event ในสัปดาห์นี้ (รวมที่ผ่านแล้วด้วย เพื่อ show "ออกแล้ว")
-    const thisWeek = candidates.filter(e => e.date >= weekStart && e.date <= weekEnd);
-    // 2) ถ้าสัปดาห์นี้ไม่มี → แสดง event อนาคตที่ใกล้ที่สุด 2 รายการ (ยังไม่ออก)
-    const upcoming = candidates.filter(e => e.date > now);
-    const source = thisWeek.length > 0 ? thisWeek : upcoming.slice(0, 2);
-
-    source.forEach(e => out.push({
-      title: e.title, country:'USD', impact:'High', demo:true,
-      date: e.date.toISOString(), forecast: e.forecast, previous: e.previous
-    }));
-    return out;
-  }
-
-  function setSrc(cls, label) {
-    state.src = cls;
-    const dot=$g('srcDot'), lbl=$g('srcLabel');
-    if (dot) dot.className='source-dot '+(cls==='live'?'ok':cls==='warn'?'warn':'err');
-    if (lbl) lbl.textContent = label||'';
-  }
-
-  /* ---------- ticker ---------- */
-  function renderTicker() {
-    const p = state.gold; if (!p) return;
-    const el=$g('tickPrice'); if(el) el.textContent='$'+fmtNum(p,2);
-    const first=state.goldFirstToday, ch=first?((p-first)/first)*100:0;
-    const ce=$g('tickChange');
-    if (ce) {
-      if (first) { ce.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%'; ce.className='tick-change '+(ch>0.01?'up':ch<-0.01?'down':'flat'); }
-      else { ce.textContent='สด'; ce.className='tick-change flat'; }
-    }
-  }
-
-  /* ---------- score ---------- */
-  function momentumSellLean() {
-    if (state.ticks.length<5||!state.gold) return null;
-    const prices=state.ticks.map((x)=>x.p);
-    const min=Math.min(...prices),max=Math.max(...prices);
-    if (max-min<1e-9) return null;
-    return clamp(((state.gold-min)/(max-min))*100,0,100);
-  }
-
-  function computeScore(ev) {
-    const tpl=matchTemplate(ev.title), notes=[]; let bias=50,mag=50,hasNum=false;
-    if (tpl) {
-      const f=parseNum(ev.forecast),p=parseNum(ev.previous);
-      if (f!=null&&p!=null) {
-        hasNum=true;
-        const gap=f-p,dir=tpl.hawkWhenHigh?1:-1,raw=dir*gap;
-        bias=clamp(50+(raw/tpl.scale)*50,5,95);
-        mag=clamp((Math.abs(raw)/tpl.scale)*100,10,100);
-        const dirWord=raw>0?'กดทอง (ทองมีแนวโน้มลง)':raw<0?'หนุนทอง (ทองมีแนวโน้มขึ้น)':'กลาง';
-        notes.push(`ข่าวนี้คือ <b>${tpl.label}</b> — เลขสูง = ${tpl.hawkWhenHigh?'เงินเฟ้อ/เศรษฐกิจร้อนแรง (Hawkish)':'อ่อนแอ (Dovish)'}`);
-        notes.push(`คาดการณ์ (${esc(ev.forecast)}) vs ค่าเดิม (${esc(ev.previous)}) → ส่วนต่าง ${raw>0?'+':''}${fmtNum(raw)} → ${dirWord}`);
-      } else { notes.push(`ข่าวนี้คือ <b>${tpl.label}</b> แต่ฟีดไม่มีค่าคาดการณ์/ค่าเดิม → ใช้ทิศทางกลาง`); }
-    } else { notes.push(`ข่าวนี้ไม่ตรงกับเทมเพลตทิศทางทอง → ทิศทางกลางๆ`); }
-    const impact=ev.impact==='High'?100:ev.impact==='Medium'?55:25;
-    const mom=momentumSellLean();
-    const D=clamp(0.75*bias+0.25*(mom!=null?mom:50),0,100);
-    const dataConf=hasNum?80:40;
-    const C=clamp(0.40*impact+0.35*mag+0.25*dataConf,0,100);
-    if (mom!=null) notes.push(mom>60?`ราคาทองอยู่สูงในกรอบวันนี้ (${mom.toFixed(0)}% ของกรอบ) → มีแรงขายทำกำไร`:`ราคาทองอยู่ต่ำในกรอบวันนี้ (${mom.toFixed(0)}% ของกรอบ) → มีแรงซื้อหนุน`);
-    else notes.push(`ยังไม่มีข้อมูลราคาในวันนี้พอคำนวณโมเมนตัม → ใช้กลาง`);
-    return {D,C,bias,mag,impact,mom,notes,hasNum,tpl};
-  }
-
-  function verdict(D) {
-    if (D<=32) return {cls:'buy',big:'BUY แรง — ซื้อทอง',sub:'โมเดลโน้มไปทางทองขึ้นหลังข่าว — ใช้ SL เสมอ'};
-    if (D<=44) return {cls:'buy',big:'BUY — ซื้อทอง',sub:'โมเดลโน้มไปทางทองขึ้น แต่อย่าแรง'};
-    if (D<=56) return {cls:'neutral',big:'NEUTRAL — รอข่าวก่อน',sub:'ทิศทางไม่ชัด รอข่าวออก + เทรด second-wave แทน'};
-    if (D<=68) return {cls:'sell',big:'SELL — ขายทอง',sub:'โมเดลโน้มไปทางทองลง แต่อย่าแรง'};
-    return {cls:'sell',big:'SELL แรง — ขายทอง',sub:'โมเดลโน้มไปทางทองลงหลังข่าว — ใช้ SL เสมอ'};
-  }
-
-  function convictionLabel(C) {
-    if (C>=70) return {t:'แรง',cls:'sell'};
-    if (C>=45) return {t:'กลาง',cls:'neutral'};
-    return {t:'อ่อน',cls:'buy'};
-  }
-
-  /* ---------- playbook ---------- */
-  function buildPlaybook(ev, sc) {
-    const tpl=sc.tpl, atr=state.atr, price=state.gold||4360, rows=[];
-    if (tpl) {
-      const hawk=tpl.hawkWhenHigh, push=(when,cls,act)=>rows.push({when,cls,act});
-      if (hawk) {
-        push('Actual >> คาด (มาก)','sell','ข่าวร้อนแรงเกินคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b> รอ Sell second-wave');
-        push('Actual ≈ คาด','neutral','ตรงตามคาด → ไร้ทิศทาง รอ 10–15 นาทีก่อน');
-        push('Actual << คาด (น้อย)','buy','ข่าวอ่อนกว่า → ดอลลาร์อ่อน → <b>ทองขึ้น</b> รอ Buy หลัง pullback');
-      } else {
-        push('Actual >> คาด (มาก)','buy','ตัวเลขแย่กว่าคาด → ดอลลาร์อ่อน → <b>ทองขึ้น</b>');
-        push('Actual ≈ คาด','neutral','ตรงตามคาด → รอตลาดเลือกทาง');
-        push('Actual << คาด (น้อย)','sell','ตัวเลขดีกว่าคาด → ดอลลาร์แข็ง → <b>ทองร่วง</b>');
+async function gnsLoadEvents(){
+  gnsSrc('loading','กำลังโหลด…');
+  const endpoints=['/api/calendar',GNS_FF];
+  for(const url of endpoints){
+    try{
+      const j=await gnsFetch(url,10000);
+      let evs=null;
+      if(j&&Array.isArray(j.events)){evs=j.events;}
+      else if(Array.isArray(j)&&j.length){evs=j.filter(e=>e.country==='USD').map(e=>({...e,_src:'ff'}));}
+      if(evs&&evs.length){
+        const now=Date.now();
+        const high=evs.filter(e=>(e.country==='USD'||e.country==='US')&&e.impact==='High').map(e=>({...e,ts:new Date(e.date).getTime()})).filter(e=>!isNaN(e.ts)).sort((a,b)=>a.ts-b.ts);
+        GS.events=high;
+        gnsSrc('live','ForexFactory ('+high.length+' อีเวนต์)');
+        const selId=GS.selected?GS.selected.title+'|'+GS.selected.date:null;
+        let next=selId?high.find(e=>e.title+'|'+e.date===selId):null;
+        if(!next)next=high.find(e=>e.ts>=now-3600e3)||high[high.length-1]||null;
+        GS.selected=next;
+        gnsRenderEvents();gnsRenderScore();return;
       }
-    } else { rows.push({when:'ทุกกรณี',cls:'neutral',act:'ข่าวนอกเทมเพลต — รอสไปก์แรก 2–3 นาที แล้วเทรดตามเทรนด์จริง'}); }
-    const half=0.55*atr;
-    const strats=[
-      {n:1,name:'Straddle (ทั้งสองทาง)',desc:'วาง Buy Stop เหนือราคา + Sell Stop ใต้ราคา ก่อนข่าว 10–15 นาที ฝั่งไหนโดนแตะให้อีกฝั่งปิดทันที',params:[['Buy Stop','$'+fmtNum(price+half,2)],['Sell Stop','$'+fmtNum(price-half,2)],['SL','ฝั่งตรงข้าม ~$'+fmtNum(atr*0.8,2)],['TP','$'+fmtNum(atr*1.5,2)]]},
-      {n:2,name:'Fade สไปก์แรงเกิน',desc:'รอ 1–3 นาทีให้แท่งแรกหมดแรง แล้ว Sell/Buy ตอนราคากลับเข้าเดิม, SL พ้นจุดสุดขั้ว',params:[['เข้า','เมื่อราคากลับเข้าช่วงก่อนข่าว'],['SL','พ้นจุดสุดขั้ว ~$'+fmtNum(atr*0.6,2)],['TP','กลับสู่กลางกรอบก่อนข่าว']]},
-      {n:3,name:'Second-wave (ตามเทรนด์จริง)',desc:'รอ pullback เล็กน้อยบน M5/M15 แล้วเข้าในทิศทางเดียวกับความจริงของข่าว (deviation)',params:[['เข้า','หลัง pullback ~50% ของสไปก์'],['SL','$'+fmtNum(atr*0.8,2)],['TP','$'+fmtNum(atr*2.0,2)]]},
-    ];
-    return {rows,strats,atr,price};
+    }catch(e){/* try next */}
   }
+  GS.events=gnsDemoEvents();gnsSrc('warn','ข้อมูลสำรอง');
+  GS.selected=GS.events[0]||null;gnsRenderEvents();gnsRenderScore();
+}
 
-  /* ---------- risk calc ---------- */
-  function calcRisk() {
-    const bal=parseFloat($g('inBal').value)||0,rp=parseFloat($g('inRisk').value)||1,sl=parseFloat($g('inSL').value)||30;
-    const riskUSD=bal*(rp/100),lots=riskUSD/(sl*100),tp=sl*1.5;
-    $g('riskUSD').textContent='$'+fmtNum(riskUSD,2);
-    $g('lotOut').textContent=lots>0?lots.toFixed(2):'0.00';
-    $g('slOut').textContent='$'+fmtNum(sl,2);
-    $g('tpOut').textContent='$'+fmtNum(tp,2);
-    const warn=$g('riskWarn');
-    if (warn&&lots>0&&sl>0) warn.textContent=`ข่าวแรง: แนะนำเสี่ยงไม่เกิน 0.5–1% ต่ออีเวนต์ จำกัดขาดทุนรวมวัน ~$${fmtNum(riskUSD*2,0)}`;
+function gnsDemoEvents(){
+  const now=new Date(),out=[];
+  for(let i=0;i<2;i++){
+    const dt=new Date(now.getFullYear(),now.getMonth()+i,1);
+    let fri=1;while(new Date(dt.getFullYear(),dt.getMonth(),fri).getDay()!==5)fri++;
+    const d=new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),fri,12,30));
+    if(d.getTime()>Date.now()-86400e3)out.push({title:'Non-Farm Payrolls (NFP)',country:'USD',impact:'High',demo:true,date:d.toISOString(),forecast:'160K',previous:'175K',ts:d.getTime()});
   }
+  return out;
+}
 
-  /* ---------- tracker ---------- */
-  function getResults() { try { return JSON.parse(store.get(LS_RESULTS))||[]; } catch { return []; } }
-  function saveResults(r) { store.set(LS_RESULTS, JSON.stringify(r)); }
-
-  function clearResults() {
-    store.del(LS_RESULTS); renderStats(); renderEvents(); toast('ล้างประวัติแล้ว');
-  }
-
-  function findResult(ev) { return getResults().find((r)=>r.title===ev.title&&r.date===ev.date)||null; }
-
-  function recordResult(ev,actual,outcome) {
-    const rs=getResults();
-    const rec=findResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now()};
-    rec.actual=actual; rec.outcome=outcome;
-    const f=parseNum(ev.forecast),a=parseNum(actual);
-    if (f!=null&&a!=null) rec.deviation=a-f;
-    const idx=rs.findIndex((r)=>r.title===ev.title&&r.date===ev.date);
-    if (idx>=0) rs[idx]=rec; else rs.push(rec);
-    saveResults(rs); renderStats(); renderEvents(); toast('บันทึกผลแล้ว ✅');
-  }
-
-  function renderStats() {
-    const rs=getResults(),judged=rs.filter((r)=>r.outcome==='win'||r.outcome==='loss');
-    const wins=judged.filter((r)=>r.outcome==='win').length,losses=judged.length-wins;
-    const winRate=judged.length?(wins/judged.length)*100:0;
-    const devs=rs.map((r)=>r.deviation).filter((v)=>v!=null);
-    const avgDev=devs.length?devs.reduce((a,b)=>a+b,0)/devs.length:0;
-    const sw=$g('stWin'),sl=$g('stLoss'),sr=$g('stRate'),sd=$g('stDev');
-    if(sw) sw.textContent=wins; if(sl) sl.textContent=losses;
-    if(sr) sr.textContent=judged.length?winRate.toFixed(0)+'%':'—';
-    if(sd) sd.textContent=devs.length?(avgDev>0?'+':'')+fmtNum(avgDev):'—';
-    const list=$g('histList'); if(!list) return;
-    list.innerHTML='';
-    if (!rs.length) { list.innerHTML='<div class="empty">ยังไม่มีผลลัพธ์</div>'; return; }
-    rs.slice().reverse().forEach((r)=>{
-      const tag=r.outcome==='win'?'<span class="tag win">ชนะ</span>':r.outcome==='loss'?'<span class="tag loss">แพ้</span>':r.outcome==='skip'?'<span class="tag skip">ไม่เทรด</span>':'<span class="tag skip">ยังไม่ตัดสิน</span>';
-      const dev=r.deviation!=null?'dev '+(r.deviation>0?'+':'')+fmtNum(r.deviation):'';
-      list.insertAdjacentHTML('beforeend',`<div class="hist-item">${tag}<span class="ev">${esc(r.title)}</span><span class="dev">${esc(dev)}</span></div>`);
-    });
-  }
-
-  /* ---------- render events ---------- */
-  function renderEvents() {
-    const list=$g('evList'); if(!list) return;
-    if (!state.events.length) { list.innerHTML='<div class="empty">ไม่มีอีเวนต์ USD ที่สำคัญในสัปดาห์นี้</div>'; return; }
-    const now=Date.now(); list.innerHTML='';
-    state.events.forEach((ev)=>{
-      const msLeft=ev.ts-now, isUrgent=msLeft>0&&msLeft<=15*60e3;
-      const cls=['ev-card',state.selected===ev?'active':'',isUrgent?'urgent':''].join(' ');
-      const f=parseNum(ev.forecast),p=parseNum(ev.previous),devTxt=[];
-      if (f!=null) devTxt.push(`คาด <b>${esc(ev.forecast)}</b>`);
-      if (p!=null) devTxt.push(`เดิม <b>${esc(ev.previous)}</b>`);
-      if (ev.actual) devTxt.push(`จริง <b style="color:var(--gold-soft)">${esc(ev.actual)}</b>`);
-      const srcBadge=ev.demo?'<span class="pill gold">สำรอง</span>':ev._src==='tv+ff'?'<span class="pill tv">TV+FF</span>':ev._src==='tv'?'<span class="pill tv">TV</span>':ev._src==='ff'?'<span class="pill ff">FF</span>':'';
-      list.insertAdjacentHTML('beforeend',`<div class="${cls}" data-idx="${state.events.indexOf(ev)}" role="button" tabindex="0"><div class="ev-top"><span class="ev-title">${esc(ev.title)} ${srcBadge}</span><span class="ev-imp ${esc(ev.impact)}">${esc(ev.impact)}</span><span class="ev-count">${countdownText(msLeft)}</span></div><div class="ev-meta"><span>⏰ ${thaiTime(ev.date)}</span>${devTxt.length?'<span>'+devTxt.join(' · ')+'</span>':''}</div></div>`);
-    });
-    const ec=$g('evCount'); if(ec) ec.textContent=state.events.length+' อีเวนต์';
-    list.querySelectorAll('.ev-card').forEach((card)=>{
-      const sel=()=>{ state.selected=state.events[+card.dataset.idx]; renderEvents(); renderScore(); };
-      card.addEventListener('click',sel);
-      card.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();sel();} });
-    });
-  }
-
-  /* ---------- render score ---------- */
-  function renderScore() {
-    const ev=state.selected, panel=$g('scorePanel');
-    if (!ev) { if(panel) panel.innerHTML='<div class="empty">เลือกอีเวนต์เพื่อดูสัญญาณ</div>'; return; }
-    const sc=computeScore(ev), v=verdict(sc.D), cv=convictionLabel(sc.C);
-    const now=Date.now(), msLeft=ev.ts-now, isUrgent=msLeft>0&&msLeft<=15*60e3, isPast=msLeft<=0;
-    const rec=findResult(ev);
-    const brk=[
-      ['ทิศทางข่าว (Event Bias)',sc.bias,sc.hasNum?'sell':'neutral','40% ของทิศทาง'],
-      ['ขนาด deviation ที่คาด',sc.mag,'neutral','ความแรง'],
-      ['น้ำหนักข่าว (Impact)',sc.impact,sc.impact>55?'sell':'neutral','High = แรงสุด'],
-      ['โมเมนตัมทอง (ช่วงวัน)',sc.mom!=null?sc.mom:50,sc.mom!=null&&sc.mom>60?'sell':sc.mom!=null&&sc.mom<40?'buy':'neutral',sc.mom!=null?'จากกรอบราคาวันนี้':'ไม่มีข้อมูล'],
-    ].map(([name,val,cls,note])=>`<div class="brk-row"><span class="name">${name}<br><small style="color:var(--txt-faint)">${note}</small></span><div class="brk-bar"><div class="brk-fill ${cls}" style="width:${val}%"></div></div><span class="val">${val.toFixed(0)}</span></div>`).join('');
-    const big=(isPast&&rec)?'จบแล้ว — ดูผล':v.big;
-    const het=$g('heroEvTitle'); if(het) het.textContent=ev.title+(ev.demo?' (ข้อมูลสำรอง)':'');
-    const hem=$g('heroEvMeta'); if(hem) hem.textContent=`ระดับ ${ev.impact} · เวลาไทย ${thaiTime(ev.date)} · คาด ${ev.forecast||'—'} / เดิม ${ev.previous||'—'}`;
-    const sn=$g('scoreName'); if(sn) sn.innerHTML=`${esc(ev.title)}${ev.demo?' <span class="pill gold">ข้อมูลสำรอง</span>':''}`;
-    const st=$g('scoreTime'); if(st) st.innerHTML=`⏰ ${thaiTime(ev.date)} · <b style="color:${isUrgent?'var(--red)':'var(--txt-dim)'}">${countdownText(msLeft)}</b>`;
-    const sg=$g('scoreGauge'); if(sg) sg.innerHTML=`<div class="gauge-track"><div class="gauge-needle" style="left:${sc.D}%"></div></div><div class="gauge-labels"><span>ซื้อทอง</span><span>กลาง</span><span>ขายทอง</span></div>`;
-    const vb=$g('verdictBox'); if(vb) vb.className='verdict '+v.cls;
-    const vbig=$g('verdictBig'); if(vbig) vbig.textContent=big;
-    const vsub=$g('verdictSub'); if(vsub) vsub.textContent=(isPast&&rec)?`ข่าวออกแล้ว — deviation ${rec.deviation!=null?(rec.deviation>0?'+':'')+fmtNum(rec.deviation):'?'} · ผล: ${rec.outcome==='win'?'ชนะ':rec.outcome==='loss'?'แพ้':rec.outcome==='skip'?'ไม่เทรด':'ยังไม่บันทึก'}`:`${v.sub} · แรงข่าว: ${cv.t}`;
-    const bb=$g('brkBox'); if(bb) bb.innerHTML=brk;
-    const rb=$g('reasonBox'); if(rb) rb.innerHTML='<b>เหตุผล:</b><ul>'+sc.notes.map((n)=>`<li>${n}</li>`).join('')+'</ul>';
-    const warnBar=$g('warnBar');
-    if (warnBar) {
-      if (isUrgent) { warnBar.className='warn-bar show urgent'; warnBar.innerHTML='⚠️ <b>ใกล้ปล่อยข่าวแล้ว!</b> สเปรดจะกว้าง 5–20 เท่าใน 1–2 นาทีแรก'; }
-      else if (isPast) { warnBar.className='warn-bar show'; warnBar.innerHTML='ข่าวออกแล้ว — กรอก actual และกดผลลัพธ์ เพื่อเก็บสถิติ ↓'; }
-      else { warnBar.className='warn-bar'; warnBar.innerHTML=''; }
+function gnsTick(){
+  const now=Date.now();
+  GS.events.forEach((ev,i)=>{
+    const ms=ev.ts-now;
+    const cards=$('gns-evList')?.querySelectorAll('.gns-ev-card');
+    if(cards&&cards[i]){
+      const spans=cards[i].querySelectorAll('span');
+      if(spans.length>=3)spans[spans.length-1].textContent=countdownText(ms);
+      cards[i].classList.toggle('gns-urgent',ms>0&&ms<=15*60e3);
     }
-    const pb=buildPlaybook(ev,sc);
-    const sr2=$g('scenRows'); if(sr2) sr2.innerHTML=pb.rows.map((r)=>`<tr><td class="sc-when ${r.cls}">${r.when}</td><td>${r.act}</td></tr>`).join('');
-    const stratr=$g('stratRows'); if(stratr) stratr.innerHTML=pb.strats.map((s)=>`<div class="strat"><h4><span class="n">${s.n}</span>${s.name}</h4><p>${s.desc}</p><div class="params">${s.params.map(([k,val])=>`<span class="chip">${k}: <b>${val}</b></span>`).join('')}</div></div>`).join('');
+  });
+  const ev=GS.selected;
+  if(ev){
+    const ms=ev.ts-Date.now();
+    if($('gns-countdownTime'))$('gns-countdownTime').textContent=countdownText(ms);
+    if($('gns-heroLabel'))$('gns-heroLabel').textContent=ms>0?(ms<=15*60e3?'ใกล้ปล่อยข่าว!':'เหลือเวลา'):'ข่าวออกแล้ว';
   }
+}
 
-  function computeDeviation(ev,actual) {
-    const f=parseNum(ev.forecast),a=parseNum(actual);
-    if (f==null||a==null) return null;
-    return a-f;
+window.openNewsSignal=function(){
+  const sc=$('news-screen');if(sc)sc.classList.remove('hidden');
+  if(!GS.inited){
+    GS.inited=true;
+    const bal=LS('gns_bal')||'1000',risk=LS('gns_risk')||'1',sl=LS('gns_sl')||'30';
+    if($('gns-inBal'))$('gns-inBal').value=bal;
+    if($('gns-inRisk'))$('gns-inRisk').value=risk;
+    if($('gns-inSL')){$('gns-inSL').value=sl;GS.atr=parseFloat(sl)||30;}
+    gnsLoadGold();gnsLoadEvents();
+    setInterval(gnsTick,1000);
+    setInterval(gnsLoadGold,30000);
   }
+};
 
-  function submitActual() {
-    const ev=state.selected; if(!ev) return;
-    const val=$g('inActual').value.trim();
-    if (!val) { toast('กรอกค่า actual ก่อน'); return; }
-    ev.actual=val;
-    const rec=findResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now()};
-    rec.actual=val;
-    const f=parseNum(ev.forecast),a=parseNum(val);
-    if (f!=null&&a!=null) rec.deviation=a-f;
-    const rs=getResults();
-    const idx=rs.findIndex((r)=>r.title===ev.title&&r.date===ev.date);
-    if (idx>=0) rs[idx]=rec; else rs.push(rec);
-    saveResults(rs); renderStats(); renderScore(); toast('บันทึก actual แล้ว');
-  }
-
-  function setOutcome(o) {
-    const ev=state.selected; if(!ev) return;
-    const rs=getResults();
-    const rec=findResult(ev)||{title:ev.title,date:ev.date,createdAt:Date.now(),actual:ev.actual||''};
-    rec.outcome=o;
-    const idx=rs.findIndex((r)=>r.title===ev.title&&r.date===ev.date);
-    if (idx>=0) rs[idx]=rec; else rs.push(rec);
-    saveResults(rs); renderStats(); renderScore();
-    toast(o==='win'?'บันทึก: ชนะ 🏆':o==='loss'?'บันทึก: แพ้ 💸':'บันทึก: ไม่เทรด');
-  }
-
-  /* ---------- toast ---------- */
-  let toastTimer=null;
-  function toast(msg) {
-    const bar=$g('gns-statusBar'); if(!bar) return;
-    bar.innerHTML=msg; bar.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer=setTimeout(()=>bar.classList.remove('show'),3200);
-  }
-
-  /* ---------- tick ---------- */
-  function tick() {
-    const now=Date.now(); if(!state.events.length) return;
-    state.events.forEach((ev)=>{
-      const msLeft=ev.ts-now;
-      if (msLeft>0&&msLeft<=15*60e3&&!state.urgentShown[ev.title+ev.date]) {
-        state.urgentShown[ev.title+ev.date]=true;
-        toast(`⚠️ ${ev.title} จะออกใน < 15 นาที!`);
-        if (!state.selected||state.selected.ts<now) { state.selected=ev; renderEvents(); renderScore(); }
-      }
-      if (msLeft<=0&&msLeft>-6*3600e3&&!state.releasedShown[ev.title+ev.date]) {
-        state.releasedShown[ev.title+ev.date]=true;
-        toast(`📢 ข่าว ${ev.title} ออกแล้ว! กรอก actual ดู deviation`);
-        if (state.selected===ev) renderScore();
-      }
-    });
-    document.querySelectorAll('#news-screen .ev-card').forEach((card)=>{
-      const ev=state.events[+card.dataset.idx]; if(!ev) return;
-      const msLeft=ev.ts-now;
-      const ec=card.querySelector('.ev-count'); if(ec) ec.textContent=countdownText(msLeft);
-      card.classList.toggle('urgent',msLeft>0&&msLeft<=15*60e3);
-    });
-    const ev=state.selected;
-    if (ev) {
-      const msLeft=ev.ts-now;
-      const ct=$g('countdownTime'); if(ct){ ct.textContent=countdownText(msLeft); ct.classList.toggle('urgent',msLeft>0&&msLeft<=15*60e3); }
-      const hc=$g('heroCard'); if(hc) hc.classList.toggle('urgent',msLeft>0&&msLeft<=15*60e3);
-      const hl=$g('heroLabel'); if(hl) hl.textContent=msLeft>0?(msLeft<=15*60e3?'ใกล้ปล่อยข่าว! เหลือ':'เหลือเวลาจนกว่าข่าวออก'):'ข่าวออกแล้ว';
-    }
-  }
-
-  /* ---------- tabs ---------- */
-  function setupTabs() {
-    document.querySelectorAll('#news-screen .tab').forEach((tab)=>{
-      tab.addEventListener('click',()=>{
-        document.querySelectorAll('#news-screen .tab').forEach((t)=>{ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
-        document.querySelectorAll('#news-screen .tab-content').forEach((c)=>c.classList.remove('active'));
-        tab.classList.add('active'); tab.setAttribute('aria-selected','true');
-        const tc=$g('tab-'+tab.dataset.tab); if(tc) tc.classList.add('active');
-      });
-    });
-  }
-
-  /* ---------- init (called once from openNewsSignal) ---------- */
-  function init() {
-    loadTicks();
-    setupTabs();
-    const rb=$g('refreshBtn');
-    if(rb) rb.addEventListener('click',async()=>{ toast('กำลังรีเฟรชข้อมูล…'); await loadEvents(); await loadGold(); toast('อัปเดตล่าสุดแล้ว ✅'); });
-    ['inBal','inRisk','inSL'].forEach((id)=>{
-      const el=$g(id); if(!el) return;
-      el.addEventListener('input',()=>{ calcRisk(); state.atr=parseFloat($g('inSL').value)||30; store.set('gns_'+id.replace('in','').toLowerCase(),$g(id).value); });
-    });
-    const ib=$g('inBal'); if(ib) ib.value=store.get('gns_bal')||'1000';
-    const ir=$g('inRisk'); if(ir) ir.value=store.get('gns_risk')||'1';
-    const isl=$g('inSL'), savedSL=store.get('gns_sl');
-    if(isl&&savedSL) { isl.value=savedSL; state.atr=parseFloat(savedSL)||30; }
-    calcRisk();
-    loadGold();
-    loadEvents();
-    setInterval(tick,1000);
-    setInterval(loadGold,30000);
-    setInterval(()=>{ if(!document.hidden) loadEvents(); },90e3);
-    state.inited=true;
-  }
-
-  /* ---------- public API ---------- */
-  window.openNewsSignal = function() {
-    const el=document.getElementById('news-screen');
-    if(el) el.classList.remove('hidden');
-    if(!state.inited) init();
-    else { renderEvents(); renderScore(); }
-  };
-
-  window.closeNewsSignal = function() {
-    const el=document.getElementById('news-screen');
-    if(el) el.classList.add('hidden');
-  };
-
-  window.gnsApp = { calcRisk, clearResults, submitActual, setOutcome };
+window.closeNewsSignal=function(){
+  const sc=$('news-screen');if(sc)sc.classList.add('hidden');
+};
 
 })();
 </script>
-</div>
-
-
-<!-- Daily Limit Popup -->
-<div id="dl-popup" style="display:none;position:fixed;bottom:145px;right:16px;z-index:9999;
-  background:var(--surface,#1a1a2e);border:1px solid var(--border2,rgba(255,255,255,.12));
-  border-radius:14px;padding:16px 20px;min-width:260px;box-shadow:0 8px 32px rgba(0,0,0,.55);
-  backdrop-filter:blur(16px)">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <span style="font-size:13px;font-weight:600;color:var(--text,#fff)">Current session</span>
-    <span id="dl-popup-pct" style="font-size:12px;color:rgba(255,255,255,.45)">0.0% used</span>
-  </div>
-  <div style="height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:8px">
-    <div id="dl-popup-bar" style="height:100%;width:0%;border-radius:2px;background:#22c55e;transition:width .5s ease"></div>
-  </div>
-  <div id="dl-popup-sub" style="font-size:11px;color:rgba(255,255,255,.4)">—</div>
-
-</div>
-
 </body>
 </html>
