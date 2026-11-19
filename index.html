@@ -1310,7 +1310,7 @@ async function authRegister() {
   try {
     const r = await fetch(API_BASE + '/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password: pass, exnessPort}) });
     const d = await r.json();
-    if (!r.ok) { const msg = d.message || t('registerFail'); if (msg.includes('ไม่มีในระบบ')) { errEl.innerHTML = msg.replace('โปรดติดต่อ Line: @870bfqsa ใช้งานฟรี', '<a href="https://line.me/ti/p/@870bfqsa" target="_blank" style="color:#ff4444;text-decoration:underline;font-weight:bold;">โปรดติดต่อ Line: @870bfqsa ใช้งานฟรี</a>'); } else { errEl.textContent = msg; } return; }
+    if (!r.ok) { const msg = d.message || t('registerFail'); if (msg.includes('ไม่มีในระบบ')) { errEl.innerHTML = 'เลขพอร์ต Exness ไม่มีในระบบ <a href="https://line.me/ti/p/@870bfqsa" target="_blank" style="color:#ff6666;text-decoration:underline;font-weight:bold;cursor:pointer;">โปรดติดต่อ Line: @870bfqsa ใช้งานฟรี</a>'; } else { errEl.textContent = msg; } return; }
     okEl.textContent = t('registerOk');
     setTimeout(() => authTab('login'), 1500);
   } catch(e) { errEl.textContent = t('serverError'); }
