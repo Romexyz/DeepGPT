@@ -7,8 +7,16 @@ const DB_NAME   = process.env.MONGODB_DB || 'deepgpt';
 
 let _client = null;
 async function getDb() {
+  if (_client) {
+    try { await _client.db('admin').command({ ping: 1 }); }
+    catch { try { await _client.close(); } catch {} _client = null; }
+  }
   if (!_client) {
-    _client = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 5000 });
+    _client = new MongoClient(MONGO_URI, {
+      serverSelectionTimeoutMS: 8000,
+      connectTimeoutMS: 8000,
+      socketTimeoutMS: 8000,
+    });
     await _client.connect();
   }
   return _client.db(DB_NAME);
